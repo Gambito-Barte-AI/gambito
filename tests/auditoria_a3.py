@@ -172,8 +172,8 @@ def verificar(m, arquivos, config, pasta):
             if spread < 0:
                 ajuste = re.fullmatch(r"AJUSTE REF (PC-[A-Z0-9-]+)(?:\s.*)?", e.get("observacao", "").upper())
                 exigir(ajuste and r.get("ref_original") == ajuste[1] and r.get("ref_evento_original") == ajuste[1]
-                       and r.get("regra") == "D-10_PENDENTE_FINANCEIRO", "Negativo irregular/ajuste sem vínculo na comissão")
-                exigir(any(s["tipo"] == "AJUSTE_PONTE_D10_PENDENTE" and s.get("ref_original") == ajuste[1]
+                       and r.get("regra") == "D-10_AJUSTE_PONTE", "Negativo irregular/ajuste sem vínculo na comissão")
+                exigir(any(s["tipo"] == "AJUSTE_PONTE_D10" and s.get("ref_original") == ajuste[1]
                            for s in arquivos["pendencias.csv"]), "Ajuste sem D-10 explícita")
         elif identificador.startswith("DIVERGENCIA:REMESSA:") or identificador.startswith("SPREAD_NEGATIVO:"):
             s = por_saida[identificador]
