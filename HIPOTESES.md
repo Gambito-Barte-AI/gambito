@@ -1,3 +1,15 @@
+# E3 — critérios aprovados de alerta (estado atual)
+
+Usuário aprovou em 17/10/2026: pico do saldo acumulado **ao fim de cada dia**, sem valor mínimo; somente CNPJ explicitamente em `contratos_bloqueados`, com identidade forte; uma pendência por lojista em pendencias.csv. Cada reversão é citada, mas só abate se sua antecipação estiver disponível no período. Exposição anterior desconhecida; não comparar com vendas nem inferir horário ou histórico. Regras operacionais do time registradas em `[extras.alertas]` no TOML, sem atribuir nova aprovação ao parceiro.
+
+- E3-P resolvida para o recorte sem contrato. A cobertura de “sem histórico” continua fora até existir lista/fonte explícita; ausência de arquivo não prova ausência de histórico.
+- Saldo inicial zero é apenas referência do recorte observado, não declaração sobre a agenda anterior. No empate, primeira data do pico. Dia com antecipação e reversão integral pode ter pico zero e ainda produzir acompanhamento, sem alarme financeiro falso ou efeito nas comissões/notas.
+- Rastro soma os movimentos até o fim do dia do pico; reversões posteriores são descritas sem abater retroativamente o pico. Os quatro relatórios financeiros são preservados; só pendências, rastro e manifesto recebem E3.
+- D-10 está **respondida**, conforme Financeiro 11:33 e retorno do checkpoint 2, já registrados na branch. Aplicar 50% do spread negativo uma vez. Avisos de pendência de D-10 nas seções antigas abaixo são históricos e estão superados.
+- E2-P (retomada financeira) continua pendente. E1/E2 preservadas; E4 não iniciada. Histórico integral de IA permanece adiado pelo usuário.
+
+---
+
 # E2 — continuidade das pendências
 
 E2 autorizada: exportação e leitura do snapshot de eventos pendentes, conforme E0, em `docs/EXTRA_CONTINUIDADE_ALERTAS.md`. E1 preservada; E3 não iniciada. CLI/publicação de extras ainda não ligadas. Sem alterações das regras financeiras, oficiais ou resultados existentes.

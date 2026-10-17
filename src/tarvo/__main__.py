@@ -48,7 +48,7 @@ def main(argv=None) -> int:
     for nome, detalhe in manifesto["resultados"].items():
         print(f"RESULTADO {nome}: {detalhe['situacao']} ({detalhe['linhas']} linhas)")
     if argumentos.escopo == "alvo":
-        for nome in ("REMESSAS", "DIVERGENCIAS_REMESSA", "NOTAS_CHECKOUT", "NOTAS_REMESSA", "EXTRATO_AURORA", "EXTRATO_MERIDIANO"):
+        for nome in ("REMESSAS", "DIVERGENCIAS_REMESSA", "NOTAS_CHECKOUT", "NOTAS_REMESSA", "EXTRATO_AURORA", "EXTRATO_MERIDIANO") + (("ALERTAS_ANTECIPACAO",) if "ALERTAS_ANTECIPACAO" in manifesto["partes"] else ()):
             parte = manifesto["partes"][nome]
             print(f"PARTE {nome}: {parte['situacao']}")
             for motivo in parte["motivos"]:

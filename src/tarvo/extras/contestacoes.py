@@ -167,7 +167,7 @@ def _renderizar(contraparte, competencia, grupos, motivos):
         linhas += [f"{rotulo} desta natureza: {total:.2f} BRL." if conhecidos else "Total desta natureza: NÃO INFORMADO."]
     linhas += ["", "Não somar estas naturezas como comissão ou nota. Não executar cobrança automaticamente.",
                "Casa/concessões, cadastro e acompanhamento de TED estão fora deste rascunho.",
-               "D-10 continua pendente de confirmação financeira; ajustes não integram esta contestação."]
+               "D-10 confirmada: ajuste abate 50% do spread uma vez; ajustes não integram esta contestação."]
     return "\n".join(linhas) + "\n"
 
 

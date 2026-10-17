@@ -163,6 +163,7 @@ class Resultado:
     parametros_notas: dict[str, dict] = field(default_factory=dict)
     contexto_aurora: dict | None = None
     contexto_meridiano: dict | None = None
+    contexto_alertas: dict | None = None
 
 
 @dataclass(frozen=True)

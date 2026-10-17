@@ -5,6 +5,7 @@ from decimal import Decimal, DecimalException
 
 from . import classificacao, notas, validacao
 from .modelos import ErroEntrada, Resultado, ResultadoParte
+from .extras import alertas
 
 # (fontes, resultados anteriores, relatórios). Leitores futuros não são presumidos válidos.
 PLANO = {
@@ -145,6 +146,8 @@ def validar_partes(resultado: Resultado) -> None:
                     notas.validar(nome, parte, resultado.partes[notas.DEPENDENCIAS[nome]], resultado.parametros_notas.get(nome))
                 if nome in {"EXTRATO_AURORA", "EXTRATO_MERIDIANO"}:
                     classificacao.validar(parte, getattr(resultado, "contexto_" + nome.removeprefix("EXTRATO_").lower()))
+                if nome == alertas.NOME:
+                    alertas.validar(parte, resultado.contexto_alertas)
                 validacao.validar_parte(parte)
                 if provisorio:
                     parte.situacao = "PROVISORIO"

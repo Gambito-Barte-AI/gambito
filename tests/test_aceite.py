@@ -279,7 +279,8 @@ natureza = "FINANCEIRA"
         texto = original.read_text(encoding="utf-8")
         config = carregar(original)
         self.assertTrue(any(r["aprovado_em"] == "NAO_INFORMADO" for r in config["observacoes_esclarecidas"]))
-        self.regras.write_text(texto.replace('aprovador = ', 'aprovador_omitido = ', 1), encoding="utf-8")
+        cabecalho, vinculos = texto.split('[[vinculos]]', 1)
+        self.regras.write_text(cabecalho + '[[vinculos]]' + vinculos.replace('aprovador = ', 'aprovador_omitido = ', 1), encoding="utf-8")
         with self.assertRaisesRegex(ErroEntrada, "RN-61"):
             carregar(self.regras)
         self.regras.write_text(texto.replace('2026-10-16T20:24:00-03:00', 'ontem', 1), encoding="utf-8")

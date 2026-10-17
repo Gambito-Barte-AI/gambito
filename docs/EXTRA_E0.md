@@ -1,5 +1,7 @@
 # E0 — contratos e divisão do desenvolvimento extra
 
+**Atualização aprovada após E0 (E3, 17/10/2026):** pico é o maior saldo ao fim de cada dia, sem limiar, somente contratos explicitamente bloqueados. "Sem histórico" não é inferido. Reversão sem original disponível no período é listada sem abater; exposição anterior é desconhecida. Uma pendência ALERTA_ANTECIPACAO por CNPJ e seu rastro são publicados no escopo alvo quando `[extras.alertas].habilitado=true`. Essa aprovação substitui, para E3, a previsão de artefato JSON separado/ativação por `--extras`; E1/E2 continuam em módulos e E4 não foi iniciada. Critérios e aceite em [E3](EXTRA_CONTINUIDADE_ALERTAS.md#e3--alertas-de-antecipação). D-10 foi confirmada pelo Financeiro às 11:33, conforme retorno do checkpoint 2: participação de 50% aplicada uma vez. Os trechos históricos de E0 abaixo não reabrem essas decisões.
+
 ## Estado e base comum
 
 E0 autorizada pelo usuário: **definição documental dos contratos e da propriedade dos arquivos**. Não implementa E1–E5, opções de CLI, novos modelos ou artefatos. Os caminhos, funções e formatos futuros descritos abaixo são decisões internas de integração, não novos contratos oficiais do parceiro.
@@ -110,9 +112,9 @@ A propriedade não é uma lista de arquivos a alterar: modificar apenas os indis
 | ID | Falta definir | Impacto e responsável |
 | --- | --- | --- |
 | E2-P | Controle persistente/arquivo de eventos já faturados, evidência de aprovação comercial e apresentação da competência original na nota do mês posterior | Comercial confirma condição/vigência; Financeiro valida apresentação/liberação; time define mecanismo mínimo e versionado de idempotência. Exportação/leitura podem ser desenvolvidas após autorização, mas não faturar backlog antes dessa definição. Nenhuma nova taxa é presumida. |
-| E3-P | Fonte/evidência de histórico, fórmula operacional do pico, desempate de eventos no mesmo instante/dia e limiar de alerta | Time documenta critério permitido por D-03; encaminhar ao Financeiro/Comercial quando faltar base de negócio. Não inventar horário que a fonte só fornece por dia. E0 não aprova esses parâmetros. |
+| E3-P | Resolvida pelo usuário para o recorte sem contrato: saldo de fim de dia, sem limiar, bloqueio explícito no TOML e pendência/rastro no alvo | Só a ampliação para ausência de histórico continua futura, exigindo lista explícita com evidência. Não inferir histórico nem horário. |
 | E4-P | Provedor/modelo, dados mínimos enviados, limites de custo/tempo e credencial | Definição técnica antes de chamada real; chave exclusivamente em ambiente. Mocks e fallback não exigem API. Nenhuma dependência nova é autorizada por este documento. |
-| D-10 | Spread negativo do ajuste inteiro ou já participação | Manter a decisão atual de 50% uma vez, explicitamente pendente; confirmar com Financeiro. Não alterar em E0 nem na composição dos rascunhos. |
+| D-10 | Respondida: spread inteiro, participação de 50% aplicada uma vez | Financeiro 11:33; retorno do checkpoint 2 às 16:01; decisão já registrada na branch e preservada em E3. |
 | Atlas/RN-61 | Contrato comercial e datas/aprovações sem evidência | Continuam pendentes; não usar taxa antiga ou preencher metadado fictício para habilitar retomada. |
 
 **E0 está documentalmente definida; a implementação extra continua não iniciada.** Não cria schema oficial novo, resolve decisão financeira, implementa integração externa, gera novos resultados ou autoriza commits. Mudança incompatível nesses contratos exige revisão coordenada antes de as duas frentes adotarem versões diferentes.

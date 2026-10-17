@@ -78,6 +78,8 @@ def verificar_partes(manifesto):
     if manifesto.get("versao", 0) >= 8:
         futuras.remove("EXTRATO_MERIDIANO")
         implementadas.add("EXTRATO_MERIDIANO")
+    if manifesto.get("versao", 0) >= 9:
+        implementadas.add("ALERTAS_ANTECIPACAO")
     exigir(set(partes) == implementadas | futuras, "Partes ausentes ou desconhecidas")
     for nome, parte in partes.items():
         estado = parte.get("situacao")
@@ -180,6 +182,9 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     if manifesto.get("versao", 0) >= 8:
         from auditoria_a6 import verificar as verificar_a6
         verificar_a6(manifesto, arquivos, configuracao, dados, regras)
+    if manifesto.get("versao", 0) >= 9:
+        from auditoria_e3 import verificar as verificar_e3
+        verificar_e3(manifesto, arquivos, configuracao, dados)
     rastros = arquivos["rastro.csv"]
     if situacao == "BLOQUEADO" and not any(arquivos.values()):
         exigir(not any(arquivos.values()) and (partes or all(r["situacao"] == "BLOQUEADO" for r in resultados.values()))

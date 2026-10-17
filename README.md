@@ -1,6 +1,6 @@
 # Gambito — fechamento Tarvo (nível alvo)
 
-Monólito modular em Python, sem servidor ou banco. Processa os arquivos locais como recebidos e gera comissões de checkout e remessas, divergências, propostas de notas, classificação dos dois bancos, pendências e rastro. Não emite notas, executa pagamentos ou acessa Slack/e-mail externos. Extras não implementados.
+Monólito modular em Python, sem servidor ou banco. Processa os arquivos locais como recebidos e gera comissões de checkout e remessas, divergências, propostas de notas, classificação dos dois bancos, pendências e rastro. Não emite notas, executa pagamentos ou acessa Slack/e-mail externos. E3 acrescenta alerta de antecipação; E1/E2 estão disponíveis como módulos, sem IA.
 
 ## Instalar do zero
 
@@ -71,7 +71,7 @@ Os seis arquivos obrigatórios ficam **diretamente em `saida/`**, conforme [FORM
 
 CSV UTF-8, separador `;`, decimal com ponto, datas ISO e CNPJ numérico com 14 dígitos. Colunas extras registram regras, vínculos, natureza do valor e próximo passo, sem substituir o contrato obrigatório. Cada saída monetária tem rastro assinado cuja soma fecha exatamente; valor desconhecido permanece vazio e explicitamente identificado, nunca zero inventado.
 
-`manifesto.json` é o marcador de publicação: guarda hashes, fontes, cobertura, status/motivos por parte e relatório, limitações e decisões pendentes. Consulte-o antes de consumir os CSVs. O manifesto conserva versão 8/etapa ALVO_A6 porque A7 é aceite integrado, sem novo módulo financeiro. Bloqueio é diagnosticado no resumo/manifesto; partes bloqueadas não publicam valores. Se todas estiverem bloqueadas, os seis CSVs têm apenas cabeçalhos.
+`manifesto.json` é o marcador de publicação: guarda hashes, fontes, cobertura, status/motivos por parte e relatório, limitações e decisões pendentes. Consulte-o antes de consumir os CSVs. Com E3 configurada, usa versão 9/etapa EXTRA_E3 e inclui o critério aprovado; sem E3, conserva versão 8/ALVO_A6. Bloqueio é diagnosticado no resumo/manifesto; partes bloqueadas não publicam valores. Se todas estiverem bloqueadas, os seis CSVs têm apenas cabeçalhos.
 
 A CLI só substitui arquivos próprios com manifesto reconhecido e hashes anteriores intactos. Arquivo externo/modificado causa erro e exige destino novo. Publicação interrompida deixa marcador bloqueado; acesso transitório do Windows recebe até quatro tentativas, com espera total máxima de 350 ms. Erro persistente continua explícito.
 
@@ -92,7 +92,7 @@ O cálculo usa `Decimal` e HALF_UP por evento. Fórmulas ficam nos módulos; con
 - Notas são propostas por saldo positivo validado; saldos não positivos geram pendência, sem transporte automático entre meses. Não somam divergência/devolução como receita.
 - Classificação bancária usa conta analítica permitida e regra única por histórico/sinal. Sem correspondência, vira pendência. Recursos de lojistas e baixas de passivo não são receita; não são geradas provisões do mês nem conciliação entre bancos. Aurora preserva linha física (L9 no exemplo); Meridiano preserva FITID e dia local.
 
-[HIPOTESES.md](HIPOTESES.md) conserva premissas e registros históricos, com o estado mais recente primeiro. Aceite técnico não ratifica decisões financeiras nem autoriza emissão/pagamento. Não há IA, alertas de antecipação, reaproveitamento automático de Atlas, rascunhos de contestação ou frontend.
+[HIPOTESES.md](HIPOTESES.md) conserva premissas e registros históricos, com o estado mais recente primeiro. Aceite técnico não autoriza emissão/pagamento. Há módulo de rascunhos E1, snapshot de continuidade E2 e alerta E3 integrado; não há IA, reaproveitamento financeiro automático de Atlas ou frontend.
 
 ## Testes e reprodução
 
@@ -124,4 +124,8 @@ A7 registrou 233 testes e aceite integrado em ambiente virtual novo. As verifica
 
 ## Extras — contratos e módulos
 
-Os [contratos e a divisão das duas branches](docs/EXTRA_E0.md) estão definidos documentalmente. [E1](docs/EXTRA_ASSISTENCIA_CONTESTACOES.md) entrega o módulo de rascunhos e [E2](docs/EXTRA_CONTINUIDADE_ALERTAS.md) entrega exportação/leitura de pendências com eventos e referências preservados. A CLI acima permanece inalterada: integração/publicação de extras ainda pendentes. E2-P mantém faturamento posterior bloqueado, sem controle de já faturados ou apresentação da nota presumidos. E3–E5 não iniciadas; decisões financeiras e o alvo validado permanecem preservados.
+Os [contratos e a divisão das duas branches](docs/EXTRA_E0.md) estão definidos documentalmente. [E1](docs/EXTRA_ASSISTENCIA_CONTESTACOES.md) entrega o módulo de rascunhos e [E2/E3](docs/EXTRA_CONTINUIDADE_ALERTAS.md) entregam continuidade e alertas. E2-P mantém faturamento posterior bloqueado. E4 não iniciada; E5 ainda pendente.
+
+E3 é ativada por `[extras.alertas].habilitado=true` no TOML fornecido, somente na saída do escopo alvo, sem novo argumento de CLI. Uma pendência por lojista explicitamente em `contratos_bloqueados`, com pico do saldo de antecipações/reversões **ao fim de cada dia**, sem valor mínimo e sem inferir histórico. O motivo cita cada reversão e declara exposição anterior desconhecida. Reversão sem original disponível no período é listada sem abater. O rastro soma apenas movimentos até o dia do pico; não é comissão ou cobrança. Desativar com `habilitado=false`; o mínimo continua sem linhas de alerta. Falha de fonte/critério bloqueia somente o resultado dependente.
+
+Referência conferida em setembro: uma nova pendência com pico de R$ 183.581,24 em 24/09, total antecipado R$ 235.943,10 e saldo final observado R$ 127.230,96. Valores não estão fixados no código. Comissões, divergências, notas e lançamentos não mudam; somente pendências, rastro e manifesto recebem E3. D-10 está confirmada e não é tratada como pendente nos novos rascunhos/snapshots. A integração CLI/publicação de E1/E2 continua futura.

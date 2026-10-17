@@ -77,7 +77,7 @@ class ContestacoesTest(unittest.TestCase):
         self.assertIn("4.56 BRL", r["texto"])
         self.assertIn("Reportado no relatório: -12.00 BRL; solicitado até o contrato: -17.25", r["texto"])
         self.assertNotIn("-12.69", r["texto"])
-        self.assertIn("D-10 continua pendente", r["texto"])
+        self.assertIn("D-10 confirmada", r["texto"])
 
     def test_naturezas_nao_cobraveis_nao_entram(self):
         v = visao_vazia()

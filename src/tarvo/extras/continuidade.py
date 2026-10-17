@@ -14,7 +14,7 @@ from ..modelos import ErroEntrada, Evento
 
 LIMITACOES = [
     "E2-P: controle de já faturados, aprovação comercial e apresentação da competência original ainda pendentes; faturamento desabilitado.",
-    "D-10: natureza do ajuste da Ponte permanece pendente de confirmação financeira; nenhuma regra alterada.",
+    "D-10 confirmada: ajuste abate 50% do Spread R$ negativo uma vez, conforme Financeiro 11:33 e checkpoint 2.",
     "Contrato/vigência precisam de evidência comercial; snapshot e leitura não autorizam cobrança.",
 ]
 
@@ -258,7 +258,9 @@ def ler_pendencias(documento):
         _exigir(isinstance(digest, str) and sha256(_canonico(pacote).encode("utf-8")).hexdigest() == digest,
                 "Integridade do conteúdo de continuidade não confere")
         pacote["sha256_conteudo"] = digest
-        _exigir(pacote["faturamento_habilitado"] is False and pacote["limitacoes_financeiras"] == LIMITACOES,
+        legado = list(LIMITACOES)
+        legado[1] = "D-10: natureza do ajuste da Ponte permanece pendente de confirmação financeira; nenhuma regra alterada."
+        _exigir(pacote["faturamento_habilitado"] is False and pacote["limitacoes_financeiras"] in (LIMITACOES, legado),
                 "E2-P: documento não pode habilitar faturamento ou remover decisões pendentes")
         _exigir(pacote["situacao"] in {"COMPLETO", "PARCIAL", "BLOQUEADO"} and type(pacote["origem_provisoria"]) is bool,
                 "Estado de continuidade inválido")
