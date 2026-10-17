@@ -1,0 +1,2035 @@
+{
+  "versao": 8,
+  "escopo": "CHECKOUT_MINIMO",
+  "etapa": "ALVO_A6",
+  "situacao": "COMPLETO",
+  "escopo_situacao": "CHECKOUT",
+  "competencia": "2026-09",
+  "motivos": [],
+  "fontes": {
+    "regras": {
+      "arquivo": "regras.toml",
+      "situacao": "DISPONIVEL",
+      "sha256": "13eb26507c9f8c7a26528f1aa4bebd85b5d7722c66779c0c32fcbaec131c7900",
+      "metadados_incompletos": [
+        {
+          "id": "OBS_BRIDGE_ANTERIOR",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "OBS_BRIDGE_NOVA",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "OBS_MUNDO_ABERTO",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "D-07",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "D-04",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "D-06",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "PONTE_RN31_RN32_D02_D10",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_ORBE_RECEBIVEIS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_TRANSFERENCIA_PROPRIA",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_TARIFAS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_FOLHA",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_INSS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_FGTS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_ISS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_IRRF",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_PIS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_COFINS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_CONDOMINIO",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_CLOUD",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_SOFTWARE",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_CONTABILIDADE",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_REPASSE_LOJISTAS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_CREDITO_NAO_IDENTIFICADO",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "AURORA_REPASSE_DEVOLVIDO",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_RECURSOS_LOJISTAS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_LIQUIDACAO_REMESSAS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_COMISSAO_A_RECEBER",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_TRANSFERENCIA_PROPRIA",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_APLICACAO",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_RESGATE",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_RENDIMENTO",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_TARIFAS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_SEGUROS",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        },
+        {
+          "id": "MERIDIANO_IOF",
+          "campo": "aprovado_em",
+          "valor": "NAO_INFORMADO"
+        }
+      ],
+      "parametros_remessa": {
+        "id": "PONTE_RN31_RN32_D02_D10",
+        "participacao_fracao": "0.5",
+        "spread_padrao_fracao": "0.015",
+        "tolerancia_pp": "0.01",
+        "fonte": "docs/documentação-geral.md RN-28 a RN-41, D-02, D-05, D-10 e D-11; Slack 2026-10-16 20:48, 20:58 e 21:13; Slack 2026-10-17 11:33",
+        "aprovacao": "Financeiro confirmou participação, spread padrão e o tratamento do ajuste (D-10, 11:33); time definiu tolerância D-02 e critério percentual D-05.",
+        "aprovador": "Financeiro (RN-31/RN-32/D-10); time (D-02/D-05)",
+        "aprovado_em": "NAO_INFORMADO",
+        "natureza": "DECISAO_TIME"
+      },
+      "vigencias_spread": [
+        {
+          "id": "SPREAD_MUNDO_ABERTO_DESDE_JULHO",
+          "cnpj": "17217888000111",
+          "inicio": "2026-07-01",
+          "fonte": "docs/documentação-geral.md RN-28; Slack 2026-10-16 20:48 e 20:58; XLSX Taxas vigentes L15, observação spread negociado em jul/26",
+          "aprovacao": "Spread registrado desde julho; não aplicar retroativamente a meses anteriores sem contrato confirmado.",
+          "aprovador": "Financeiro (papel documentado; nome não individualizado)",
+          "aprovado_em": "2026-10-16T20:58:00-03:00",
+          "natureza": "FINANCEIRA"
+        }
+      ],
+      "parametros_notas": {
+        "NOTAS_CHECKOUT": {
+          "id": "NOTAS_CHECKOUT_RN42_RN43_RN45",
+          "servico": "Intermediação de pagamentos checkout",
+          "fonte": "docs/documentação-geral.md RN-42, RN-43 e RN-45; Slack 2026-10-16 20:47",
+          "aprovacao": "Uma proposta por lojista/competência com saldo positivo; zero/negativo fica pendente, sem transporte. Discriminação por serviço e competência.",
+          "aprovador": "Financeiro (papel documentado; nome não individualizado)",
+          "aprovado_em": "2026-10-16T20:47:00-03:00",
+          "natureza": "FINANCEIRA"
+        },
+        "NOTAS_REMESSA": {
+          "id": "NOTAS_REMESSA_RN37_RN43_RN44_RN45",
+          "servico": "Intermediação de remessas",
+          "tomador_cnpj": "75374179000146",
+          "tomador": "Ponte Câmbio",
+          "fonte": "docs/documentação-geral.md RN-37, RN-43, RN-44 e RN-45; Slack 2026-10-16 20:47 e 2026-10-17 11:33 (D-10)",
+          "aprovacao": "Uma proposta única à Ponte pelo saldo da participação validada no mês, incluindo ajuste; sem nota por lojista/complementar. Ajuste D-10 abate a participação do mês dentro dessa nota.",
+          "aprovador": "Financeiro (regra de notas e D-10)",
+          "aprovado_em": "2026-10-17T11:33:00-03:00",
+          "natureza": "FINANCEIRA"
+        }
+      },
+      "parametros_classificacao_aurora": [
+        {
+          "id": "AURORA_ORBE_RECEBIVEIS",
+          "padrao": "^ted recebida (?:[0-9./-]+ )?orbe adquirencia\\b",
+          "sinal": "CREDITO",
+          "conta_codigo": "1.1.03.001",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-56, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_TRANSFERENCIA_PROPRIA",
+          "padrao": "^transf entre contas p/ bco meridiano ag 0091 cc 90233-5$",
+          "sinal": "DEBITO",
+          "conta_codigo": "1.1.09.001",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-54, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_TARIFAS",
+          "padrao": "^tar (?:pacote servicos pj|ted/pix avulsas)\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "4.2.01",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_FOLHA",
+          "padrao": "^pagto salarios\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "2.1.04.001",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_INSS",
+          "padrao": "^gps inss\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "2.1.04.002",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_FGTS",
+          "padrao": "^grf fgts\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "2.1.04.003",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_ISS",
+          "padrao": "^pagto iss\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "2.1.03.003",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_IRRF",
+          "padrao": "^debito darf 0561 irrf\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "2.1.03.004",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_PIS",
+          "padrao": "^debito darf 8109 pis\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "2.1.03.001",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_COFINS",
+          "padrao": "^debito darf 2172 cofins\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "2.1.03.002",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_CONDOMINIO",
+          "padrao": "^boleto (?:condominio|aluguel)\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "4.2.02",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_CLOUD",
+          "padrao": "^deb aut amazon web services\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "4.2.03",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_SOFTWARE",
+          "padrao": "^cartao pj - google workspace\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "4.2.04",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_CONTABILIDADE",
+          "padrao": "^pix enviado contabilidade\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "4.2.06",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_REPASSE_LOJISTAS",
+          "padrao": "^pix enviado (?:rota global|novo horizonte|kiwi experience|andes expedicoes|dublin hub|sol nascente|vela turismo|mundo aberto|casa do estudante|edu abroad|oxford prep|bem-vindo exchange|escola bridge|horizonte viagens|atlas idiomas|maple study|lisboa cursos|trilha jovem|canguru intercambios|fluente idiomas|bagagem livre|campus global)(?: |$)",
+          "sinal": "DEBITO",
+          "conta_codigo": "2.1.01.001",
+          "fonte": "docs/documentação-geral.md RN-19 e RN-46, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "AURORA_CREDITO_NAO_IDENTIFICADO",
+          "padrao": "^pix recebido .*\\bsem identificacao\\b",
+          "sinal": "CREDITO",
+          "conta_codigo": "1.1.09.002",
+          "fonte": "docs/documentação-geral.md RN-52, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA",
+          "pendencia_tipo": "CREDITO_NAO_IDENTIFICADO",
+          "motivo": "Crédito sem identificação do pagador; não representa receita (RN-52).",
+          "proximo_passo": "Identificar pagador e finalidade com o Financeiro antes de reclassificar; não reconhecer receita.",
+          "quem_decide": "Financeiro"
+        },
+        {
+          "id": "AURORA_REPASSE_DEVOLVIDO",
+          "padrao": "^devolucao pix - mundo aberto\\b",
+          "sinal": "CREDITO",
+          "conta_codigo": "2.1.01.001",
+          "fonte": "docs/documentação-geral.md RN-53 e D-06, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "aprovacao": "D-06: repasse devolvido volta a ser devido ao lojista em 2.1.01.001; motivo da devolução requer revisão.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "DECISAO_TIME",
+          "pendencia_tipo": "REPASSE_DEVOLVIDO",
+          "motivo": "Repasse devolvido continua devido ao lojista; motivo do retorno desconhecido (RN-53/D-06).",
+          "proximo_passo": "Investigar motivo do retorno e validar novo repasse; não reconhecer receita nem executar pagamento automaticamente.",
+          "quem_decide": "Financeiro"
+        }
+      ],
+      "parametros_classificacao_meridiano": [
+        {
+          "id": "MERIDIANO_RECURSOS_LOJISTAS",
+          "padrao": "^pix receb (?:lisboa cursos|mundo aberto|nordica educacao|dublin hub|casa do estudante|edu abroad|rota global|kiwi experience|canguru intercambios|novo horizonte|maple study|ponte aerea estudantil|bagagem livre|bem-vindo exchange)(?: |$)",
+          "sinal": "CREDITO",
+          "conta_codigo": "2.1.02.001",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-55, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "MERIDIANO_LIQUIDACAO_REMESSAS",
+          "padrao": "^ted enviada ponte cambio sa liq operacoes$",
+          "sinal": "DEBITO",
+          "conta_codigo": "2.1.02.001",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "MERIDIANO_COMISSAO_A_RECEBER",
+          "padrao": "^ted receb ponte cambio sa repasse comissao\\b",
+          "sinal": "CREDITO",
+          "conta_codigo": "1.1.03.002",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-49, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "MERIDIANO_TRANSFERENCIA_PROPRIA",
+          "padrao": "^ted recebida tarvo pagamentos ltda - mesma titularidade$",
+          "sinal": "CREDITO",
+          "conta_codigo": "1.1.09.001",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-54, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "MERIDIANO_APLICACAO",
+          "padrao": "^aplicacao automatica cdb di$",
+          "sinal": "DEBITO",
+          "conta_codigo": "1.1.02.001",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "MERIDIANO_RESGATE",
+          "padrao": "^resgate automatico cdb di$",
+          "sinal": "CREDITO",
+          "conta_codigo": "1.1.02.001",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "MERIDIANO_RENDIMENTO",
+          "padrao": "^rendimento aplic automatica$",
+          "sinal": "CREDITO",
+          "conta_codigo": "3.2.01",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "MERIDIANO_TARIFAS",
+          "padrao": "^tarifa (?:manutencao conta pj|pacote cambio)$",
+          "sinal": "DEBITO",
+          "conta_codigo": "4.2.01",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "MERIDIANO_SEGUROS",
+          "padrao": "^seguro empresarial parc\\b",
+          "sinal": "DEBITO",
+          "conta_codigo": "4.2.05",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-50, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        },
+        {
+          "id": "MERIDIANO_IOF",
+          "padrao": "^iof s/ operacao credito$",
+          "sinal": "DEBITO",
+          "conta_codigo": "4.3.01",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
+          "aprovador": "Financeiro (critério); time (mapeamento técnico)",
+          "aprovado_em": "NAO_INFORMADO",
+          "natureza": "INTERPRETACAO_TECNICA"
+        }
+      ]
+    },
+    "orbe": {
+      "situacao": "DISPONIVEL",
+      "arquivos": [
+        {
+          "arquivo": "01_orbe_relatorio_comissoes_set2026.csv",
+          "sha256": "fdbc2bad2dd38dde8bf3af9d5c1f21116f0eae8d71d6a5a16b0dfd82de3cc7ec",
+          "situacao": "DISPONIVEL",
+          "linhas": 1943
+        },
+        {
+          "arquivo": "06_orbe_ajustes_tardios_set2026.csv",
+          "sha256": "b1cfd183945fb194e05cfbe9455ab364c31b676427e6653562f6821f57240292",
+          "situacao": "DISPONIVEL",
+          "linhas": 14
+        }
+      ]
+    },
+    "taxas": {
+      "arquivo": "02_tabela_taxas_contratadas.xlsx",
+      "situacao": "DISPONIVEL",
+      "sha256": "d0c7d2b13ac41c2a036a40362eb26c341666feef74d7199284742c255885dfc4"
+    },
+    "ponte": {
+      "situacao": "DISPONIVEL",
+      "arquivos": [
+        {
+          "arquivo": "03_email_ponte_cambio_relatorio_set2026.eml",
+          "sha256": "e36808cab907df4b598d0022ae92af99c9b7c281a5d619d91e64d163f42e6f8f",
+          "anexos": [
+            {
+              "arquivo": "PonteCambio_Relatorio_TARVO_092026.xlsx",
+              "sha256": "c7d4e137fe7ee00ae5838cc229bfed87b34aca3e3495518921f6bc19c607fc26",
+              "linhas": 233
+            }
+          ],
+          "situacao": "DISPONIVEL"
+        }
+      ],
+      "avisos": [],
+      "competencias": [
+        "2026-09"
+      ],
+      "competencia": "2026-09",
+      "motivo": ""
+    },
+    "contratos_remessa": {
+      "situacao": "DISPONIVEL",
+      "arquivo": "02_tabela_taxas_contratadas.xlsx",
+      "sha256": "d0c7d2b13ac41c2a036a40362eb26c341666feef74d7199284742c255885dfc4"
+    },
+    "plano_contas": {
+      "arquivo": "04_plano_de_contas_fenix_erp.csv",
+      "sha256": "fb99c63b151c2a029c86475eb2551e4af7722a055dc24137244a2411e7876d72",
+      "contas_lidas": 52,
+      "situacao": "DISPONIVEL"
+    },
+    "aurora": {
+      "arquivo": "05a_extrato_banco_aurora_cc4471_set2026.csv",
+      "sha256": "7303b72fa76d227a863279a36726411605d93fb63237f0cae638c111a70d2d92",
+      "ingestao": {
+        "linhas_fisicas": 95,
+        "ignoradas": [
+          {
+            "ref": "L8",
+            "motivo": "SALDO_OU_RODAPE"
+          },
+          {
+            "ref": "L93",
+            "motivo": "LINHA_VAZIA"
+          },
+          {
+            "ref": "L94",
+            "motivo": "SALDO_OU_RODAPE"
+          },
+          {
+            "ref": "L95",
+            "motivo": "SALDO_OU_RODAPE"
+          }
+        ],
+        "movimentos_lidos": 84
+      },
+      "competencia": "2026-09",
+      "fora_competencia": 0,
+      "situacao": "DISPONIVEL"
+    },
+    "meridiano": {
+      "arquivo": "05b_extrato_banco_meridiano_cc90233_set2026.ofx",
+      "sha256": "27f11fae20c1fb69e2ca47885f6082690fe5db5cd13ddf3e407ef3cb29e33283",
+      "ingestao": {
+        "encoding": "cp1252",
+        "conta": {
+          "BANKID": "0477",
+          "BRANCHID": "0091",
+          "ACCTID": "90233-5",
+          "ACCTTYPE": "CHECKING"
+        },
+        "inicio": "2026-09-01",
+        "fim": "2026-09-30",
+        "movimentos_lidos": 100,
+        "fitids_repetidos": [],
+        "fitids_ausentes": 0
+      },
+      "competencia": "2026-09",
+      "fora_competencia": 0,
+      "situacao": "DISPONIVEL"
+    }
+  },
+  "rastro_validado": true,
+  "ingestao": {
+    "linhas_recebidas": 1957,
+    "fora_competencia": 0,
+    "competencias": [
+      "2026-09"
+    ],
+    "ocorrencias_duplicadas": 0,
+    "ids_conflitantes": []
+  },
+  "avisos": [],
+  "cobertura": {
+    "linhas_lidas": 1957,
+    "calculadas": 1900,
+    "pendentes": 57,
+    "bloqueadas": 0
+  },
+  "total_parcial_brl": "203735.34",
+  "pendencias": [
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88421353",
+      "linha": 608,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1292.63",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "45.11"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88423234",
+      "linha": 681,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "7551.55",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "339.06"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88418299",
+      "linha": 687,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "957.70",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "38.21"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88422170",
+      "linha": 716,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "7810.21",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "311.62"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88423562",
+      "linha": 786,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "6218.54",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "279.21"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88410188",
+      "linha": 803,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1918.29",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "76.53"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88425538",
+      "linha": 820,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "203.46",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "2.01"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88425685",
+      "linha": 848,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "5461.51",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "245.22"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88417174",
+      "linha": 879,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "7567.58",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "301.94"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88413600",
+      "linha": 902,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "2794.19",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "97.51"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88417783",
+      "linha": 919,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "3742.59",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "130.61"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88412107",
+      "linha": 936,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1394.81",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "48.67"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "AN88445637",
+      "linha": 949,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "52361.86",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "1099.59"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88428032",
+      "linha": 950,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "504.60",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "4.99"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "AN88445646",
+      "linha": 951,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "22223.80",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "466.69"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88428488",
+      "linha": 957,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "939.45",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "9.30"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88427530",
+      "linha": 966,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "7000.39",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "314.31"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "AN88445703",
+      "linha": 971,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "51942.03",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "1090.78"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "AN88445766",
+      "linha": 976,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "53065.13",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "1114.36"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88429366",
+      "linha": 1025,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "2506.25",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "99.99"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88428508",
+      "linha": 1052,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1008.53",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "35.19"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88430278",
+      "linha": 1104,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "521.25",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "18.19"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "AN88446030",
+      "linha": 1122,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "-52361.86",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "-1099.59"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88430524",
+      "linha": 1123,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "298.85",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "5.94"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88430846",
+      "linha": 1129,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1569.79",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "54.78"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88414356",
+      "linha": 1139,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "5617.94",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "224.15"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88430812",
+      "linha": 1177,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "3760.11",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "150.02"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88419921",
+      "linha": 1222,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "3479.67",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "138.83"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88431921",
+      "linha": 1252,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "3538.98",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "158.90"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88433440",
+      "linha": 1279,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1782.57",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "71.12"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88433459",
+      "linha": 1304,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "256.15",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "5.09"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88433374",
+      "linha": 1318,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "583.72",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "5.77"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88433751",
+      "linha": 1321,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "710.35",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "7.03"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88411311",
+      "linha": 1354,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "2821.87",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "112.59"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88434732",
+      "linha": 1388,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "2850.33",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "28.21"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88436129",
+      "linha": 1399,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "2672.89",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "106.64"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88435925",
+      "linha": 1410,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "444.02",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "8.83"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88435943",
+      "linha": 1439,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "3752.96",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "149.74"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88417414",
+      "linha": 1484,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "5687.98",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "255.39"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88415360",
+      "linha": 1500,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1599.33",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "63.81"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88446499",
+      "linha": 1512,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "-521.25",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "-18.19"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88410385",
+      "linha": 1519,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1033.78",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "10.23"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "AN88446517",
+      "linha": 1520,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "56350.28",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "1183.35"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88437771",
+      "linha": 1551,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "2853.15",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "99.57"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88437854",
+      "linha": 1552,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "5011.64",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "199.96"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88438901",
+      "linha": 1556,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "569.26",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "5.63"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88440207",
+      "linha": 1640,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "3017.94",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "120.41"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "AN88446660",
+      "linha": 1642,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "-56350.28",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "-1183.35"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88419007",
+      "linha": 1768,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "5981.11",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "238.64"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88412755",
+      "linha": 1796,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "2370.93",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "82.74"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88443476",
+      "linha": 1865,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "3117.97",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "139.99"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88442802",
+      "linha": 1871,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1862.08",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "64.98"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88444518",
+      "linha": 1882,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "3030.59",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "120.92"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88413941",
+      "linha": 1883,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "2916.27",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "101.77"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88444426",
+      "linha": 1913,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "246.20",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "2.43"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88444140",
+      "linha": 1928,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "875.69",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "30.56"
+    },
+    {
+      "arquivo_origem": "01_orbe_relatorio_comissoes_set2026.csv",
+      "ref_origem": "TX88413380",
+      "linha": 1944,
+      "motivo": "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência.",
+      "quem_decide": "Comercial",
+      "valor_bruto_brl": "1721.25",
+      "cnpj": "39566044000119",
+      "identidade_origem": "02_tabela_taxas_contratadas.xlsx",
+      "ref_identidade": "ANTIGO 2025 - nao usar!L8",
+      "vinculo_identidade": "IDENTIDADE_ATLAS",
+      "categoria": "NEGOCIO",
+      "tipo": "CONTRATO_PENDENTE",
+      "proximo_passo": "Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar.",
+      "valor_orbe_brl": "60.07"
+    }
+  ],
+  "decisoes_financeiras_pendentes": [],
+  "decisoes_documentadas": [
+    {
+      "id": "D-07",
+      "descricao": "Atlas fora das comissões; identidade e cobrança efetiva da Orbe preservadas nas pendências comerciais.",
+      "fonte": "docs/documentação-geral.md D-07 / RN-17",
+      "aprovador": "Time (apresentação); Financeiro (não faturar)",
+      "aprovado_em": "NAO_INFORMADO"
+    },
+    {
+      "id": "RN-64 (antiga D-08)",
+      "descricao": "Casa: devolução líquida pelo cobrado efetivamente nas linhas elegíveis, abatendo estornos de vendas isentas. Referência: R$ 15.405,85 em vendas/antecipações menos R$ 9,08 de estorno elegível = R$ 15.396,77 em 118 linhas, nunca constante de cálculo.",
+      "fonte": "docs/documentação-geral.md RN-64; Financeiro, Slack 2026-10-17 12:50; consolidação 13h15",
+      "aprovador": "Financeiro",
+      "aprovado_em": "2026-10-17T12:50:00-03:00"
+    },
+    {
+      "id": "RN-64-RECORTE",
+      "descricao": "Esclarecimento atual do usuário substitui a interpretação anterior de exclusão genérica: incluir estornos cuja venda original seja isenta; excluir estorno de agosto, cuja venda não é isenta.",
+      "fonte": "Esclarecimento explícito do usuário sobre RN-64 nesta conversa em 2026-10-17; docs/documentação-geral.md correção A2",
+      "aprovador": "Usuário nesta conversa; não atribuir nova aprovação ao Financeiro no Slack",
+      "aprovado_em": "2026-10-17"
+    },
+    {
+      "id": "D-10",
+      "descricao": "Ajuste da Ponte (AJUSTE REF PC-…) é mais uma operação: o Spread R$ negativo é spread, e a participação da Tarvo é 50% dele, aplicada uma vez; abate a nota única do mês em que aparece, com rastro para a operação original e sem nota complementar.",
+      "fonte": "Slack 2026-10-17 11:33 (Financeiro, resposta Desbravadores: ajuste é linha nova com Spread R$ negativo e abate a nossa participação); retorno do checkpoint 2 às 16:01 (ajuste da Ponte já respondido no canal); docs/documentação-geral.md D-10",
+      "aprovacao": "Financeiro definiu o tratamento do ajuste em 11:33; a organização confirmou no checkpoint 2 que a pergunta das 12:04 já estava respondida. A metade segue a RN-31 (participação de 50% do spread realizado).",
+      "aprovador": "Financeiro (regra do ajuste); time (aplicação da RN-31 ao ajuste)",
+      "aprovado_em": "2026-10-17T11:33:00-03:00",
+      "natureza": "FINANCEIRA"
+    },
+    {
+      "id": "D-04",
+      "descricao": "Aurora usa a linha física inicial do registro; L9 é a primeira transação do exemplo, não uma constante do leitor.",
+      "fonte": "docs/documentação-geral.md RN-57 e D-04; Context/context.md decisões do time",
+      "aprovacao": "Decisão documentada do time: referência física, inclusive com preâmbulo.",
+      "aprovador": "Time (decisão técnica documentada)",
+      "aprovado_em": "NAO_INFORMADO",
+      "natureza": "DECISAO_TIME"
+    },
+    {
+      "id": "D-06",
+      "descricao": "Repasse devolvido da RN-53 em 2.1.01.001: volta a ser devido ao lojista; motivo do retorno permanece pendente.",
+      "fonte": "docs/documentação-geral.md RN-53 e D-06; Slack 16/10 20:49 e 17/10 09:48 (critério); decisão do time (conta)",
+      "aprovacao": "Financeiro aceitou 2.1.01.001 ou 2.1.01.002 com motivo; time escolheu a primeira pela obrigação de repasse.",
+      "aprovador": "Financeiro (critério); time (escolha D-06)",
+      "aprovado_em": "NAO_INFORMADO",
+      "natureza": "DECISAO_TIME"
+    }
+  ],
+  "fora_do_escopo": [
+    "extras"
+  ],
+  "escopo_comando": "alvo",
+  "situacao_comando": "COMPLETO",
+  "fechamento": {
+    "escopo": "ALVO",
+    "situacao": "COMPLETO",
+    "partes": [
+      "DIVERGENCIAS_CHECKOUT",
+      "DEVOLUCAO_CASA",
+      "REMESSAS",
+      "DIVERGENCIAS_REMESSA",
+      "CHECKOUT",
+      "PENDENCIAS_CHECKOUT",
+      "NOTAS_CHECKOUT",
+      "NOTAS_REMESSA",
+      "EXTRATO_AURORA",
+      "EXTRATO_MERIDIANO"
+    ],
+    "bloqueadas": [],
+    "provisorias": []
+  },
+  "partes": {
+    "DIVERGENCIAS_CHECKOUT": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "orbe",
+          "taxas",
+          "regras"
+        ],
+        "partes": []
+      },
+      "fontes": {
+        "orbe": "DISPONIVEL",
+        "taxas": "DISPONIVEL",
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "divergencias_taxa.csv",
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 1957,
+        "calculadas": 1900,
+        "pendentes": 57,
+        "bloqueadas": 0
+      }
+    },
+    "DEVOLUCAO_CASA": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "orbe",
+          "taxas",
+          "regras"
+        ],
+        "partes": []
+      },
+      "fontes": {
+        "orbe": "DISPONIVEL",
+        "taxas": "DISPONIVEL",
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 118,
+        "calculadas": 118,
+        "pendentes": 0,
+        "bloqueadas": 0
+      }
+    },
+    "REMESSAS": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "ponte",
+          "regras"
+        ],
+        "partes": []
+      },
+      "fontes": {
+        "ponte": "DISPONIVEL",
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "comissoes_por_lojista.csv",
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 233,
+        "calculadas": 228,
+        "pendentes": 5,
+        "bloqueadas": 0
+      }
+    },
+    "DIVERGENCIAS_REMESSA": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "ponte",
+          "contratos_remessa",
+          "regras"
+        ],
+        "partes": []
+      },
+      "fontes": {
+        "ponte": "DISPONIVEL",
+        "contratos_remessa": "DISPONIVEL",
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "divergencias_taxa.csv",
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 233,
+        "calculadas": 228,
+        "pendentes": 5,
+        "bloqueadas": 0
+      }
+    },
+    "CHECKOUT": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "orbe",
+          "taxas",
+          "regras"
+        ],
+        "partes": []
+      },
+      "fontes": {
+        "orbe": "DISPONIVEL",
+        "taxas": "DISPONIVEL",
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "comissoes_por_lojista.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 1957,
+        "calculadas": 1900,
+        "pendentes": 57,
+        "bloqueadas": 0
+      }
+    },
+    "PENDENCIAS_CHECKOUT": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "orbe",
+          "taxas",
+          "regras"
+        ],
+        "partes": []
+      },
+      "fontes": {
+        "orbe": "DISPONIVEL",
+        "taxas": "DISPONIVEL",
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 57,
+        "calculadas": 0,
+        "pendentes": 57,
+        "bloqueadas": 0
+      }
+    },
+    "NOTAS_CHECKOUT": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "regras"
+        ],
+        "partes": [
+          "CHECKOUT"
+        ]
+      },
+      "fontes": {
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "notas_a_emitir.csv",
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 21,
+        "calculadas": 20,
+        "pendentes": 1,
+        "bloqueadas": 0
+      }
+    },
+    "NOTAS_REMESSA": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "regras"
+        ],
+        "partes": [
+          "REMESSAS"
+        ]
+      },
+      "fontes": {
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "notas_a_emitir.csv",
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 14,
+        "calculadas": 14,
+        "pendentes": 0,
+        "bloqueadas": 0
+      }
+    },
+    "EXTRATO_AURORA": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "aurora",
+          "plano_contas",
+          "regras"
+        ],
+        "partes": []
+      },
+      "fontes": {
+        "aurora": "DISPONIVEL",
+        "plano_contas": "DISPONIVEL",
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "lancamentos_classificados.csv",
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 84,
+        "calculadas": 84,
+        "pendentes": 0,
+        "bloqueadas": 0
+      }
+    },
+    "EXTRATO_MERIDIANO": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "meridiano",
+          "plano_contas",
+          "regras"
+        ],
+        "partes": []
+      },
+      "fontes": {
+        "meridiano": "DISPONIVEL",
+        "plano_contas": "DISPONIVEL",
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "lancamentos_classificados.csv",
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 100,
+        "calculadas": 100,
+        "pendentes": 0,
+        "bloqueadas": 0
+      }
+    }
+  },
+  "resultados": {
+    "comissoes_por_lojista.csv": {
+      "situacao": "COMPLETO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "alvo",
+      "partes": [
+        "REMESSAS",
+        "CHECKOUT"
+      ],
+      "partes_bloqueadas": [],
+      "motivos": [],
+      "linhas": 35
+    },
+    "divergencias_taxa.csv": {
+      "situacao": "COMPLETO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "alvo",
+      "partes": [
+        "DIVERGENCIAS_CHECKOUT",
+        "DIVERGENCIAS_REMESSA"
+      ],
+      "partes_bloqueadas": [],
+      "motivos": [],
+      "linhas": 115
+    },
+    "notas_a_emitir.csv": {
+      "situacao": "COMPLETO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "alvo",
+      "partes": [
+        "NOTAS_CHECKOUT",
+        "NOTAS_REMESSA"
+      ],
+      "partes_bloqueadas": [],
+      "motivos": [],
+      "linhas": 21
+    },
+    "lancamentos_classificados.csv": {
+      "situacao": "COMPLETO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "alvo",
+      "partes": [
+        "EXTRATO_AURORA",
+        "EXTRATO_MERIDIANO"
+      ],
+      "partes_bloqueadas": [],
+      "motivos": [],
+      "linhas": 184
+    },
+    "pendencias.csv": {
+      "situacao": "COMPLETO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "alvo",
+      "partes": [
+        "DIVERGENCIAS_CHECKOUT",
+        "DEVOLUCAO_CASA",
+        "REMESSAS",
+        "DIVERGENCIAS_REMESSA",
+        "PENDENCIAS_CHECKOUT",
+        "NOTAS_CHECKOUT",
+        "NOTAS_REMESSA",
+        "EXTRATO_AURORA",
+        "EXTRATO_MERIDIANO"
+      ],
+      "partes_bloqueadas": [],
+      "motivos": [],
+      "linhas": 83
+    },
+    "rastro.csv": {
+      "situacao": "COMPLETO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "alvo",
+      "partes": [
+        "DIVERGENCIAS_CHECKOUT",
+        "DEVOLUCAO_CASA",
+        "REMESSAS",
+        "DIVERGENCIAS_REMESSA",
+        "CHECKOUT",
+        "PENDENCIAS_CHECKOUT",
+        "NOTAS_CHECKOUT",
+        "NOTAS_REMESSA",
+        "EXTRATO_AURORA",
+        "EXTRATO_MERIDIANO"
+      ],
+      "partes_bloqueadas": [],
+      "motivos": [],
+      "linhas": 5080
+    }
+  },
+  "publicacao_concluida": true,
+  "arquivos": {
+    "comissoes_por_lojista.csv": "c441ef1b5ea5eeb5395aae68de748a1f5f7c67f950f6cf6976a9597f9ede3572",
+    "divergencias_taxa.csv": "a570355cfc449062f82bca1897a3c44405cb55765eaa6d987c5378e6b0c613c9",
+    "notas_a_emitir.csv": "6cf567c3d233152a64f37f00e21f3b2efdad14262243700e49a3eeaafc3ecc57",
+    "lancamentos_classificados.csv": "e55b99e52476fe4b0f7274f1d67cbdeca5dcd5ba04c40c7ec25645f361e153bd",
+    "pendencias.csv": "159a80fd39eb4ac838c414d2028f3c14b083e4f6bb10a532d7e33196d6a5e7ea",
+    "rastro.csv": "e3df1175eecf49232c7abc15103659001937876b4cd619f04095f59ba22daf78"
+  }
+}

@@ -1,0 +1,49 @@
+# Segredos
+.env
+.env.*
+!.env.example
+
+# Data pack original
+data/raw/*
+!data/raw/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+build/
+.tmp/
+
+# Node
+node_modules/
+
+# SO / editores
+.DS_Store
+.vscode/
+.idea/
+
+# Material do hackathon (não versionar)
+01_instrucoes_participantes.docx
+Tarvo_Data_Pack_set2026/
+
+# Local project context
+/Context/
+
+# Entrega oficial: seis CSVs e marcador de validade na raiz de saida/.
+# Ensaios e referências locais permanecem ignorados.
+/saida/*
+!/saida/.gitkeep
+!/saida/comissoes_por_lojista.csv
+!/saida/divergencias_taxa.csv
+!/saida/notas_a_emitir.csv
+!/saida/lancamentos_classificados.csv
+!/saida/pendencias.csv
+!/saida/rastro.csv
+!/saida/manifesto.json
+
+# PROMPTS/ integra a entrega obrigatória; não ignorar seu histórico.
+
+
