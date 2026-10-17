@@ -77,7 +77,7 @@ A1–A6 foram implementadas e A7 foi autorizada e validada tecnicamente. Extras 
 
 ## Riscos, decisões e limites
 
-- **D-10:** existe decisão do time de usar 50% do Spread R$ do ajuste, porém a pergunta financeira sobre a natureza do valor segue aberta. Manter parâmetro e proveniência explícitos; não anunciar confirmação do financeiro, nem aplicar 50% duas vezes. Regular e ajuste precisam de testes distintos.
+- **D-10:** respondida (Financeiro, Slack 11:33; confirmada pela organização no retorno do checkpoint 2, 16:01). O ajuste é mais uma operação: 50% do Spread R$ negativo, aplicado uma vez, na nota única do mês. Manter parâmetro e proveniência explícitos e não aplicar 50% duas vezes. Regular e ajuste precisam de testes distintos.
 - **Atlas:** contrato continua pendente para o Comercial. D-07 sobre apresentação está resolvida; taxa antiga segue proibida. Recuperação/faturamento posterior pertence ao extra, não ao alvo.
 - **Casa:** RN-64 resolveu a base da devolução; D-09 escolheu só pendência, sem linhas opcionais de divergência. Confirmar dados elegíveis pelo cálculo, nunca fixar totais. Referência atual: 117 vendas/antecipações, R$ 15.405,85, menos R$ 9,08 de estorno de venda isenta = R$ 15.396,77 líquidos em 118 linhas. Estorno de agosto não isento fica fora. A interpretação anterior de exclusão genérica foi corrigida pelo esclarecimento do usuário. Não reabrir D-08 como decisão pendente.
 - **D-02, D-05 e D-06:** decisões existentes do time, não regras novas a inventar. Preservar tolerância de spread, critério percentual da Mundo Aberto e conta 2.1.01.001 para repasse devolvido, com fonte/data no TOML quando implementados.
