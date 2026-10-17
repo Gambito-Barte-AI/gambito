@@ -10,7 +10,7 @@
     "regras": {
       "arquivo": "regras.toml",
       "situacao": "DISPONIVEL",
-      "sha256": "e150651f5023a4b71aa550cf701f9e376c33d144ec07725a7a3efcfb50eb6c49",
+      "sha256": "13eb26507c9f8c7a26528f1aa4bebd85b5d7722c66779c0c32fcbaec131c7900",
       "metadados_incompletos": [
         {
           "id": "OBS_BRIDGE_ANTERIOR",
@@ -39,11 +39,6 @@
         },
         {
           "id": "D-06",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "D-10",
           "campo": "aprovado_em",
           "valor": "NAO_INFORMADO"
         },
@@ -194,8 +189,8 @@
         "spread_padrao_fracao": "0.015",
         "tolerancia_pp": "0.01",
         "fonte": "docs/documentação-geral.md RN-28 a RN-41, D-02, D-05, D-10 e D-11; Slack 2026-10-16 20:48, 20:58 e 21:13; Slack 2026-10-17 11:33",
-        "aprovacao": "Financeiro confirmou participação e spread padrão; time definiu tolerância D-02, critério percentual D-05 e 50% para ajuste D-10. Natureza do ajuste continua pendente para o Financeiro.",
-        "aprovador": "Financeiro (RN-31/RN-32); time (D-02/D-05/D-10); confirmação financeira de D-10 pendente",
+        "aprovacao": "Financeiro confirmou participação, spread padrão e o tratamento do ajuste (D-10, 11:33); time definiu tolerância D-02 e critério percentual D-05.",
+        "aprovador": "Financeiro (RN-31/RN-32/D-10); time (D-02/D-05)",
         "aprovado_em": "NAO_INFORMADO",
         "natureza": "DECISAO_TIME"
       },
@@ -226,9 +221,9 @@
           "servico": "Intermediação de remessas",
           "tomador_cnpj": "75374179000146",
           "tomador": "Ponte Câmbio",
-          "fonte": "docs/documentação-geral.md RN-37, RN-43, RN-44 e RN-45; Slack 2026-10-16 20:47 e 2026-10-17 11:33; D-10 continua pendente",
-          "aprovacao": "Uma proposta única à Ponte pelo saldo da participação validada no mês, incluindo ajuste; sem nota por lojista/complementar. Decisão do time sobre D-10 não equivale à ratificação financeira.",
-          "aprovador": "Financeiro (regra de notas); time (D-10, confirmação financeira pendente)",
+          "fonte": "docs/documentação-geral.md RN-37, RN-43, RN-44 e RN-45; Slack 2026-10-16 20:47 e 2026-10-17 11:33 (D-10)",
+          "aprovacao": "Uma proposta única à Ponte pelo saldo da participação validada no mês, incluindo ajuste; sem nota por lojista/complementar. Ajuste D-10 abate a participação do mês dentro dessa nota.",
+          "aprovador": "Financeiro (regra de notas e D-10)",
           "aprovado_em": "2026-10-17T11:33:00-03:00",
           "natureza": "FINANCEIRA"
         }
@@ -582,9 +577,7 @@
         }
       ],
       "avisos": [],
-      "competencias": [
-        "2026-09"
-      ],
+      "competencias": ["2026-09"],
       "competencia": "2026-09",
       "motivo": ""
     },
@@ -654,9 +647,7 @@
   "ingestao": {
     "linhas_recebidas": 1957,
     "fora_competencia": 0,
-    "competencias": [
-      "2026-09"
-    ],
+    "competencias": ["2026-09"],
     "ocorrencias_duplicadas": 0,
     "ids_conflitantes": []
   },
@@ -1582,16 +1573,7 @@
       "valor_orbe_brl": "60.07"
     }
   ],
-  "decisoes_financeiras_pendentes": [
-    {
-      "id": "D-10",
-      "descricao": "Financeiro ainda deve confirmar se ajuste Ponte representa spread integral ou participação da Tarvo.",
-      "tratamento_atual": "Time decidiu usar 50% do Spread R$ negativo, sem aplicar duas vezes; decisão aplicada em A3, sem ratificação financeira; cada ajuste mantém pendência explícita e rastro da operação original. A4 gera proposta pelo saldo líquido validado, sem emitir nota fiscal.",
-      "fonte": "docs/documentação-geral.md D-10 e pergunta Slack 17/10 12:04",
-      "aprovador": "Time; confirmação financeira pendente",
-      "aprovado_em": "NAO_INFORMADO"
-    }
-  ],
+  "decisoes_financeiras_pendentes": [],
   "decisoes_documentadas": [
     {
       "id": "D-07",
@@ -1615,6 +1597,15 @@
       "aprovado_em": "2026-10-17"
     },
     {
+      "id": "D-10",
+      "descricao": "Ajuste da Ponte (AJUSTE REF PC-…) é mais uma operação: o Spread R$ negativo é spread, e a participação da Tarvo é 50% dele, aplicada uma vez; abate a nota única do mês em que aparece, com rastro para a operação original e sem nota complementar.",
+      "fonte": "Slack 2026-10-17 11:33 (Financeiro, resposta Desbravadores: ajuste é linha nova com Spread R$ negativo e abate a nossa participação); retorno do checkpoint 2 às 16:01 (ajuste da Ponte já respondido no canal); docs/documentação-geral.md D-10",
+      "aprovacao": "Financeiro definiu o tratamento do ajuste em 11:33; a organização confirmou no checkpoint 2 que a pergunta das 12:04 já estava respondida. A metade segue a RN-31 (participação de 50% do spread realizado).",
+      "aprovador": "Financeiro (regra do ajuste); time (aplicação da RN-31 ao ajuste)",
+      "aprovado_em": "2026-10-17T11:33:00-03:00",
+      "natureza": "FINANCEIRA"
+    },
+    {
       "id": "D-04",
       "descricao": "Aurora usa a linha física inicial do registro; L9 é a primeira transação do exemplo, não uma constante do leitor.",
       "fonte": "docs/documentação-geral.md RN-57 e D-04; Context/context.md decisões do time",
@@ -1633,10 +1624,8 @@
       "natureza": "DECISAO_TIME"
     }
   ],
-  "fora_do_escopo": [
-    "extras"
-  ],
-  "escopo_comando": "checkout",
+  "fora_do_escopo": ["extras"],
+  "escopo_comando": "alvo",
   "situacao_comando": "COMPLETO",
   "fechamento": {
     "escopo": "ALVO",
@@ -1663,11 +1652,7 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "orbe",
-          "taxas",
-          "regras"
-        ],
+        "fontes": ["orbe", "taxas", "regras"],
         "partes": []
       },
       "fontes": {
@@ -1675,10 +1660,7 @@
         "taxas": "DISPONIVEL",
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "divergencias_taxa.csv",
-        "pendencias.csv"
-      ],
+      "relatorios": ["divergencias_taxa.csv", "pendencias.csv"],
       "cobertura": {
         "linhas_lidas": 1957,
         "calculadas": 1900,
@@ -1692,11 +1674,7 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "orbe",
-          "taxas",
-          "regras"
-        ],
+        "fontes": ["orbe", "taxas", "regras"],
         "partes": []
       },
       "fontes": {
@@ -1704,9 +1682,7 @@
         "taxas": "DISPONIVEL",
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "pendencias.csv"
-      ],
+      "relatorios": ["pendencias.csv"],
       "cobertura": {
         "linhas_lidas": 118,
         "calculadas": 118,
@@ -1720,20 +1696,14 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "ponte",
-          "regras"
-        ],
+        "fontes": ["ponte", "regras"],
         "partes": []
       },
       "fontes": {
         "ponte": "DISPONIVEL",
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "comissoes_por_lojista.csv",
-        "pendencias.csv"
-      ],
+      "relatorios": ["comissoes_por_lojista.csv", "pendencias.csv"],
       "cobertura": {
         "linhas_lidas": 233,
         "calculadas": 228,
@@ -1747,11 +1717,7 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "ponte",
-          "contratos_remessa",
-          "regras"
-        ],
+        "fontes": ["ponte", "contratos_remessa", "regras"],
         "partes": []
       },
       "fontes": {
@@ -1759,10 +1725,7 @@
         "contratos_remessa": "DISPONIVEL",
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "divergencias_taxa.csv",
-        "pendencias.csv"
-      ],
+      "relatorios": ["divergencias_taxa.csv", "pendencias.csv"],
       "cobertura": {
         "linhas_lidas": 233,
         "calculadas": 228,
@@ -1776,11 +1739,7 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "orbe",
-          "taxas",
-          "regras"
-        ],
+        "fontes": ["orbe", "taxas", "regras"],
         "partes": []
       },
       "fontes": {
@@ -1788,9 +1747,7 @@
         "taxas": "DISPONIVEL",
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "comissoes_por_lojista.csv"
-      ],
+      "relatorios": ["comissoes_por_lojista.csv"],
       "cobertura": {
         "linhas_lidas": 1957,
         "calculadas": 1900,
@@ -1804,11 +1761,7 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "orbe",
-          "taxas",
-          "regras"
-        ],
+        "fontes": ["orbe", "taxas", "regras"],
         "partes": []
       },
       "fontes": {
@@ -1816,9 +1769,7 @@
         "taxas": "DISPONIVEL",
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "pendencias.csv"
-      ],
+      "relatorios": ["pendencias.csv"],
       "cobertura": {
         "linhas_lidas": 57,
         "calculadas": 0,
@@ -1832,20 +1783,13 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "regras"
-        ],
-        "partes": [
-          "CHECKOUT"
-        ]
+        "fontes": ["regras"],
+        "partes": ["CHECKOUT"]
       },
       "fontes": {
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "notas_a_emitir.csv",
-        "pendencias.csv"
-      ],
+      "relatorios": ["notas_a_emitir.csv", "pendencias.csv"],
       "cobertura": {
         "linhas_lidas": 21,
         "calculadas": 20,
@@ -1859,20 +1803,13 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "regras"
-        ],
-        "partes": [
-          "REMESSAS"
-        ]
+        "fontes": ["regras"],
+        "partes": ["REMESSAS"]
       },
       "fontes": {
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "notas_a_emitir.csv",
-        "pendencias.csv"
-      ],
+      "relatorios": ["notas_a_emitir.csv", "pendencias.csv"],
       "cobertura": {
         "linhas_lidas": 14,
         "calculadas": 14,
@@ -1886,11 +1823,7 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "aurora",
-          "plano_contas",
-          "regras"
-        ],
+        "fontes": ["aurora", "plano_contas", "regras"],
         "partes": []
       },
       "fontes": {
@@ -1898,10 +1831,7 @@
         "plano_contas": "DISPONIVEL",
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "lancamentos_classificados.csv",
-        "pendencias.csv"
-      ],
+      "relatorios": ["lancamentos_classificados.csv", "pendencias.csv"],
       "cobertura": {
         "linhas_lidas": 84,
         "calculadas": 84,
@@ -1915,11 +1845,7 @@
       "implementado": true,
       "rastro_validado": true,
       "dependencias": {
-        "fontes": [
-          "meridiano",
-          "plano_contas",
-          "regras"
-        ],
+        "fontes": ["meridiano", "plano_contas", "regras"],
         "partes": []
       },
       "fontes": {
@@ -1927,10 +1853,7 @@
         "plano_contas": "DISPONIVEL",
         "regras": "DISPONIVEL"
       },
-      "relatorios": [
-        "lancamentos_classificados.csv",
-        "pendencias.csv"
-      ],
+      "relatorios": ["lancamentos_classificados.csv", "pendencias.csv"],
       "cobertura": {
         "linhas_lidas": 100,
         "calculadas": 100,
@@ -1943,78 +1866,86 @@
     "comissoes_por_lojista.csv": {
       "situacao": "COMPLETO",
       "situacao_alvo": "COMPLETO",
-      "escopo": "checkout",
-      "partes": [
-        "CHECKOUT"
-      ],
+      "escopo": "alvo",
+      "partes": ["REMESSAS", "CHECKOUT"],
+      "partes_bloqueadas": [],
+      "motivos": [],
+      "linhas": 35
+    },
+    "divergencias_taxa.csv": {
+      "situacao": "COMPLETO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "alvo",
+      "partes": ["DIVERGENCIAS_CHECKOUT", "DIVERGENCIAS_REMESSA"],
+      "partes_bloqueadas": [],
+      "motivos": [],
+      "linhas": 115
+    },
+    "notas_a_emitir.csv": {
+      "situacao": "COMPLETO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "alvo",
+      "partes": ["NOTAS_CHECKOUT", "NOTAS_REMESSA"],
       "partes_bloqueadas": [],
       "motivos": [],
       "linhas": 21
     },
-    "divergencias_taxa.csv": {
-      "situacao": "BLOQUEADO",
-      "situacao_alvo": "COMPLETO",
-      "escopo": "checkout",
-      "partes": [],
-      "partes_bloqueadas": [],
-      "motivos": [
-        "Relatório fora do escopo checkout; consulte --escopo alvo"
-      ],
-      "linhas": 0
-    },
-    "notas_a_emitir.csv": {
-      "situacao": "BLOQUEADO",
-      "situacao_alvo": "COMPLETO",
-      "escopo": "checkout",
-      "partes": [],
-      "partes_bloqueadas": [],
-      "motivos": [
-        "Relatório fora do escopo checkout; consulte --escopo alvo"
-      ],
-      "linhas": 0
-    },
     "lancamentos_classificados.csv": {
-      "situacao": "BLOQUEADO",
+      "situacao": "COMPLETO",
       "situacao_alvo": "COMPLETO",
-      "escopo": "checkout",
-      "partes": [],
+      "escopo": "alvo",
+      "partes": ["EXTRATO_AURORA", "EXTRATO_MERIDIANO"],
       "partes_bloqueadas": [],
-      "motivos": [
-        "Relatório fora do escopo checkout; consulte --escopo alvo"
-      ],
-      "linhas": 0
+      "motivos": [],
+      "linhas": 184
     },
     "pendencias.csv": {
       "situacao": "COMPLETO",
       "situacao_alvo": "COMPLETO",
-      "escopo": "checkout",
+      "escopo": "alvo",
       "partes": [
-        "PENDENCIAS_CHECKOUT"
+        "DIVERGENCIAS_CHECKOUT",
+        "DEVOLUCAO_CASA",
+        "REMESSAS",
+        "DIVERGENCIAS_REMESSA",
+        "PENDENCIAS_CHECKOUT",
+        "NOTAS_CHECKOUT",
+        "NOTAS_REMESSA",
+        "EXTRATO_AURORA",
+        "EXTRATO_MERIDIANO"
       ],
       "partes_bloqueadas": [],
       "motivos": [],
-      "linhas": 57
+      "linhas": 83
     },
     "rastro.csv": {
       "situacao": "COMPLETO",
       "situacao_alvo": "COMPLETO",
-      "escopo": "checkout",
+      "escopo": "alvo",
       "partes": [
+        "DIVERGENCIAS_CHECKOUT",
+        "DEVOLUCAO_CASA",
+        "REMESSAS",
+        "DIVERGENCIAS_REMESSA",
         "CHECKOUT",
-        "PENDENCIAS_CHECKOUT"
+        "PENDENCIAS_CHECKOUT",
+        "NOTAS_CHECKOUT",
+        "NOTAS_REMESSA",
+        "EXTRATO_AURORA",
+        "EXTRATO_MERIDIANO"
       ],
       "partes_bloqueadas": [],
       "motivos": [],
-      "linhas": 1957
+      "linhas": 5080
     }
   },
   "publicacao_concluida": true,
   "arquivos": {
-    "comissoes_por_lojista.csv": "2fe90214ed05f2f0e7283e4310bed567e898dc9897dd696998c3da8dc49c0633",
-    "divergencias_taxa.csv": "044ace88ff7067baff2fabb05ad7c400ff3c0bef5b0a5434ca1b5ad5975fe1df",
-    "notas_a_emitir.csv": "1ea0f248673c08e39030377ef3896b2fe2b35c8b896924ba12c6e7c836bc40f7",
-    "lancamentos_classificados.csv": "b84be0ba3904022c39d952e7b52f60dcb9d5dbe84a7feb42d0ef111f9bff85ee",
-    "pendencias.csv": "4dd6ed8ac74ac17ed61358014dc9eaf7da8e14b79f4c4020efa161d6b2874228",
-    "rastro.csv": "bbc9d9c611f9a8675b907c713ba07be5c59e48f8b85f0ef95be8f0c6320d9c50"
+    "comissoes_por_lojista.csv": "c441ef1b5ea5eeb5395aae68de748a1f5f7c67f950f6cf6976a9597f9ede3572",
+    "divergencias_taxa.csv": "a570355cfc449062f82bca1897a3c44405cb55765eaa6d987c5378e6b0c613c9",
+    "notas_a_emitir.csv": "6cf567c3d233152a64f37f00e21f3b2efdad14262243700e49a3eeaafc3ecc57",
+    "lancamentos_classificados.csv": "e55b99e52476fe4b0f7274f1d67cbdeca5dcd5ba04c40c7ec25645f361e153bd",
+    "pendencias.csv": "159a80fd39eb4ac838c414d2028f3c14b083e4f6bb10a532d7e33196d6a5e7ea",
+    "rastro.csv": "e3df1175eecf49232c7abc15103659001937876b4cd619f04095f59ba22daf78"
   }
 }

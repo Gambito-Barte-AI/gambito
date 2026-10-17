@@ -120,11 +120,11 @@ def calcular(operacoes, falhas, quantidade, contratos, regras):
                 continue
             valor = centavos(e.spread_brl * fracao)
             arquivo_original = conhecidas[0].origem.arquivo if conhecidas else ""
-            pendencia(com, f"AJUSTE_D10:{e.origem.arquivo}:L{e.origem.linha}:{ref}", "AJUSTE_PONTE_D10_PENDENTE",
-                [(e, valor, None)], "D-10: time usa participação sobre Spread R$ negativo; natureza do ajuste ainda aguarda confirmação financeira.",
-                "PARTICIPACAO_AJUSTE_D10", proximo="Financeiro deve confirmar se Spread R$ representa spread integral ou participação; revisar antes de liberar.",
+            pendencia(com, f"AJUSTE_D10:{e.origem.arquivo}:L{e.origem.linha}:{ref}", "AJUSTE_PONTE_D10",
+                [(e, valor, None)], "D-10: ajuste da Ponte abate a participação do mês (50% do Spread R$ negativo), com rastro para a operação original.",
+                "PARTICIPACAO_AJUSTE_D10", proximo="Conferir o ajuste contra a operação original no relatório da Ponte; já abatido na nota única do mês.",
                 reportado=e.spread_brl, ref_original=original, arquivo_original=arquivo_original)
-            regra = "D-10_PENDENTE_FINANCEIRO"
+            regra = "D-10_AJUSTE_PONTE"
         elif e.spread_brl < 0:
             # D-11 usa o spread realizado do relatório, não recalcula esse valor pelo %.
             try:

@@ -54,14 +54,14 @@ def calcular(nome, origem, p):
         ids = {l["id_saida"] for l in linhas}
         detalhes = [r for r in origem.rastro if r["id_saida"] in ids]
         valor = sum((Decimal(l["comissao_brl"]) for l in linhas), Decimal(0))
-        tem_ajuste = any(r.get("regra") == "D-10_PENDENTE_FINANCEIRO" for r in detalhes)
+        tem_ajuste = any(r.get("regra") == "D-10_AJUSTE_PONTE" for r in detalhes)
         if tem_ajuste:
-            parte.motivos.append("D-10: valor derivado da decisão do time; natureza do ajuste aguarda confirmação financeira antes da liberação")
+            parte.motivos.append("D-10: nota já abatida pelo ajuste da Ponte do mês")
         if valor > 0:
             identificador = f"NOTA:{negocio}:{mes}:{cnpj}"
             discriminacao = f"{p['servico']} - competência {mes}"
             if tem_ajuste:
-                discriminacao += "; ajuste D-10 pendente de confirmação financeira"
+                discriminacao += "; inclui ajuste D-10 da Ponte"
             parte.linhas["notas_a_emitir.csv"].append(dict(id_saida=identificador,
                 tomador_cnpj=cnpj, tomador=linhas[0]["lojista"] if negocio == "CHECKOUT" else p["tomador"],
                 linha_negocio=negocio, valor_brl=format(valor, ".2f"), discriminacao=discriminacao))

@@ -237,9 +237,10 @@ class A2Test(unittest.TestCase):
         with self.assertRaises(ErroAceite):
             verificar(self.dados, self.saida, self.regras)
 
-    def test_politica_aprovada_real_usa_isencao_original_e_preserva_d10(self):
+    def test_politica_aprovada_real_usa_isencao_original_e_documenta_d10(self):
         from tarvo.regras import carregar
         config = carregar(Path(__file__).resolve().parents[1] / "regras.toml")
         self.assertEqual(config["devolucoes_checkout"][0]["politica_estornos"], "VENDA_ORIGINAL_ISENTA")
-        self.assertEqual([d["id"] for d in config["decisoes_pendentes"]], ["D-10"])
+        self.assertEqual(config.get("decisoes_pendentes", []), [])
+        self.assertIn("D-10", [d["id"] for d in config["decisoes_documentadas"]])
 

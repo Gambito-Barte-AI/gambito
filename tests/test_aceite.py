@@ -246,7 +246,7 @@ natureza = "FINANCEIRA"
         documento = raiz / "docs/documentação-geral.md"
         self.assertTrue(documento.is_file())
         texto = documento.read_text(encoding="utf-8")
-        self.assertFalse({"D-07", "D-08"} & {d["id"] for d in config["decisoes_pendentes"]})
+        self.assertFalse({"D-07", "D-08"} & {d["id"] for d in config.get("decisoes_pendentes", [])})
         for tabela in ("vinculos", "contratos_bloqueados", "isencoes", "observacoes_esclarecidas", "decisoes_documentadas", "decisoes_pendentes"):
             for regra in config.get(tabela, []):
                 self.assertIn("docs/documentação-geral.md", regra["fonte"])
