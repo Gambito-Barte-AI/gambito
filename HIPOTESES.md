@@ -1,34 +1,13 @@
-# E3 — critérios aprovados de alerta (estado atual)
+# Estado atual (17h40): nenhuma decisão pendente
 
-Usuário aprovou em 17/10/2026: pico do saldo acumulado **ao fim de cada dia**, sem valor mínimo; somente CNPJ explicitamente em `contratos_bloqueados`, com identidade forte; uma pendência por lojista em pendencias.csv. Cada reversão é citada, mas só abate se sua antecipação estiver disponível no período. Exposição anterior desconhecida; não comparar com vendas nem inferir horário ou histórico. Regras operacionais do time registradas em `[extras.alertas]` no TOML, sem atribuir nova aprovação ao parceiro.
+Todas as decisões estão respondidas pelo Financeiro ou registradas como decisão do time. As seções abaixo são o histórico, do mais recente para o mais antigo: onde um registro antigo diz "D-10 pendente", "decisões pendentes" ou "NAO_INFORMADO", vale este estado atual.
 
-- E3-P resolvida para o recorte sem contrato. A cobertura de “sem histórico” continua fora até existir lista/fonte explícita; ausência de arquivo não prova ausência de histórico.
-- Saldo inicial zero é apenas referência do recorte observado, não declaração sobre a agenda anterior. No empate, primeira data do pico. Dia com antecipação e reversão integral pode ter pico zero e ainda produzir acompanhamento, sem alarme financeiro falso ou efeito nas comissões/notas.
-- Rastro soma os movimentos até o fim do dia do pico; reversões posteriores são descritas sem abater retroativamente o pico. Os quatro relatórios financeiros são preservados; só pendências, rastro e manifesto recebem E3.
-- D-10 está **respondida**, conforme Financeiro 11:33 e retorno do checkpoint 2, já registrados na branch. Aplicar 50% do spread negativo uma vez. Avisos de pendência de D-10 nas seções antigas abaixo são históricos e estão superados.
-- E2-P (retomada financeira) continua pendente. E1/E2 preservadas; E4 não iniciada. Histórico integral de IA permanece adiado pelo usuário.
-
----
-
-# E2 — continuidade das pendências
-
-E2 autorizada: exportação e leitura do snapshot de eventos pendentes, conforme E0, em `docs/EXTRA_CONTINUIDADE_ALERTAS.md`. E1 preservada; E3 não iniciada. CLI/publicação de extras ainda não ligadas. Sem alterações das regras financeiras, oficiais ou resultados existentes.
-
-- E2-P continua bloqueando retomada com efeito financeiro: falta fechar controle persistente de já faturados, evidência da condição comercial e apresentação da competência original na nota posterior. Snapshot íntegro não é aprovação nem autoriza cobrança; o campo `faturamento_habilitado` é sempre false.
-- Estornos/reversões preservam eventos referenciados disponíveis como contexto não faturável; ausência, conflito ou ciclo gera diagnóstico, sem reconstruir dados ou escolher ocorrência arbitrária.
-- Hash de conteúdo detecta alteração, mas não substitui autenticação, validação do manifesto de origem ou aprovação comercial. IDs estáveis/duplicatas no pacote não resolvem idempotência entre fechamentos.
-- D-10, contrato Atlas e metadados sem comprovação permanecem explícitos. Histórico integral de IA segue adiado pelo usuário, sem criar resumos substitutos.
+- **D-10:** respondida pelo Financeiro (11h33) e confirmada no retorno do checkpoint 2.
+- **D-03:** decidida pelo time (Alice, 17h36). O alerta de antecipação não entra nesta entrega; o critério para quando entrar está no `regras.toml` e na documentação.
+- **Datas de aprovação:** as 34 regras que estavam com `NAO_INFORMADO` receberam o horário da resposta do Slack que as sustenta (critério do Financeiro) ou da decisão do time. O manifesto não lista mais metadados incompletos.
+- **O que segue aberto é operacional, não decisão:** contrato da Atlas (o Diego, do comercial, decide), pagador do Pix de R$ 7.350 (o Caio identifica), contestações com a Orbe e a Ponte e conferência do crédito da Ponte em 06/10. Cada um é uma pendência no `pendencias.csv`, com motivo, próximo passo e dono.
 
 ---
-
-# E0 — contratos do extra (documentação)
-
-E0 autorizada pelo usuário: contratos internos e propriedade dos arquivos em `docs/EXTRA_E0.md`, sobre a base alvo `82c087cfd3b8315b2178f6a0ab02b8dffd57cef3`. Nenhuma implementação extra iniciada. E1–E5, branches e commits não autorizados por esta etapa. Histórico integral de IA continua adiado pelo usuário.
-
-- Retomada: condição comercial, controle de já faturados e apresentação da competência original no faturamento posterior devem ser fechados antes de ligar efeitos financeiros; exportar uma pendência não autoriza cobrar.
-- Alertas: fonte do histórico, fórmula do pico, tratamento de ordem intradia e limiar continuam por definir; D-03 não permite inventar esses dados.
-- IA: provedor/modelo, dados mínimos e limites de custo/tempo dependem de definição técnica; nenhum fornecedor é confirmado pelo placeholder de `.env.example`.
-- D-10, contrato Atlas, RN-64 corrigida e metadados sem comprovação preservados. Parâmetros e estruturas futuras no contrato não estão disponíveis na CLI atual.
 
 # Respostas do Financeiro e da organização (15h47 às 16h52) e D-10
 
@@ -58,6 +37,15 @@ Registro de 17/10/2026. As respostas abaixo foram dadas no canal a outros times,
   - Pix de R$ 18.240 da Ponte Aérea: `2.1.02.001`; a baixa sai quando a remessa liquidar, pelo relatório de outubro da Ponte;
   - folha de agosto baixada em setembro: a provisão foi feita pelo valor pago, então a baixa é pelo valor cheio do lançamento. A solução não gera a provisão do mês.
 - **Colunas extras.** Podem ficar, desde que as colunas pedidas estejam presentes e com os nomes certos.
+
+Revisão completa do canal às 17h30 (63 respostas do Financeiro e da organização, de 16/10 19h59 a 17/10 16h52). Além do que já estava registrado, entram estes critérios das respostas da tarde:
+
+- **Isenção da Casa na antecipação (13h34).** Vale pela data da antecipação: é um serviço prestado no dia. Antecipação feita entre 01/09 e 31/12 é isenta, sem procurar as vendas de origem. O motor já usa a data do movimento da antecipação.
+- **Ajuste tardio da Orbe depois da aprovação (13h34).** Se chegar antes da aprovação do fechamento, entra no mês do movimento (como o arquivo 06). Se chegar depois, entra no mês seguinte. A aprovação é do Financeiro e não é registrada nos arquivos; quem roda o fechamento escolhe a competência com `--competencia`.
+- **Correção de linha com o mesmo `id_transacao` (13h34).** Nunca aconteceu; o critério é nosso. A linha idêntica em dois arquivos conta uma vez. Se os valores forem diferentes, não escolhemos nenhum: as linhas viram pendência para o Financeiro.
+- **Ajuste órfão (14h10).** Regra do Financeiro: ajuste cuja original não está em nenhum arquivo entra pelo valor que veio e vira pendência para o Financeiro pedir a original à Orbe. **Diferença conhecida:** hoje o motor só abre a pendência para estorno de venda do mesmo mês sem original, sem lançar o valor na comissão. Em setembro não há esse caso (todas as referências do arquivo 06 estão no relatório), então nenhum resultado muda; o ajuste no código fica para o time.
+- **Bandeira no estorno (14h08).** A bandeira não muda a taxa. Estorno com bandeira diferente da venda segue vinculado pela referência, sem contestação e sem pendência (7 casos no arquivo 06).
+- **Alerta de antecipação (D-03).** O Financeiro disse que o alerta é para ele e para o comercial, que não muda nenhum número e que o critério é nosso (11h37, 11h49, 12h50). Decisão do time (Alice, 17h36): o alerta não entra nesta entrega. Critério para quando entrar: só lojista com contrato bloqueado (hoje a Atlas), sem corte em reais, pico pelo maior saldo ao fim de cada dia (antecipações menos reversões vinculadas) e uma pendência por lojista para Financeiro e Comercial. Referência de setembro: Atlas, R$ 183.581,24 em 24/09.
 
 ---
 
@@ -189,7 +177,7 @@ Os registros seguintes descrevem o histórico das Entregas 1–4; menções a D-
 
 ---
 
-# Hipóteses, limites e decisões pendentes
+# Hipóteses, limites e decisões da entrega 1 (registro histórico)
 
 ## Escopo autorizado
 
@@ -199,53 +187,53 @@ Arquitetura consolidada e Entregas 1 a 4 autorizadas pelo usuário nesta convers
 
 Registro histórico do primeiro incremento. E1-02 e E1-03 são ampliadas pelas decisões da Entrega 2 abaixo; os demais controles continuam válidos.
 
-| ID    | Premissa/decisão                                                                                              | Motivo e impacto                                                                                                                                       |
-| ----- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| E1-01 | Consumir somente Orbe e taxas.                                                                                | Recorte explicitamente aprovado; prevalece sobre RF-02 local que chama a leitura das seis fontes de mínima. Fontes do alvo ausentes não bloqueiam.     |
+| ID | Premissa/decisão | Motivo e impacto |
+| --- | --- | --- |
+| E1-01 | Consumir somente Orbe e taxas. | Recorte explicitamente aprovado; prevalece sobre RF-02 local que chama a leitura das seis fontes de mínima. Fontes do alvo ausentes não bloqueiam. |
 | E1-02 | Calcular somente VENDA simples, com vínculo direto por EC, contrato único, início explícito e sem observação. | Não interpretar condições financeiras ainda não implementadas. Parcelamentos, estornos, antecipações, reversões e condições especiais ficam pendentes. |
-| E1-03 | Data isolada em Vigência representa início inclusivo.                                                         | Compatível com as linhas simples do case. Venda anterior não é calculada. Vigências textuais e sobreposições ficam para a Entrega 2.                   |
-| E1-04 | Arquivo Orbe com uma competência, derivada de data_movimento.                                                 | Múltiplos meses ou ausência de data válida bloqueiam o cálculo. Não escolher mês arbitrário.                                                           |
-| E1-05 | CSVs mostram somente contribuições calculadas; o manifesto explicita a cobertura parcial.                     | Nunca apresentar o subtotal como fechamento completo nem comissão desconhecida como zero. Pendências com ID conhecido preservam a referência.          |
-| E1-06 | Fonte ausente/inválida bloqueia somente dependentes; o manifesto identifica os resultados atuais.             | Fechamento parcial informado pelo usuário, atualização posterior ao contexto local. Não cria módulos futuros.                                          |
-| E1-07 | Testes com unittest em vez de pytest.                                                                         | Mesma verificação automatizada, sem adicionar dependência de desenvolvimento ao primeiro incremento.                                                   |
+| E1-03 | Data isolada em Vigência representa início inclusivo. | Compatível com as linhas simples do case. Venda anterior não é calculada. Vigências textuais e sobreposições ficam para a Entrega 2. |
+| E1-04 | Arquivo Orbe com uma competência, derivada de data_movimento. | Múltiplos meses ou ausência de data válida bloqueiam o cálculo. Não escolher mês arbitrário. |
+| E1-05 | CSVs mostram somente contribuições calculadas; o manifesto explicita a cobertura parcial. | Nunca apresentar o subtotal como fechamento completo nem comissão desconhecida como zero. Pendências com ID conhecido preservam a referência. |
+| E1-06 | Fonte ausente/inválida bloqueia somente dependentes; o manifesto identifica os resultados atuais. | Fechamento parcial informado pelo usuário, atualização posterior ao contexto local. Não cria módulos futuros. |
+| E1-07 | Testes com unittest em vez de pytest. | Mesma verificação automatizada, sem adicionar dependência de desenvolvimento ao primeiro incremento. |
 
 ## Decisões financeiras ainda pendentes
 
-| ID        | Questão                                                        | Orientação conhecida                                                                                                                                        | Tratamento nesta entrega                                                                                                                                                                                                                                                                                 |
-| --------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| D-07      | Atlas fora ou zerada nas comissões?                            | Usuário informou que ambas são opções do time; identidade pode vir da aba antiga, mas taxas não.                                                            | Não ratificada. A identidade histórica está implementada; seus eventos continuam pendentes para o Comercial, sem comissão estimada. O arquivo não ganha linha zerada por contrato desconhecido. Isso é tratamento provisório, não decisão sobre apresentação final. Recuperação futura não implementada. |
-| D-08      | Ratificar devolução da Casa pelo cobrado e recorte elegível?   | Usuário relatou fala de Helena: “o que foi cobrado eu devolvo”; referência corrigida para R$ 15.396,77. Concessão paga pela Tarvo, fora da cobrança à Orbe. | A isenção confirmada é aplicada independentemente de D-08. Estorno anterior à isenção agora usa a taxa anterior, sem apagar saldo negativo. Não calcular devolução nem usar valor_taxa como comissão.                                                                                                    |
-| D-10      | Ajuste Ponte deve abater 50%?                                  | Usuário informou nova linha negativa `AJUSTE REF PC-…`, abatendo nossa participação na nota do mês e vinculada ao original.                                 | Fora do escopo. Confirmar se o valor da linha é spread integral ou participação antes de aplicar 50%.                                                                                                                                                                                                    |
-| P-VALORES | Como representar dois valores da pendência de spread negativo? | Preservar valor reportado e diferença até o contrato solicitada à Ponte.                                                                                    | Definir posteriormente valor_brl, colunas adicionais e valor reconciliado no rastro.                                                                                                                                                                                                                     |
-| P-AJUSTE  | Como representar ajuste e operação histórica no rastro?        | Preservar a linha atual e o vínculo à operação original, sem dupla contagem.                                                                                | Definição reservada ao alvo.                                                                                                                                                                                                                                                                             |
+| ID | Questão | Orientação conhecida | Tratamento nesta entrega |
+| --- | --- | --- | --- |
+| D-07 | Atlas fora ou zerada nas comissões? | Usuário informou que ambas são opções do time; identidade pode vir da aba antiga, mas taxas não. | Não ratificada. A identidade histórica está implementada; seus eventos continuam pendentes para o Comercial, sem comissão estimada. O arquivo não ganha linha zerada por contrato desconhecido. Isso é tratamento provisório, não decisão sobre apresentação final. Recuperação futura não implementada. |
+| D-08 | Ratificar devolução da Casa pelo cobrado e recorte elegível? | Usuário relatou fala de Helena: “o que foi cobrado eu devolvo”; referência corrigida para R$ 15.396,77. Concessão paga pela Tarvo, fora da cobrança à Orbe. | A isenção confirmada é aplicada independentemente de D-08. Estorno anterior à isenção agora usa a taxa anterior, sem apagar saldo negativo. Não calcular devolução nem usar valor_taxa como comissão. |
+| D-10 | Ajuste Ponte deve abater 50%? | Usuário informou nova linha negativa `AJUSTE REF PC-…`, abatendo nossa participação na nota do mês e vinculada ao original. | Fora do escopo. Confirmar se o valor da linha é spread integral ou participação antes de aplicar 50%. |
+| P-VALORES | Como representar dois valores da pendência de spread negativo? | Preservar valor reportado e diferença até o contrato solicitada à Ponte. | Definir posteriormente valor_brl, colunas adicionais e valor reconciliado no rastro. |
+| P-AJUSTE | Como representar ajuste e operação histórica no rastro? | Preservar a linha atual e o vínculo à operação original, sem dupla contagem. | Definição reservada ao alvo. |
 
 Não se atribuiu aprovação financeira às escolhas técnicas acima. As novas respostas foram fornecidas pelo usuário; não houve consulta direta ao Slack nem contato com integrantes do time.
 
 ## Decisões técnicas e fontes da Entrega 2
 
-| ID    | Decisão                                                                                    | Fonte e limite                                                                                                                                                                                                                                                                                                    |
-| ----- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| E2-01 | Resolver EC para CNPJ por vínculo direto ou configuração explícita.                        | RN-01 a RN-05. Os três ECs complementares vêm de RN-03; CNPJs conferidos nas linhas vigentes do XLSX. Nomes semelhantes não são evidência de vínculo.                                                                                                                                                             |
-| E2-02 | Usar taxas das faixas débito, vista, 2–6x, 7–12x e Pix.                                    | RN-08 e RN-09. Taxa de antecipação não é consumida nesta entrega. Coluna parcelada ausente não recebe taxa de outra faixa.                                                                                                                                                                                        |
-| E2-03 | Aceitar data isolada, “até” e “a partir de”, com limites inclusivos e outro limite aberto. | RN-10 e formatos efetivamente presentes na planilha. Não escolher contrato por ordem de linha ou “mais recente”; lacunas/sobreposições/formatos novos geram pendência.                                                                                                                                            |
-| E2-04 | Explicitar observações conhecidas por CNPJ/texto, sem interpretação livre.                 | Bridge: notas apenas explicam a renegociação descrita nas vigências; Kiwi: EC confirmado em RN-03; Casa: RN-13/RN-14 esclarecem condição; Mundo Aberto: nota refere-se exclusivamente a remessa. Essas são interpretações técnicas documentadas, não novas aprovações de taxas. Texto novo volta a ser pendência. |
-| E2-05 | Importar da aba antiga apenas identidade.                                                  | Atualização do usuário. Atlas: EC em RN-15; CNPJ/nome conferidos em ANTIGO 2025 - nao usar L8. Semelhança de nome ou taxas históricas não são usadas para contrato.                                                                                                                                               |
-| E2-06 | Aplicar taxa zero da Casa apenas no intervalo configurado e registrar regra no rastro.     | RN-13/RN-14 e atualização do usuário sobre data da venda. A comissão zero confirmada não equivale a comissão desconhecida; não confundir com devolução de D-08. Exige contrato único vigente, sem ignorar novas observações.                                                                                      |
-| E2-07 | Manter bloqueio comercial da Atlas até confirmação documentada.                            | RN-15/RN-16. Mesmo se surgir linha nova na planilha, retirar bloqueio exige registro de confirmação; D-07 continua pendente. Todos os eventos conhecidos da Atlas são encaminhados ao Comercial.                                                                                                                  |
+| ID | Decisão | Fonte e limite |
+| --- | --- | --- |
+| E2-01 | Resolver EC para CNPJ por vínculo direto ou configuração explícita. | RN-01 a RN-05. Os três ECs complementares vêm de RN-03; CNPJs conferidos nas linhas vigentes do XLSX. Nomes semelhantes não são evidência de vínculo. |
+| E2-02 | Usar taxas das faixas débito, vista, 2–6x, 7–12x e Pix. | RN-08 e RN-09. Taxa de antecipação não é consumida nesta entrega. Coluna parcelada ausente não recebe taxa de outra faixa. |
+| E2-03 | Aceitar data isolada, “até” e “a partir de”, com limites inclusivos e outro limite aberto. | RN-10 e formatos efetivamente presentes na planilha. Não escolher contrato por ordem de linha ou “mais recente”; lacunas/sobreposições/formatos novos geram pendência. |
+| E2-04 | Explicitar observações conhecidas por CNPJ/texto, sem interpretação livre. | Bridge: notas apenas explicam a renegociação descrita nas vigências; Kiwi: EC confirmado em RN-03; Casa: RN-13/RN-14 esclarecem condição; Mundo Aberto: nota refere-se exclusivamente a remessa. Essas são interpretações técnicas documentadas, não novas aprovações de taxas. Texto novo volta a ser pendência. |
+| E2-05 | Importar da aba antiga apenas identidade. | Atualização do usuário. Atlas: EC em RN-15; CNPJ/nome conferidos em ANTIGO 2025 - nao usar L8. Semelhança de nome ou taxas históricas não são usadas para contrato. |
+| E2-06 | Aplicar taxa zero da Casa apenas no intervalo configurado e registrar regra no rastro. | RN-13/RN-14 e atualização do usuário sobre data da venda. A comissão zero confirmada não equivale a comissão desconhecida; não confundir com devolução de D-08. Exige contrato único vigente, sem ignorar novas observações. |
+| E2-07 | Manter bloqueio comercial da Atlas até confirmação documentada. | RN-15/RN-16. Mesmo se surgir linha nova na planilha, retirar bloqueio exige registro de confirmação; D-07 continua pendente. Todos os eventos conhecidos da Atlas são encaminhados ao Comercial. |
 
 Metadados de regra registram as fontes disponíveis. Onde os documentos só informam horário ou papel aprovador, a configuração declara que a data/pessoa não foi informada. Não foi fabricada uma aprovação financeira.
 
 ## Decisões técnicas e limites da Entrega 3
 
-| ID    | Decisão ou tratamento conservador                                                                                                         | Fonte e limite                                                                                                                                                                                                                                                                             |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| E3-01 | Estorno na competência do movimento, com faixa da própria linha e taxa/isenção pela data original.                                        | RN-07/RN-11/RN-14 e atualização do usuário sobre faixa. Não reabre o mês da venda. Referência e data original ausentes/inconsistentes ficam pendentes.                                                                                                                                     |
-| E3-02 | Venda de mês anterior pode estar ausente do arquivo corrente.                                                                             | O data pack contém nove estornos sem venda local, com referências/datas originais. Selecionar contrato comprovável pela data declarada não inventa o valor de uma venda histórica. O rastro identifica essa referência, mas não inventa arquivo de origem ausente.                         |
+| ID | Decisão ou tratamento conservador | Fonte e limite |
+| --- | --- | --- |
+| E3-01 | Estorno na competência do movimento, com faixa da própria linha e taxa/isenção pela data original. | RN-07/RN-11/RN-14 e atualização do usuário sobre faixa. Não reabre o mês da venda. Referência e data original ausentes/inconsistentes ficam pendentes. |
+| E3-02 | Venda de mês anterior pode estar ausente do arquivo corrente. | O data pack contém nove estornos sem venda local, com referências/datas originais. Selecionar contrato comprovável pela data declarada não inventa o valor de uma venda histórica. O rastro identifica essa referência, mas não inventa arquivo de origem ausente. |
 | E3-03 | Venda do próprio mês referenciada mas ausente, tipo/EC/data incompatíveis ou estornos acumulados acima do bruto conhecido exigem revisão. | Tratamento técnico conservador de inconsistências, não nova regra de aprovação financeira. Não escolher qual estorno manter ou inferir dados faltantes. Estornos parciais coerentes usam o bruto da própria linha; relações históricas sem arquivo não permitem conferir limite acumulado. |
-| E3-04 | Antecipação usa taxa da coluna específica e data do próprio evento.                                                                       | RN-08/RN-12 e formato do relatório: antecipações não indicam venda individual/data original. Não há constante de 2,10% nem inferência de uma data de venda; referência temporal diferente vira pendência.                                                                                  |
-| E3-05 | Reversão é o negativo exato da contribuição da antecipação referenciada.                                                                  | RN-12. Confere original disponível/calculável, tipo, EC, data e bruto integral oposto; preserva taxa, regra, contrato e base temporal originais. A ordem física do arquivo não interfere.                                                                                                  |
-| E3-06 | Reversão parcial, múltiplas reversões do mesmo original ou original ausente ficam pendentes.                                              | Esses cenários não têm tratamento confirmado nos documentos. Não ratear a comissão, reconstruir por taxa atual ou escolher a primeira reversão. Confirmar com o financeiro antes de ampliar.                                                                                               |
-| E3-07 | Contribuição da reversão tem origem na linha nova e vínculo ao original como metadado.                                                    | Preserva a soma do rastro sem duplicar valores. O validador também exige anulação exclusiva do original. Comissão negativa/zero não gera nota ou transporte de saldo nesta entrega.                                                                                                        |
+| E3-04 | Antecipação usa taxa da coluna específica e data do próprio evento. | RN-08/RN-12 e formato do relatório: antecipações não indicam venda individual/data original. Não há constante de 2,10% nem inferência de uma data de venda; referência temporal diferente vira pendência. |
+| E3-05 | Reversão é o negativo exato da contribuição da antecipação referenciada. | RN-12. Confere original disponível/calculável, tipo, EC, data e bruto integral oposto; preserva taxa, regra, contrato e base temporal originais. A ordem física do arquivo não interfere. |
+| E3-06 | Reversão parcial, múltiplas reversões do mesmo original ou original ausente ficam pendentes. | Esses cenários não têm tratamento confirmado nos documentos. Não ratear a comissão, reconstruir por taxa atual ou escolher a primeira reversão. Confirmar com o financeiro antes de ampliar. |
+| E3-07 | Contribuição da reversão tem origem na linha nova e vínculo ao original como metadado. | Preserva a soma do rastro sem duplicar valores. O validador também exige anulação exclusiva do original. Comissão negativa/zero não gera nota ou transporte de saldo nesta entrega. |
 
 Os tratamentos conservadores não ratificam D-07, D-08 ou D-10. Não há emissão de nota, relatório de divergência, devolução, recuperação da Atlas ou processamento automático dos ajustes tardios.
 
