@@ -52,6 +52,7 @@ class Entrega3Test(unittest.TestCase):
         r = Resultado(situacao="PROVISORIO" if pendencias else "COMPLETO", eventos=eventos,
                       contribuicoes=contribuicoes, pendencias=pendencias, linhas_lidas=len(eventos),
                       competencia="2031-03")
+        r.fontes = {nome: {"situacao": "DISPONIVEL"} for nome in ("orbe", "taxas", "regras")}
         consolidar(r)
         validar(r)
         return r
@@ -208,7 +209,7 @@ class Entrega3Test(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             m = publicar(r, Path(tmp))
             self.assertEqual(set(m["arquivos"]), {"comissoes_por_lojista.csv", "rastro.csv", "pendencias.csv", "divergencias_taxa.csv", "notas_a_emitir.csv", "lancamentos_classificados.csv"})
-            self.assertEqual(m["etapa"], "ENTREGA_4")
+            self.assertEqual(m["etapa"], "ALVO_A1")
 
     def test_pipeline_completo_le_antecipacao_e_relacoes(self):
         from openpyxl import Workbook

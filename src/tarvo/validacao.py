@@ -4,7 +4,64 @@ from collections import Counter, defaultdict
 from decimal import Decimal
 import re
 
-from .modelos import ErroEntrada, Resultado
+from .contratos import ARQUIVOS, CAMPOS_VALOR
+from .modelos import ErroEntrada, Resultado, ResultadoParte
+
+
+def validar_parte(parte: ResultadoParte) -> None:
+    """Confere o contrato monetário comum, sem fórmulas de módulos futuros."""
+    parte.validado = False
+
+    def dinheiro(texto):
+        if not isinstance(texto, str) or not re.fullmatch(r"-?[0-9]+\.[0-9]{2}", texto):
+            raise ErroEntrada("Valor monetário fora do contrato de saída")
+        return Decimal(texto)
+
+    valores, desconhecidos = {}, set()
+    if set(parte.linhas) - set(parte.relatorios):
+        raise ErroEntrada("Parte produziu relatório fora do seu contrato")
+    for arquivo, linhas in parte.linhas.items():
+        if arquivo not in CAMPOS_VALOR:
+            raise ErroEntrada("Relatório não reconhecido no contrato da parte")
+        obrigatorias = ARQUIVOS[arquivo][:6] if arquivo == "pendencias.csv" else ARQUIVOS[arquivo]
+        for linha in linhas:
+            if not isinstance(linha, dict) or not set(obrigatorias) <= linha.keys() or set(linha) - set(ARQUIVOS[arquivo]):
+                raise ErroEntrada("Linha incompatível com o contrato do relatório")
+            identificador = linha["id_saida"]
+            if not identificador or identificador in valores or identificador in desconhecidos:
+                raise ErroEntrada("ID de saída ausente ou duplicado na parte")
+            valor = linha[CAMPOS_VALOR[arquivo]]
+            if arquivo == "pendencias.csv":
+                if any(not linha.get(c) for c in ("tipo", "ref_origem", "motivo", "quem_decide", "proximo_passo")):
+                    raise ErroEntrada("Pendência sem motivo, responsável ou próximo passo")
+                if linha.get("categoria") not in {"DADOS", "NEGOCIO"}:
+                    raise ErroEntrada("Pendência sem categoria reconhecida")
+                if valor == "" and linha.get("natureza_valor") == "NAO_INFORMADO":
+                    desconhecidos.add(identificador)
+                    continue
+            valores[identificador] = dinheiro(valor)
+    somas, vistos = defaultdict(lambda: Decimal(0)), set()
+    for linha in parte.rastro:
+        if not isinstance(linha, dict) or not set(ARQUIVOS["rastro.csv"][:4]) <= linha.keys() or set(linha) - set(ARQUIVOS["rastro.csv"]):
+            raise ErroEntrada("Rastro incompatível com o contrato")
+        identificador = linha["id_saida"]
+        chave = (identificador, linha["arquivo_origem"], linha["ref_origem"])
+        if identificador not in valores or not all(chave) or chave in vistos:
+            raise ErroEntrada("Rastro sem saída monetária ou referência duplicada/ausente")
+        vistos.add(chave)
+        somas[identificador] += dinheiro(linha["valor"])
+    if set(somas) != set(valores) or any(somas[k] != v for k, v in valores.items()):
+        raise ErroEntrada("Soma do rastro não fecha para a parte")
+    if parte.cobertura:
+        c = parte.cobertura
+        if (set(c) != {"linhas_lidas", "calculadas", "pendentes", "bloqueadas"}
+                or any(type(v) is not int or v < 0 for v in c.values())
+                or c["linhas_lidas"] != c["calculadas"] + c["pendentes"] + c["bloqueadas"]):
+            raise ErroEntrada("Cobertura inválida na parte")
+    if desconhecidos:
+        parte.situacao = "PROVISORIO"
+        parte.motivos.append("Há pendências sem valor conhecido; não são zero e não têm rastro monetário")
+    parte.validado = True
 
 
 def consolidar(resultado: Resultado) -> None:

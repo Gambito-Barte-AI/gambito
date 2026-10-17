@@ -1,6 +1,6 @@
-# Gambito — Entrega 4: aceite do mínimo
+# Gambito — A1: isolamento de resultados e dependências
 
-Checkout Tarvo com vendas, estornos, antecipações e reversões: lê Orbe e taxas, calcula **eventos com contrato e referências verificáveis**, valida o rastro e publica comissões, pendências existentes e rastro. Os seis CSVs do contrato são gerados; os três relatórios ainda não implementados contêm só cabeçalhos e ficam bloqueados no manifesto. Os eventos sem contrato confirmado, como a Atlas, ficam pendentes; não são estimados. O cálculo dos módulos do alvo não foi implementado; a exportação das pendências existentes foi autorizada na revisão final do mínimo.
+Checkout Tarvo com vendas, estornos, antecipações e reversões: lê Orbe e taxas, calcula **eventos com contrato e referências verificáveis**, valida o rastro e publica comissões, pendências existentes e rastro. Os seis CSVs do contrato são gerados; os três relatórios ainda não implementados contêm só cabeçalhos e ficam bloqueados no manifesto. Os eventos sem contrato confirmado, como a Atlas, ficam pendentes; não são estimados. A1 acrescenta coordenação por parte, sem novos cálculos financeiros. O cálculo dos demais módulos do alvo não foi implementado; a exportação das pendências existentes foi autorizada na revisão final do mínimo.
 
 ## Instalação
 
@@ -30,6 +30,14 @@ Coloque os arquivos originais do mês em uma pasta. Não os edite antes de execu
 .\.venv\Scripts\python.exe -m tarvo --dados data/raw --saida saida --regras regras.toml
 ```
 
+O padrão é `--escopo checkout`: exige concluir checkout e exportação das pendências existentes. Para consultar a conclusão do alvo, sem ativar funcionalidades futuras:
+
+```powershell
+.\.venv\Scripts\python.exe -m tarvo --dados data/raw --saida saida-alvo --regras regras.toml --escopo alvo
+```
+
+Em macOS/Linux, use `.venv/bin/python` com os mesmos argumentos. Nesta A1, com checkout válido, `--escopo alvo` retorna `2` (`PROVISORIO`), pois remessas, divergências, notas e bancos continuam não implementados. O comando padrão preserva o resultado do mínimo: no case atual retorna `0`. O escopo muda o critério de conclusão e a agregação dos relatórios; não executa leitores ou fórmulas inexistentes.
+
 Para o data pack local, se disponível:
 
 ```powershell
@@ -41,7 +49,7 @@ Execução, testes e auditoria em **macOS/Linux**:
 ```bash
 .venv/bin/python -m tarvo --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml
 .venv/bin/python -m unittest discover -s tests -v
-.venv/bin/python tests/validar_saida.py --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml --esperar COMPLETO
+.venv/bin/python tests/validar_saida.py --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml --esperar COMPLETO --esperar-fechamento PROVISORIO
 ```
 
 Substitua `Tarvo_Data_Pack_set2026` por `data/raw` ou pela pasta recebida. Para escolher um mês, acrescente `--competencia AAAA-MM` ao comando de execução. Os mesmos códigos de saída documentados abaixo valem nas três plataformas.
@@ -50,7 +58,7 @@ O data pack e `Context/` não estão versionados. A banca fornece os arquivos or
 
 A competência vem de `data_movimento`, nunca da data da venda original. Com vários meses, escolha explicitamente, por exemplo `--competencia 2026-09`. Linhas válidas de outros meses ficam fora do cálculo e são contadas em `ingestao.fora_competencia`. Linhas com data inválida permanecem pendentes, pois não é seguro atribuir um mês. Uma reversão cujo original esteja fora do recorte exige revisão; não é reconstruída por estimativa.
 
-A pasta completa com `01` e `06` é suportada. Também é possível executar somente relatório e taxas. As evidências antigas em `saida/entrega2/`, `entrega3/` e `entrega4/` foram preservadas; representam a versão anterior. O aceite atualizado está em `docs/ACEITE_MINIMO.md` e `saida/revisao-pre-alvo/`; o aceite anterior em `saida/aceite-multiorbe/` foi preservado.
+A pasta completa com `01` e `06` é suportada. Também é possível executar somente relatório e taxas. As evidências antigas em `saida/entrega2/`, `entrega3/` e `entrega4/` foram preservadas; representam a versão anterior. O aceite atual de A1 está em `docs/ACEITE_A1.md` e `saida/alvo-a1/`. O mínimo anterior em `docs/ACEITE_MINIMO.md`, `saida/revisao-pre-alvo/` e `saida/aceite-multiorbe/` foi preservado.
 
 ## Escopo financeiro
 
@@ -81,13 +89,17 @@ A pasta completa com `01` e `06` é suportada. Também é possível executar som
 - `divergencias_taxa.csv`, `notas_a_emitir.csv`, `lancamentos_classificados.csv`: somente cabeçalhos oficiais; status `BLOQUEADO`, motivo “relatório do alvo não implementado”. Ausência de linhas não declara nenhum desses cálculos concluído.
 - `manifesto.json`: situação, competência, hashes de cada fonte e saída, cobertura física, duplicidades, avisos, limitações, decisões documentadas/pendentes e todas as pendências por referência, tipo, categoria, próximo passo e responsável. O valor bruto de uma pendência não representa comissão nem valor a cobrar.
 
-O terminal exibe resumo, decisões, pendências e status de cada CSV; `proximo_passo` fica no manifesto e no CSV de pendências. A situação principal e o código de saída se referem ao **checkout**, identificados por `escopo_situacao=CHECKOUT`; consulte `resultados` para a situação de cada arquivo. O manifesto agora usa versão 2. IDs e ordenação são estáveis; mesma entrada e regras geram os mesmos arquivos.
+O terminal exibe resumo, decisões, pendências e status de cada CSV; `proximo_passo` fica no manifesto e no CSV de pendências. O manifesto usa **versão 3**. `situacao`, `escopo_situacao=CHECKOUT`, `rastro_validado` e `total_parcial_brl` conservam o significado legado, exclusivamente do checkout. O código de saída agora segue `situacao_comando`: agrega CHECKOUT e PENDENCIAS_CHECKOUT no escopo padrão, ou todas as partes no escopo alvo. Nos casos normais do mínimo os códigos e os seis CSVs permanecem iguais.
+
+`partes` declara situação, motivos, dependências de fontes/resultados, validação e cobertura de cada parte. `fechamento` sempre resume **todo o alvo**, inclusive etapas não implementadas: completo somente com todas as partes completas; provisório com ao menos uma parte disponível e alguma incompleta; bloqueado quando todas estão bloqueadas. Pendência de negócio não impõe provisório ao módulo, conforme D-13.
+
+`resultados` identifica por CSV os produtores, as partes bloqueadas, a situação no escopo escolhido e `situacao_alvo`. Assim, comissões podem estar completas no escopo checkout e parciais no alvo, pois remessas ainda faltam. Não confunda total do checkout com total das outras linhas de negócio. IDs e ordenação são estáveis; mesma entrada e regras geram os mesmos arquivos.
 
 | Situação | Significado | Código de saída |
 | --- | --- | --- |
-| `COMPLETO` | Fontes válidas e rastro reconciliado. Pendências de negócio, como Atlas, continuam explícitas. Não significa alvo concluído. | `0` |
-| `PROVISORIO` | Há pendências de dados ou aviso de fonte adicional inválida; fecha somente o subconjunto validado. | `2` |
-| `BLOQUEADO` | Dependência inválida/ausente, competência ambígua ou rastro quebrado; CSVs apenas com cabeçalhos, total indisponível. | `1` |
+| `COMPLETO` | Todas as partes exigidas pelo escopo disponíveis e validadas. Atlas continua pendente para o Comercial. Só significa alvo concluído se esse for o escopo e todas as partes estiverem completas. | `0` |
+| `PROVISORIO` | Há partes exigidas provisórias ou bloqueadas, mas existe resultado válido. Publica somente as partes validadas, sem estimar valores. | `2` |
+| `BLOQUEADO` | Todas as partes exigidas bloqueadas. Sem valores dessas partes; resultados independentes de outro escopo têm situação própria. Erros de uso/escrita também retornam 1. | `1` |
 
 Ausência de fontes do alvo não bloqueia checkout. Orbe, taxas e regras são inspecionadas separadamente. Se todos os candidatos Orbe forem inválidos, bloqueia; se houver fontes válidas e outra identificada com layout inválido, fecha provisoriamente as válidas e registra o arquivo rejeitado, hash e motivo. A cobertura de linhas refere-se aos arquivos lidos com sucesso; linhas de fonte estruturalmente inválida não são contadas como processadas.
 
@@ -95,7 +107,15 @@ IDs idênticos entre arquivos são calculados uma vez, com ocorrência repetida 
 
 **Consulte sempre `manifesto.json` e verifique seus hashes antes de consumir CSVs.** Ele é publicado por último como marcador de validade. Se a publicação for interrompida, o marcador permanece bloqueado. Só os arquivos registrados em `arquivos` pertencem à execução atual.
 
-Uma execução bloqueada publica diagnóstico e substitui os seis CSVs próprios, com hash intacto, por arquivos apenas com cabeçalhos. O manifesto marca `BLOQUEADO`, `rastro_validado=false` e total `null`; isso não é comissão zero. Arquivos externos ou modificados pelo usuário nunca são sobrescritos/removidos: o comando falha e pede outra pasta de saída. Não use a pasta das entradas como saída. Outros arquivos presentes em `saida/` não fazem parte desta entrega.
+Uma parte bloqueada publica diagnóstico e não contribui com valores nos CSVs. Arquivos compartilhados conservam apenas as partes validadas; se não houver produtor válido, ficam só com cabeçalho. Se checkout estiver bloqueado, seu total é `null`, nunca zero. Se todas as partes estiverem bloqueadas, os seis CSVs contêm só cabeçalhos. Na falha de escrita, o marcador de publicação permanece bloqueado para a execução inteira, pois não é seguro declarar um conjunto de arquivos parcialmente substituído como publicado. Arquivos externos ou modificados pelo usuário nunca são sobrescritos/removidos: o comando falha e pede outra pasta de saída. Não use a pasta das entradas como saída. Outros arquivos presentes em `saida/` não fazem parte desta entrega.
+
+## Dependências e isolamento de A1
+
+- CHECKOUT e PENDENCIAS_CHECKOUT usam Orbe, taxas e regras, mas têm validações independentes. Uma falha no rastro de comissões pode preservar as pendências já identificadas e validadas, e vice-versa.
+- Remessas declara Ponte + regras; divergências de remessa também declara taxas. Notas declaram dependência da respectiva comissão. Cada banco declara seu extrato + plano de contas + regras, sem depender do outro banco.
+- As partes futuras são **não implementadas**. Suas fontes não lidas aparecem como `NAO_AVALIADA`; a existência de um arquivo não é tratada como validação de seu conteúdo. Não foram adicionados leitores de Ponte ou bancos em A1.
+- O validador comum confere esquema, IDs, cobertura e soma do rastro por saída; o checkout conserva suas verificações financeiras específicas. Dependência bloqueada ou conflito de IDs bloqueia os produtores/dependentes envolvidos, preservando partes independentes.
+- Cobertura global do mínimo conta somente contribuições e pendências validadas; registros cujo destino ficou bloqueado aparecem em `bloqueadas`. Contagens por parte descrevem seu domínio e não devem ser somadas indiscriminadamente: um evento pode produzir comissão e outro resultado derivado.
 
 ## Verificação
 
@@ -123,15 +143,15 @@ Em uma cópia nova do projeto, repita a instalação acima e coloque todos os CS
 $codigo = $LASTEXITCODE
 ```
 
-Código `0` é esperado para o case com as pendências comerciais da Atlas e fontes válidas. Código `2` indica dados não reconhecidos ou aviso de fonte rejeitada, com subconjunto validado. Código `1` indica bloqueio ou erro. Não trate qualquer saída diferente de zero como fechamento concluído.
+Código `0` é esperado no escopo padrão para o case com as pendências comerciais da Atlas e fontes válidas. Código `2` indica que apenas parte do escopo foi validada, inclusive falha isolada de comissão ou pendência; com `--escopo alvo`, também indica etapas futuras ainda bloqueadas. Código `1` indica bloqueio ou erro. Não trate qualquer saída diferente de zero como fechamento concluído.
 
 O verificador independente usa apenas a biblioteca padrão, sem importar o motor:
 
 ```powershell
-.\.venv\Scripts\python.exe tests/validar_saida.py --dados data/raw --saida saida --regras regras.toml --esperar COMPLETO
+.\.venv\Scripts\python.exe tests/validar_saida.py --dados data/raw --saida saida --regras regras.toml --esperar COMPLETO --esperar-fechamento PROVISORIO
 ```
 
-Ele confere cabeçalhos e domínios, hashes das fontes/saídas, IDs de todas as linhas Orbe, destino único em rastro ou pendência, contagens, datas/competência, soma exata por comissão e pendência com valor conhecido, seis cabeçalhos oficiais em ordem e preservação das decisões pendentes. Ele audita os artefatos; os testes de regras verificam as fórmulas e a seleção contratual.
+O auditor conserva `--esperar` como expectativa do checkout e aceita `--esperar-fechamento` para o agregado do alvo. Ele confere cabeçalhos e domínios, hashes das fontes/saídas, IDs de todas as linhas Orbe, destino único em rastro ou pendência, contagens, datas/competência, soma exata por comissão e pendência com valor conhecido, seis cabeçalhos oficiais em ordem e preservação das decisões pendentes. Ele audita os artefatos; os testes de regras verificam as fórmulas e a seleção contratual.
 
 Para determinismo, rode o mesmo comando em duas pastas de saída novas (por exemplo, `saida-a` e `saida-b`) e compare os bytes dos seis CSVs e `manifesto.json`. O teste `test_execucao_instalada_fora_da_raiz_sem_chaves_e_repeticao` também verifica repetição sem depender do diretório do código. Os demais testes de aceite exercitam outro mês sintético, modalidade desconhecida, 13x, EC sem cadastro, fonte ausente, layout inválido, soma/referência adulterada e publicação interrompida.
 
@@ -139,6 +159,6 @@ Os testes de subprocesso exigem o pacote instalado pelo comando de instalação.
 
 ## Estrutura
 
-`src/tarvo/` separa execução, modelos, leitores, cadastro, cálculo, validação e exportação. `regras.toml` contém a configuração desta fatia e decisões pendentes. `docs/FORMATO_SAIDA.md` conserva o contrato do desafio. `HIPOTESES.md` registra limites e decisões. `PROMPTS/` registra o uso de IA.
+`src/tarvo/` separa execução, modelos, leitores, cadastro, cálculo, validação e exportação. `ResultadoParte` em `modelos.py` contém o contrato interno; `partes.py` declara dependências e isola validações; `contratos.py` reúne os layouts usados por coordenação, validação e exportação, sem duplicar definições. `regras.toml` contém a configuração desta fatia e decisões pendentes. `docs/FORMATO_SAIDA.md` conserva o contrato do desafio. `HIPOTESES.md` registra limites e decisões. `PROMPTS/` registra o uso de IA.
 
-A proposta de expansão está em [docs/EVOLUCAO_ALVO.md](docs/EVOLUCAO_ALVO.md), exclusivamente como planejamento. Nenhuma etapa futura é iniciada por executar o comando atual.
+A proposta de expansão está em [docs/EVOLUCAO_ALVO.md](docs/EVOLUCAO_ALVO.md), com A1 marcada como implementada e A2–A7 exclusivamente como planejamento. Nenhuma etapa futura é iniciada por executar o comando atual.

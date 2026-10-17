@@ -51,7 +51,62 @@ def ler_csv(caminho, obrigatorias):
         return linhas
 
 
-def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
+def agregar(estados):
+    estados = list(estados)
+    return ("BLOQUEADO" if not estados or all(e == "BLOQUEADO" for e in estados) else
+            "COMPLETO" if all(e == "COMPLETO" for e in estados) else "PROVISORIO")
+
+
+def verificar_partes(manifesto):
+    partes = manifesto.get("partes", {})
+    minimo = {"CHECKOUT", "PENDENCIAS_CHECKOUT"}
+    futuras = {"REMESSAS", "DIVERGENCIAS_CHECKOUT", "DIVERGENCIAS_REMESSA", "NOTAS_CHECKOUT",
+               "NOTAS_REMESSA", "EXTRATO_AURORA", "EXTRATO_MERIDIANO"}
+    exigir(set(partes) == minimo | futuras, "Partes de A1 ausentes ou desconhecidas")
+    for nome, parte in partes.items():
+        estado = parte.get("situacao")
+        exigir(estado in {"COMPLETO", "PROVISORIO", "BLOQUEADO"}, "Situação de parte inválida")
+        exigir(parte.get("rastro_validado") is (estado != "BLOQUEADO"), "Validade da parte incompatível com o status")
+        if nome in futuras:
+            exigir(parte.get("implementado") is False and estado == "BLOQUEADO" and parte.get("motivos"),
+                   "Parte futura apresentada como implementada no aceite de A1")
+        else:
+            exigir(parte.get("implementado") is True, "Parte do mínimo não implementada")
+        dependencias = parte.get("dependencias", {})
+        exigir(isinstance(dependencias.get("fontes"), list) and isinstance(dependencias.get("partes"), list),
+               "Dependências não declaradas")
+        for fonte in dependencias["fontes"]:
+            esperado = manifesto.get("fontes", {}).get(fonte, {}).get("situacao", "NAO_AVALIADA")
+            exigir(parte.get("fontes", {}).get(fonte) == esperado, "Estado da fonte da parte incorreto")
+        if estado != "BLOQUEADO":
+            exigir(all(partes.get(d, {}).get("rastro_validado") is True for d in dependencias["partes"]),
+                   "Parte liberada apesar de resultado requerido bloqueado")
+            exigir(all(e in {"DISPONIVEL", "PROVISORIO"} for e in parte.get("fontes", {}).values()),
+                   "Parte liberada sem fontes válidas")
+    exigir(partes["CHECKOUT"]["situacao"] == manifesto.get("situacao"), "Status legado diverge do checkout")
+    exigir(manifesto.get("rastro_validado") is partes["CHECKOUT"]["rastro_validado"], "Rastro legado diverge do checkout")
+    fechamento = manifesto.get("fechamento", {})
+    exigir(fechamento.get("situacao") == agregar(p["situacao"] for p in partes.values()), "Situação agregada incorreta")
+    exigir(set(fechamento.get("partes", [])) == set(partes)
+           and set(fechamento.get("bloqueadas", [])) == {n for n,p in partes.items() if p["situacao"] == "BLOQUEADO"}
+           and set(fechamento.get("provisorias", [])) == {n for n,p in partes.items() if p["situacao"] == "PROVISORIO"},
+           "Resumo das partes incorreto")
+    escopo = manifesto.get("escopo_comando")
+    exigir(escopo in {"checkout", "alvo"}, "Escopo do comando inválido")
+    escolhidas = minimo if escopo == "checkout" else set(partes)
+    exigir(manifesto.get("situacao_comando") == agregar(partes[n]["situacao"] for n in escolhidas),
+           "Código de conclusão não corresponde ao escopo")
+    for arquivo, detalhe in manifesto["resultados"].items():
+        previstas = {n for n,p in partes.items() if arquivo == "rastro.csv" or arquivo in p.get("relatorios", [])}
+        participantes = previstas & escolhidas or previstas
+        exigir(set(detalhe.get("partes", [])) == participantes, "Produtores do relatório incorretos")
+        exigir(detalhe.get("situacao") == agregar(partes[n]["situacao"] for n in participantes)
+               and detalhe.get("situacao_alvo") == agregar(partes[n]["situacao"] for n in previstas),
+               "Status do relatório omite uma parte bloqueada")
+    return partes
+
+
+def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fechamento=None):
     manifesto = json.loads((saida / "manifesto.json").read_text(encoding="utf-8"))
     exigir(isinstance(manifesto, dict), "Manifesto não é objeto")
     situacao = manifesto.get("situacao")
@@ -78,18 +133,21 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
     for nome, linhas in arquivos.items():
         exigir(resultados[nome].get("linhas") == len(linhas), f"Contagem incorreta: {nome}")
         exigir(resultados[nome].get("situacao") in {"COMPLETO", "PROVISORIO", "BLOQUEADO"}, f"Status inválido: {nome}")
+    partes = verificar_partes(manifesto) if manifesto.get("versao", 0) >= 3 else {}
+    if esperar_fechamento:
+        exigir(manifesto.get("fechamento", {}).get("situacao") == esperar_fechamento, "Fechamento diferente do esperado")
     for nome in ("divergencias_taxa.csv", "notas_a_emitir.csv", "lancamentos_classificados.csv"):
         exigir(not arquivos[nome] and resultados[nome].get("situacao") == "BLOQUEADO"
                and resultados[nome].get("motivos"), "Relatório do alvo apresentado como processado")
     comissoes = arquivos["comissoes_por_lojista.csv"]
     rastros = arquivos["rastro.csv"]
-    if situacao == "BLOQUEADO":
-        exigir(not any(arquivos.values()) and all(r["situacao"] == "BLOQUEADO" for r in resultados.values())
+    if situacao == "BLOQUEADO" and not any(arquivos.values()):
+        exigir(not any(arquivos.values()) and (partes or all(r["situacao"] == "BLOQUEADO" for r in resultados.values()))
                and manifesto.get("rastro_validado") is False
                and manifesto.get("total_parcial_brl") is None and manifesto.get("motivos"),
                "Bloqueio deve ter apenas cabeçalhos, sem valores válidos")
         return {"situacao": situacao, "motivos": manifesto["motivos"], "arquivos_validos": 0}
-    exigir(manifesto.get("rastro_validado") is True, "Rastro não marcado como validado")
+    exigir(manifesto.get("rastro_validado") is (situacao != "BLOQUEADO"), "Rastro não corresponde ao estado do checkout")
     fontes = manifesto.get("fontes", {})
     exigir(set(fontes) == {"orbe", "taxas", "regras"}, "Dependências do mínimo não identificadas")
     for nome in ("taxas", "regras"):
@@ -159,7 +217,8 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
         exigir(p.get("linha") == linhas_fisicas.get((p.get("arquivo_origem"), p.get("ref_origem"))),
                "Pendência perdeu a linha física de origem")
     pendencias_csv = arquivos["pendencias.csv"]
-    exigir(len(pendencias_csv) == len(pendencias), "Contagem de pendencias.csv difere do manifesto")
+    pendencias_publicadas = pendencias if not partes or partes["PENDENCIAS_CHECKOUT"]["rastro_validado"] else []
+    exigir(len(pendencias_csv) == len(pendencias_publicadas), "Contagem de pendencias.csv difere da parte validada")
     por_pendencia = {(p["arquivo_origem"], p["ref_origem"], str(p["linha"])): p for p in pendencias}
     ids_pendencias = set()
     valores_pendencias = {}
@@ -194,19 +253,23 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
                and dinheiro(r["valor"]) == dinheiro(p["valor_brl"])
                and r.get("natureza_valor") == p["natureza_valor"], "Rastro da pendência não reconcilia")
     rastros = [r for r in rastros if not r["id_saida"].startswith("PENDENCIA:")]
-    exigir(resultados["comissoes_por_lojista.csv"]["situacao"] == situacao, "Status da comissão diverge do checkout")
-    esperado_pendencias = "PROVISORIO" if any(not p["valor_brl"] for p in pendencias_csv) else situacao
-    for nome in ("pendencias.csv", "rastro.csv"):
-        exigir(resultados[nome]["situacao"] == esperado_pendencias, f"Status incoerente em {nome}")
+    if not partes:
+        exigir(resultados["comissoes_por_lojista.csv"]["situacao"] == situacao, "Status da comissão diverge do checkout")
+        esperado_pendencias = "PROVISORIO" if any(not p["valor_brl"] for p in pendencias_csv) else situacao
+        for nome in ("pendencias.csv", "rastro.csv"):
+            exigir(resultados[nome]["situacao"] == esperado_pendencias, f"Status incoerente em {nome}")
     destinos = [(l["arquivo_origem"], l["ref_origem"]) for l in rastros]
-    destinos += [(p["arquivo_origem"], p["ref_origem"]) for p in pendencias]
-    exigir(Counter(destinos) == Counter(origem), "Entrada sem destino, duplicada ou com referência inventada")
+    destinos += [(p["arquivo_origem"], p["ref_origem"]) for p in pendencias_publicadas]
+    exigir(Counter(destinos) <= Counter(origem), "Entrada sem destino, duplicada ou com referência inventada")
     exigir(len({l["ref_origem"] for l in rastros}) == len(rastros), "ID econômico calculado mais de uma vez")
     cobertura = manifesto.get("cobertura", {})
     exigir(cobertura == {"linhas_lidas": len(origem), "calculadas": len(rastros),
-                         "pendentes": len(pendencias), "bloqueadas": 0}, "Cobertura declarada não corresponde aos arquivos")
+                         "pendentes": len(pendencias_publicadas), "bloqueadas": len(origem) - len(destinos)}, "Cobertura declarada não corresponde aos arquivos")
     provisorio = bool(manifesto.get("avisos")) or any(p["categoria"] == "DADOS" for p in pendencias)
-    exigir((situacao == "PROVISORIO") == provisorio, "Situação incompatível com D-13")
+    if situacao != "BLOQUEADO":
+        exigir((situacao == "PROVISORIO") == provisorio, "Situação incompatível com D-13")
+    if situacao != "BLOQUEADO" and (not partes or partes["PENDENCIAS_CHECKOUT"]["rastro_validado"]):
+        exigir(Counter(destinos) == Counter(origem), "Cobertura incompleta sem parte bloqueada")
     ids = [l["id_saida"] for l in comissoes]
     exigir(len(set(ids)) == len(ids), "IDs de saída duplicados")
     exigir(len({l["cnpj"] for l in comissoes}) == len(comissoes), "CNPJ duplicado nas comissões do mês")
@@ -248,11 +311,15 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
     exigir(all(somas[l["id_saida"]] == dinheiro(l["comissao_brl"]) for l in comissoes),
            "Soma do rastro não corresponde à comissão")
     total = sum((dinheiro(l["comissao_brl"]) for l in comissoes), Decimal(0))
-    exigir(total == dinheiro(manifesto.get("total_parcial_brl")), "Total do manifesto não confere")
+    if situacao == "BLOQUEADO":
+        exigir(not comissoes and not rastros and manifesto.get("total_parcial_brl") is None, "Comissão bloqueada publicou valores")
+    else:
+        exigir(total == dinheiro(manifesto.get("total_parcial_brl")), "Total do manifesto não confere")
     return {"situacao": situacao, "competencia": manifesto.get("competencia"),
-            "cobertura": cobertura, "comissoes": len(comissoes), "total_brl": format(total, ".2f"),
+            "cobertura": cobertura, "comissoes": len(comissoes), "total_brl": format(total, ".2f") if situacao != "BLOQUEADO" else None,
             "rastro_exato": True, "fontes_e_hashes": True, "decisoes_preservadas": True, "pendencias_csv": len(pendencias_csv),
-            "rastro_pendencias": len(rastros_pendencias), "contratos_csv": len(arquivos)}
+            "rastro_pendencias": len(rastros_pendencias), "contratos_csv": len(arquivos), "fechamento": manifesto.get("fechamento", {}).get("situacao"),
+            "situacao_comando": manifesto.get("situacao_comando", situacao)}
 
 
 def main():
@@ -261,9 +328,10 @@ def main():
     parser.add_argument("--saida", required=True, type=Path)
     parser.add_argument("--regras", required=True, type=Path)
     parser.add_argument("--esperar", choices=["COMPLETO", "PROVISORIO", "BLOQUEADO"])
+    parser.add_argument("--esperar-fechamento", choices=["COMPLETO", "PROVISORIO", "BLOQUEADO"])
     args = parser.parse_args()
     try:
-        resultado = verificar(args.dados, args.saida, args.regras, args.esperar)
+        resultado = verificar(args.dados, args.saida, args.regras, args.esperar, args.esperar_fechamento)
     except (ValueError, OSError, KeyError, TypeError, csv.Error) as exc:
         parser.exit(1, f"ACEITE REPROVADO: {exc}\n")
     print(json.dumps(resultado, ensure_ascii=False, indent=2))

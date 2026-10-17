@@ -93,6 +93,22 @@ class Contribuicao:
 
 
 @dataclass
+class ResultadoParte:
+    """Um resultado validável; não executa leitores ou cálculos financeiros."""
+
+    fontes: tuple[str, ...] = ()
+    depende_de: tuple[str, ...] = ()
+    relatorios: tuple[str, ...] = ()
+    implementado: bool = False
+    situacao: str = "BLOQUEADO"
+    motivos: list[str] = field(default_factory=list)
+    linhas: dict[str, list[dict]] = field(default_factory=dict)
+    rastro: list[dict] = field(default_factory=list)
+    cobertura: dict[str, int] = field(default_factory=dict)
+    validado: bool = False
+
+
+@dataclass
 class Resultado:
     situacao: str = "BLOQUEADO"
     motivos: list[str] = field(default_factory=list)
@@ -109,3 +125,5 @@ class Resultado:
     decisoes_documentadas: list[dict] = field(default_factory=list)
     ingestao: dict = field(default_factory=dict)
     avisos: list[str] = field(default_factory=list)
+    partes: dict[str, ResultadoParte] = field(default_factory=dict)
+    calculo_executado: bool = False

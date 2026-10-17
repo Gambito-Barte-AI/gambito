@@ -7,9 +7,16 @@ import re
 from . import checkout, regras, validacao
 from .leitores import orbe, taxas
 from .modelos import Cadastro, ErroEntrada, Resultado
+from .partes import preparar_partes
 
 
 def executar(pasta: Path, configuracao: Path, competencia: str | None = None) -> Resultado:
+    resultado = _executar_checkout(pasta, configuracao, competencia)
+    preparar_partes(resultado)
+    return resultado
+
+
+def _executar_checkout(pasta: Path, configuracao: Path, competencia: str | None = None) -> Resultado:
     resultado = Resultado()
     bloqueios = []
     config = None
@@ -69,6 +76,7 @@ def executar(pasta: Path, configuracao: Path, competencia: str | None = None) ->
     resultado.contribuicoes, pendencias = checkout.calcular(
         resultado.eventos, cadastro, config,
     )
+    resultado.calculo_executado = True
     resultado.pendencias.extend(pendencias)
     resultado.pendencias.sort(key=lambda p: (p.origem.arquivo, p.origem.linha))
     validacao.consolidar(resultado)

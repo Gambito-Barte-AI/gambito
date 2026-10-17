@@ -1,3 +1,19 @@
+# A1 — isolamento aprovado de resultados e dependências
+
+Apenas A1 foi autorizada nesta sessão. Mantidos os valores, os seis CSVs do mínimo e todas as decisões financeiras; A2 e os leitores/cálculos futuros não foram implementados.
+
+- ResultadoParte separa payload, rastro, cobertura, fontes, resultados requeridos, situação e motivos. CHECKOUT e PENDENCIAS_CHECKOUT são adaptados a partir do contrato existente; cada um é revalidado antes da publicação.
+- O padrão --escopo checkout exige o mínimo (comissões e pendências existentes). --escopo alvo exige todas as partes declaradas, sem ativar etapas não implementadas. O agregado é completo somente se todas forem completas; provisório se houver parte disponível e alguma incompleta; bloqueado se nenhuma estiver disponível. Códigos 0/2/1 seguem o escopo escolhido. O case normal continua retornando 0 no padrão.
+- Manifesto versão 3 preserva os campos legados de checkout. situacao_comando, fechamento, partes e resultados explicam o escopo e a composição dos arquivos. Em falha isolada, o código pode ser 2 mesmo com checkout bloqueado, se pendências independentes forem válidas; o total do checkout fica null.
+- Fontes futuras não lidas têm estado NAO_AVALIADA, não DISPONIVEL nem AUSENTE por suposição. As etapas correspondentes ficam bloqueadas como não implementadas. A1 não faz detecção ou parsing financeiro da Ponte/bancos.
+- Falha de rastro, esquema ou cobertura bloqueia a parte afetada e seus dependentes. Conflito de id_saida bloqueia os produtores envolvidos. Arquivos compostos recebem apenas linhas de partes validadas; registros monetários bloqueados não viram zero. Falha de escrita mantém o marcador global de publicação bloqueado.
+- Testes de bancos/remessa usam saídas normalizadas sintéticas para exercitar dependências, sem leitores ou regras desses produtos. Não constituem aceite financeiro do alvo.
+- Contrato da Atlas, pergunta financeira de D-10 e datas de aprovação ausentes continuam explícitos, sem novas aprovações ou valores inferidos. Interpretação histórica RN-13/RN-65 preservada.
+
+Evidência vigente de A1: docs/ACEITE_A1.md e saida/alvo-a1/. Os registros abaixo permanecem como histórico das entregas anteriores.
+
+---
+
 # Revisão final do mínimo antes do alvo
 
 A solicitação atual autorizou a exportação das pendências existentes, embora RF-11 esteja originalmente classificado no alvo. Não foram implementados novos cálculos do alvo. Os seis CSVs oficiais passam a ser publicados; divergências, notas e classificação ainda têm apenas cabeçalhos e status BLOQUEADO com motivo no manifesto.

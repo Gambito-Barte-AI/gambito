@@ -15,16 +15,20 @@ def main(argv=None) -> int:
     parser.add_argument("--saida", default=Path("saida"), type=Path)
     parser.add_argument("--regras", default=Path("regras.toml"), type=Path)
     parser.add_argument("--competencia", help="AAAA-MM; obrigatório quando as entradas têm vários meses")
+    parser.add_argument("--escopo", choices=["checkout", "alvo"], default="checkout",
+                        help="Critério de conclusão; alvo inclui etapas ainda não implementadas")
     argumentos = parser.parse_args(argv)
     try:
         if argumentos.saida.resolve() == argumentos.dados.resolve():
             raise ErroEntrada("Use uma pasta de saída diferente da pasta de dados originais")
         resultado = executar(argumentos.dados, argumentos.regras, argumentos.competencia)
-        manifesto = publicar(resultado, argumentos.saida)
+        manifesto = publicar(resultado, argumentos.saida, argumentos.escopo)
     except (ErroEntrada, OSError) as exc:
         print(f"ERRO: {exc}", file=sys.stderr)
         return 1
     print(f"Checkout {resultado.situacao}")
+    print(f"Escopo {argumentos.escopo}: {manifesto['situacao_comando']}")
+    print(f"Fechamento alvo: {manifesto['fechamento']['situacao']}")
     print(f"Competência: {resultado.competencia or 'não determinada'}")
     cobertura = manifesto["cobertura"]
     print(f"Linhas: {cobertura['linhas_lidas']} | calculadas: {cobertura['calculadas']} | "
@@ -42,7 +46,7 @@ def main(argv=None) -> int:
     for nome, detalhe in manifesto["resultados"].items():
         print(f"RESULTADO {nome}: {detalhe['situacao']} ({detalhe['linhas']} linhas)")
     print(f"Manifesto: {argumentos.saida / 'manifesto.json'}")
-    return {"COMPLETO": 0, "PROVISORIO": 2, "BLOQUEADO": 1}[resultado.situacao]
+    return {"COMPLETO": 0, "PROVISORIO": 2, "BLOQUEADO": 1}[manifesto["situacao_comando"]]
 
 
 if __name__ == "__main__":

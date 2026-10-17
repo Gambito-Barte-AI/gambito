@@ -213,12 +213,14 @@ class FluxoTest(unittest.TestCase):
         self.vendas([{"id_transacao": "A"}, {"id_transacao": "B", "data_movimento": "02/04/2031"}])
         self.assertEqual(self.executar().situacao, "BLOQUEADO")
 
-    def test_rastro_corrompido_nao_publica(self):
+    def test_rastro_corrompido_bloqueia_somente_checkout(self):
         resultado = self.executar()
         resultado.rastro[0]["valor"] = "0.00"
-        with self.assertRaises(ErroEntrada):
-            publicar(resultado, self.saida)
-        self.assertFalse((self.saida / "manifesto.json").exists())
+        manifesto = publicar(resultado, self.saida)
+        self.assertEqual(manifesto["partes"]["CHECKOUT"]["situacao"], "BLOQUEADO")
+        self.assertEqual(manifesto["partes"]["PENDENCIAS_CHECKOUT"]["situacao"], "COMPLETO")
+        self.assertEqual(len((self.saida / "comissoes_por_lojista.csv").read_text().splitlines()), 1)
+        self.assertIsNone(manifesto["total_parcial_brl"])
 
     def test_cobertura_corrompida_falha(self):
         resultado = self.executar()
