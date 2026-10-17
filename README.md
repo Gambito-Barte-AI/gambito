@@ -121,3 +121,7 @@ As referências locais opcionais `--referencia saida/alvo-a6 --minimo saida/alvo
 Os aceites `docs/ACEITE_MINIMO.md` e `docs/ACEITE_A1.md` a `docs/ACEITE_A7.md` são evidências históricas de decisões/regressões, não instruções para executar etapas antigas sobre o pacote final. Foram preservados; alguns apontam para logs locais ignorados. A referência de arquitetura/evolução é [EVOLUCAO_ALVO.md](docs/EVOLUCAO_ALVO.md), sem alteração de escopo nesta revisão.
 
 A7 registrou 233 testes e aceite integrado em ambiente virtual novo. As verificações finais desta entrega têm evidências locais em `.tmp/revisao-entrega/`: 233 testes aprovados, 21 cenários integrados mais reprodução do mínimo, auditoria do pacote final e integridade de 108 arquivos oficiais/referências. A anexação posterior dos históricos originais de IA e o envio/publicação cabem aos participantes.
+
+## Extras — contratos e módulos
+
+Os [contratos e a divisão das duas branches](docs/EXTRA_E0.md) estão definidos documentalmente. [E1](docs/EXTRA_ASSISTENCIA_CONTESTACOES.md) entrega o módulo de rascunhos e [E2](docs/EXTRA_CONTINUIDADE_ALERTAS.md) entrega exportação/leitura de pendências com eventos e referências preservados. A CLI acima permanece inalterada: integração/publicação de extras ainda pendentes. E2-P mantém faturamento posterior bloqueado, sem controle de já faturados ou apresentação da nota presumidos. E3–E5 não iniciadas; decisões financeiras e o alvo validado permanecem preservados.

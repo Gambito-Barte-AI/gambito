@@ -1636,7 +1636,7 @@
   "fora_do_escopo": [
     "extras"
   ],
-  "escopo_comando": "alvo",
+  "escopo_comando": "checkout",
   "situacao_comando": "COMPLETO",
   "fechamento": {
     "escopo": "ALVO",
@@ -1943,98 +1943,78 @@
     "comissoes_por_lojista.csv": {
       "situacao": "COMPLETO",
       "situacao_alvo": "COMPLETO",
-      "escopo": "alvo",
+      "escopo": "checkout",
       "partes": [
-        "REMESSAS",
         "CHECKOUT"
-      ],
-      "partes_bloqueadas": [],
-      "motivos": [],
-      "linhas": 35
-    },
-    "divergencias_taxa.csv": {
-      "situacao": "COMPLETO",
-      "situacao_alvo": "COMPLETO",
-      "escopo": "alvo",
-      "partes": [
-        "DIVERGENCIAS_CHECKOUT",
-        "DIVERGENCIAS_REMESSA"
-      ],
-      "partes_bloqueadas": [],
-      "motivos": [],
-      "linhas": 115
-    },
-    "notas_a_emitir.csv": {
-      "situacao": "COMPLETO",
-      "situacao_alvo": "COMPLETO",
-      "escopo": "alvo",
-      "partes": [
-        "NOTAS_CHECKOUT",
-        "NOTAS_REMESSA"
       ],
       "partes_bloqueadas": [],
       "motivos": [],
       "linhas": 21
     },
-    "lancamentos_classificados.csv": {
-      "situacao": "COMPLETO",
+    "divergencias_taxa.csv": {
+      "situacao": "BLOQUEADO",
       "situacao_alvo": "COMPLETO",
-      "escopo": "alvo",
-      "partes": [
-        "EXTRATO_AURORA",
-        "EXTRATO_MERIDIANO"
-      ],
+      "escopo": "checkout",
+      "partes": [],
       "partes_bloqueadas": [],
-      "motivos": [],
-      "linhas": 184
+      "motivos": [
+        "Relatório fora do escopo checkout; consulte --escopo alvo"
+      ],
+      "linhas": 0
+    },
+    "notas_a_emitir.csv": {
+      "situacao": "BLOQUEADO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "checkout",
+      "partes": [],
+      "partes_bloqueadas": [],
+      "motivos": [
+        "Relatório fora do escopo checkout; consulte --escopo alvo"
+      ],
+      "linhas": 0
+    },
+    "lancamentos_classificados.csv": {
+      "situacao": "BLOQUEADO",
+      "situacao_alvo": "COMPLETO",
+      "escopo": "checkout",
+      "partes": [],
+      "partes_bloqueadas": [],
+      "motivos": [
+        "Relatório fora do escopo checkout; consulte --escopo alvo"
+      ],
+      "linhas": 0
     },
     "pendencias.csv": {
       "situacao": "COMPLETO",
       "situacao_alvo": "COMPLETO",
-      "escopo": "alvo",
+      "escopo": "checkout",
       "partes": [
-        "DIVERGENCIAS_CHECKOUT",
-        "DEVOLUCAO_CASA",
-        "REMESSAS",
-        "DIVERGENCIAS_REMESSA",
-        "PENDENCIAS_CHECKOUT",
-        "NOTAS_CHECKOUT",
-        "NOTAS_REMESSA",
-        "EXTRATO_AURORA",
-        "EXTRATO_MERIDIANO"
+        "PENDENCIAS_CHECKOUT"
       ],
       "partes_bloqueadas": [],
       "motivos": [],
-      "linhas": 83
+      "linhas": 57
     },
     "rastro.csv": {
       "situacao": "COMPLETO",
       "situacao_alvo": "COMPLETO",
-      "escopo": "alvo",
+      "escopo": "checkout",
       "partes": [
-        "DIVERGENCIAS_CHECKOUT",
-        "DEVOLUCAO_CASA",
-        "REMESSAS",
-        "DIVERGENCIAS_REMESSA",
         "CHECKOUT",
-        "PENDENCIAS_CHECKOUT",
-        "NOTAS_CHECKOUT",
-        "NOTAS_REMESSA",
-        "EXTRATO_AURORA",
-        "EXTRATO_MERIDIANO"
+        "PENDENCIAS_CHECKOUT"
       ],
       "partes_bloqueadas": [],
       "motivos": [],
-      "linhas": 5080
+      "linhas": 1957
     }
   },
   "publicacao_concluida": true,
   "arquivos": {
-    "comissoes_por_lojista.csv": "c441ef1b5ea5eeb5395aae68de748a1f5f7c67f950f6cf6976a9597f9ede3572",
-    "divergencias_taxa.csv": "a570355cfc449062f82bca1897a3c44405cb55765eaa6d987c5378e6b0c613c9",
-    "notas_a_emitir.csv": "6cf567c3d233152a64f37f00e21f3b2efdad14262243700e49a3eeaafc3ecc57",
-    "lancamentos_classificados.csv": "e55b99e52476fe4b0f7274f1d67cbdeca5dcd5ba04c40c7ec25645f361e153bd",
-    "pendencias.csv": "159a80fd39eb4ac838c414d2028f3c14b083e4f6bb10a532d7e33196d6a5e7ea",
-    "rastro.csv": "e3df1175eecf49232c7abc15103659001937876b4cd619f04095f59ba22daf78"
+    "comissoes_por_lojista.csv": "2fe90214ed05f2f0e7283e4310bed567e898dc9897dd696998c3da8dc49c0633",
+    "divergencias_taxa.csv": "044ace88ff7067baff2fabb05ad7c400ff3c0bef5b0a5434ca1b5ad5975fe1df",
+    "notas_a_emitir.csv": "1ea0f248673c08e39030377ef3896b2fe2b35c8b896924ba12c6e7c836bc40f7",
+    "lancamentos_classificados.csv": "b84be0ba3904022c39d952e7b52f60dcb9d5dbe84a7feb42d0ef111f9bff85ee",
+    "pendencias.csv": "4dd6ed8ac74ac17ed61358014dc9eaf7da8e14b79f4c4020efa161d6b2874228",
+    "rastro.csv": "bbc9d9c611f9a8675b907c713ba07be5c59e48f8b85f0ef95be8f0c6320d9c50"
   }
 }

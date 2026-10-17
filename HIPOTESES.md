@@ -1,3 +1,25 @@
+# E2 — continuidade das pendências
+
+E2 autorizada: exportação e leitura do snapshot de eventos pendentes, conforme E0, em `docs/EXTRA_CONTINUIDADE_ALERTAS.md`. E1 preservada; E3 não iniciada. CLI/publicação de extras ainda não ligadas. Sem alterações das regras financeiras, oficiais ou resultados existentes.
+
+- E2-P continua bloqueando retomada com efeito financeiro: falta fechar controle persistente de já faturados, evidência da condição comercial e apresentação da competência original na nota posterior. Snapshot íntegro não é aprovação nem autoriza cobrança; o campo `faturamento_habilitado` é sempre false.
+- Estornos/reversões preservam eventos referenciados disponíveis como contexto não faturável; ausência, conflito ou ciclo gera diagnóstico, sem reconstruir dados ou escolher ocorrência arbitrária.
+- Hash de conteúdo detecta alteração, mas não substitui autenticação, validação do manifesto de origem ou aprovação comercial. IDs estáveis/duplicatas no pacote não resolvem idempotência entre fechamentos.
+- D-10, contrato Atlas e metadados sem comprovação permanecem explícitos. Histórico integral de IA segue adiado pelo usuário, sem criar resumos substitutos.
+
+---
+
+# E0 — contratos do extra (documentação)
+
+E0 autorizada pelo usuário: contratos internos e propriedade dos arquivos em `docs/EXTRA_E0.md`, sobre a base alvo `82c087cfd3b8315b2178f6a0ab02b8dffd57cef3`. Nenhuma implementação extra iniciada. E1–E5, branches e commits não autorizados por esta etapa. Histórico integral de IA continua adiado pelo usuário.
+
+- Retomada: condição comercial, controle de já faturados e apresentação da competência original no faturamento posterior devem ser fechados antes de ligar efeitos financeiros; exportar uma pendência não autoriza cobrar.
+- Alertas: fonte do histórico, fórmula do pico, tratamento de ordem intradia e limiar continuam por definir; D-03 não permite inventar esses dados.
+- IA: provedor/modelo, dados mínimos e limites de custo/tempo dependem de definição técnica; nenhum fornecedor é confirmado pelo placeholder de `.env.example`.
+- D-10, contrato Atlas, RN-64 corrigida e metadados sem comprovação preservados. Parâmetros e estruturas futuras no contrato não estão disponíveis na CLI atual.
+
+---
+
 # A7 — aceite integrado e reprodução final
 
 A7 autorizada pelo usuário e validada tecnicamente em 17/10/2026 no ambiente Windows/Python 3.12.10. Preservados mínimo, A1–A6, RN-64 corrigida e D-10 pendente. Extras não iniciados. Evidências finais em `docs/ACEITE_A7.md` e `saida/alvo-a7-final/`; registros anteriores permanecem históricos.
