@@ -102,7 +102,8 @@ class FluxoTest(unittest.TestCase):
     def test_nome_nao_e_usado_para_casar_ec(self):
         self.vendas([{"cod_estabelecimento": "999"}])
         resultado = self.executar()
-        self.assertEqual(resultado.situacao, "PROVISORIO")
+        self.assertEqual(resultado.situacao, "COMPLETO")
+        self.assertEqual(resultado.pendencias[0].categoria, "NEGOCIO")
         self.assertEqual(resultado.comissoes, [])
         self.assertEqual(resultado.pendencias[0].quem_decide, "Comercial")
 
@@ -148,15 +149,16 @@ class FluxoTest(unittest.TestCase):
         self.vendas([{"id_transacao": "A"}, {"id_transacao": "A"}])
         self.assertEqual(self.executar().situacao, "BLOQUEADO")
 
-    def test_fonte_ausente_bloqueia_e_remove_somente_saidas_proprias_antigas(self):
+    def test_fonte_ausente_substitui_saidas_proprias_por_cabecalhos(self):
         publicar(self.executar(), self.saida)
         (self.dados / "contratos.xlsx").unlink()
         resultado = self.executar()
         self.assertEqual(resultado.situacao, "BLOQUEADO")
         self.assertEqual(resultado.fontes["orbe"]["situacao"], "DISPONIVEL")
         manifesto = publicar(resultado, self.saida)
-        self.assertEqual(manifesto["arquivos"], {})
-        self.assertFalse((self.saida / "rastro.csv").exists())
+        self.assertEqual(set(manifesto["arquivos"]), {"rastro.csv", "comissoes_por_lojista.csv"})
+        self.assertEqual(len((self.saida / "rastro.csv").read_text().splitlines()), 1)
+        self.assertIsNone(manifesto["total_parcial_brl"])
 
     def test_layout_invalido_bloqueia_com_arquivo_e_colunas(self):
         (self.dados / "exportacao.csv").write_text("id_transacao;outra\nA;1\n", encoding="utf-8")
@@ -184,11 +186,14 @@ class FluxoTest(unittest.TestCase):
         (self.dados / "outro_banco.csv").write_bytes(b"\x81")
         self.assertEqual(self.executar().situacao, "COMPLETO")
 
-    def test_dois_relatorios_orbe_bloqueiam_sem_escolha_automatica(self):
+    def test_dois_relatorios_identicos_contam_uma_vez_com_pendencia(self):
         (self.dados / "ajustes.csv").write_bytes((self.dados / "exportacao.csv").read_bytes())
         resultado = self.executar()
-        self.assertEqual(resultado.situacao, "BLOQUEADO")
-        self.assertIn("ajustes.csv", resultado.fontes["orbe"]["motivo"])
+        self.assertEqual(resultado.situacao, "PROVISORIO")
+        self.assertEqual(resultado.linhas_lidas, 4)
+        self.assertEqual(len(resultado.contribuicoes), 2)
+        self.assertEqual(len(resultado.pendencias), 2)
+        self.assertTrue(all(p.tipo == "DUPLICIDADE" for p in resultado.pendencias))
 
     def test_evento_sem_parcelas_preserva_bruto_na_pendencia(self):
         self.vendas([{"tipo_lancamento": "ANTECIPACAO", "qtd_parcelas": ""}])

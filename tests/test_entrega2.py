@@ -82,6 +82,9 @@ ec = "{ec}"
 cnpj = "{cnpj}"
 fonte = "Amostra sintética"
 aprovacao = "Teste, sem efeito em produção"
+aprovador = "Teste sintético"
+aprovado_em = "2031-01-01"
+natureza = "INTERPRETACAO_TECNICA"
 '''
 
     def isencao(self, id="ISENCAO"):
@@ -92,6 +95,9 @@ inicio = 2031-03-10
 fim = 2031-03-20
 fonte = "Amostra sintética"
 aprovacao = "Teste, sem efeito em produção"
+aprovador = "Teste sintético"
+aprovado_em = "2031-01-01"
+natureza = "INTERPRETACAO_TECNICA"
 '''
 
     def test_faixas_e_limites_de_parcelas(self):
@@ -216,6 +222,9 @@ cnpj = "01234567800012"
 motivo = "Aguardando confirmação comercial; decisão de apresentação pendente"
 fonte = "Amostra"
 aprovacao = "Teste"
+aprovador = "Teste sintético"
+aprovado_em = "2031-01-01"
+natureza = "INTERPRETACAO_TECNICA"
 ''')
         r = self.executar()
         self.assertEqual(r.contribuicoes, [])
@@ -252,6 +261,9 @@ cnpj = "01234567800012"
 texto = "EC já confirmado"
 fonte = "Amostra"
 aprovacao = "Teste"
+aprovador = "Teste sintético"
+aprovado_em = "2031-01-01"
+natureza = "INTERPRETACAO_TECNICA"
 ''')
         self.planilha([self.contrato(obs="EC já confirmado")])
         self.assertEqual(len(self.executar().contribuicoes), 1)

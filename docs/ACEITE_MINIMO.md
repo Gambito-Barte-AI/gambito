@@ -1,3 +1,66 @@
+# Aceite atualizado do mínimo — P0/P1 e ajustes tardios
+
+**Resultado: aprovado tecnicamente com relatório e ajustes tardios, mantendo as pendências comerciais e a arquitetura existente.** Situação `COMPLETO` conforme D-13, sem confundir pendência de contrato da Atlas com erro de processamento. Nenhuma funcionalidade do alvo foi implementada.
+
+## Reprodução do zero
+
+Em 17/10/2026 foi criada `.tmp/aceite-multiorbe/` com fonte, testes, configuração e documentação atuais, sem `.git`, ambiente virtual anterior ou Context. O data pack foi copiado byte a byte, incluindo os dois CSVs Orbe. Os arquivos de remessas/bancos presentes na pasta não se tornam dependências do checkout.
+
+Um venv novo foi criado com Python **3.12.10**, seguido de instalação editável do projeto. O temporário do sandbox foi direcionado ao workspace. A primeira tentativa de instalação não tinha acesso à rede; a repetição autorizada instalou somente as dependências já declaradas: **openpyxl 3.1.5** e **et-xmlfile 2.0.0**. `pip check` passou. Sem novas dependências de produto.
+
+Os comandos foram executados a partir da cópia nova, sem `PYTHONPATH`, `PYTHONHOME`, site-packages do usuário ou chaves de API. O caminho importado do pacote aponta ao `src/` da cópia. **94 testes passaram** nesse ambiente. Os bytes do código, testes e regras foram comparados ao workspace; hashes em `aceite.json` identificam o que foi validado.
+
+## Resultado conferido pelo auditor independente
+
+| Verificação | Evidência |
+| --- | --- |
+| Competência derivada do movimento | 2026-09 |
+| Cobertura física dos arquivos Orbe válidos | 1.957 linhas = 1.900 calculadas + 57 pendências comerciais; zero sem destino |
+| Comissões de checkout | 21 lojistas; **R$ 203.735,34** |
+| Ajustes tardios | 14 contribuições com origem no arquivo 06; 13 referências apontam ao arquivo 01 |
+| Comparação com relatório original isolado | R$ 207.039,73 → R$ 203.735,34; 7 lojistas alterados; diferença −R$ 3.304,39 |
+| Casa | Comissão −R$ 5,50, preservando estorno anterior à isenção; devolução não calculada |
+| Atlas | Fora das comissões; 57 pendências com CNPJ, origem, próximo passo e cobrança efetiva Orbe somada em R$ 7.876,05, separada do bruto |
+| Rastro | Uma contribuição assinada por evento calculado; reconciliação exata por `id_saida` |
+| Formato | CSV UTF-8 com `;`, ponto decimal, datas ISO e colunas obrigatórias preservadas |
+| Determinismo | Mesmos bytes dos dois CSVs e manifesto em duas pastas distintas |
+| Tempos medidos | 0.8704 s e 1.3381 s, incluindo inicialização |
+| Fontes | Hashes iguais aos originais antes/depois; nenhuma edição dos dados |
+
+Os números acima são referências de conferência, não constantes do motor. Também foi auditado o recorte só com relatório original e taxas. `tests/validar_saida.py` usa apenas a biblioteca padrão, sem importar `tarvo`: verifica todos os candidatos Orbe, hashes, cobertura por arquivo/referência, linha física das pendências, contratos de saída, competência, vínculos, anulação de reversões e soma por comissão. Os testes financeiros continuam responsáveis pela seleção contratual e fórmulas.
+
+## Casos de falha e regressão
+
+- Arquivos com nomes livres, referência entre arquivos e reversão antes do original na ordem de leitura.
+- Duplicata idêntica contada uma vez, com destino explícito para a ocorrência repetida; conflito de valores ou ocorrência inválida não libera comissão arbitrária nem referência dependente.
+- Arquivo adicional com layout inválido deixa o subconjunto válido provisório, com aviso, hash e motivo. Mudança da coluna de ID também é detectada pelos demais campos da assinatura Orbe.
+- Fonte necessária ausente, todas as fontes Orbe inválidas ou rastro quebrado: dois CSVs só com cabeçalhos, manifesto bloqueado e total `null`, sem transformar desconhecido em zero.
+- Publicação interrompida mantém marcador inválido; arquivos externos/modificados continuam protegidos.
+- Múltiplos meses exigem escolha; seleção por `--competencia` contabiliza separadamente os demais meses. Datas inválidas não são atribuídas silenciosamente a outro mês.
+- Auditor rejeita CSV Orbe omitido, soma/referência adulterada e decisões omitidas; metadados de aprovação ausentes ou datas inválidas nas regras são rejeitados.
+
+## Pendências e limites
+
+**D-07** é decisão documentada do time: Atlas fora do arquivo de comissões. Seu contrato continua pendente para o Comercial. As 57 origens e valores cobrados ficam no manifesto; não se cria comissão fictícia no rastro dos valores calculados. **RN-64**, antiga D-08, confirmou a devolução da Casa pelo efetivamente cobrado, mas essa funcionalidade continua no alvo.
+
+**D-10** permanece com resposta financeira pendente: o time decidiu usar 50% do Spread R$ negativo, porém ainda falta confirmar se a linha já vem como participação. Não há implementação de remessas. Datas de aprovação não documentadas das interpretações técnicas e decisões do time aparecem como `NAO_INFORMADO`, também no manifesto; não foram fabricadas.
+
+A interpretação de RN-13 que permite estorno de mês anterior sem relatório histórico foi preservada e explicitada em `HIPOTESES.md`; referência do próprio mês ausente ou reversão sem original vira pendência. Duplicata dentro de um mesmo arquivo ainda invalida essa fonte, por ambiguidade de `arquivo + id_transacao`. Cobertura não inclui linhas de arquivo estruturalmente rejeitado, cujo motivo permanece explícito.
+
+D-02 (tolerância de spread de 0,01 p.p. = 0,0001 em fração) e D-04 (Aurora com primeira transação física L9) permanecem requisitos para os módulos futuros. Não há remessas, divergências, notas, extratos, devoluções, IA, recuperação futura da Atlas ou `pendencias.csv` nesta etapa.
+
+## Evidências e reprodução
+
+`saida/aceite-multiorbe/` contém os CSVs, manifesto, `aceite.json`, log dos 94 testes, `pip-check.log`, logs das execuções e auditorias. A cópia nova mantém a repetição em `saida-b/` e o recorte original em `saida-original/`. Evidências anteriores não foram sobrescritas.
+
+Siga o README para instalar e executar com a pasta completa. Para o case atual, o motor retorna `0` (`COMPLETO` com pendências comerciais); o auditor com `--esperar COMPLETO` também retorna `0`. As pastas de saída, dados, Context e PROMPTS continuam sob as escolhas existentes de `.gitignore`; presença local não implica versionamento. Nenhum commit, push ou alteração de branch.
+
+---
+
+# Registro histórico da Entrega 4, anterior aos ajustes P0/P1
+
+O registro abaixo foi preservado para rastrear a entrega anterior. Seus critérios de um único Orbe, bloqueio sem CSVs e D-07/D-08 abertas foram substituídos pelo aceite acima.
+
 # Aceite técnico do mínimo — Entrega 4
 
 **Resultado: aprovado no recorte das duas entradas originais, com pendências financeiras explícitas.** Não é aprovação das decisões financeiras, dos ajustes tardios ou do alvo.

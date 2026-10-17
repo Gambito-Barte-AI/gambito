@@ -1,5 +1,5 @@
 versao = 1
-fonte = "Arquitetura consolidada e Entregas 1 a 4 autorizadas pelo usuário nesta conversa"
+fonte = "docs/documentação-geral.md; aprovação técnica P0/P1 pelo usuário nesta conversa"
 escopo = "Checkout com vendas, estornos, antecipações e reversões; sem funcionalidades do alvo"
 
 # Configuração de leitura, sem assumir nomes dos arquivos do mês.
@@ -7,56 +7,74 @@ escopo = "Checkout com vendas, estornos, antecipações e reversões; sem funcio
 aba_taxas = "Taxas vigentes"
 abas_identidade = ["ANTIGO 2025 - nao usar"]
 
-# Seleção de faixa parcelada por quantidade, conforme RN-08 e RN-09.
+# Seleção de faixa parcelada por quantidade, conforme RN-10.
 [modalidades]
 DEBITO = "debito"
 "CREDITO A VISTA" = "credito_vista"
 PIX = "pix"
 "CREDITO PARCELADO" = "parcelado"
 
-# RN-03: ECs confirmados pelo financeiro. CNPJs conferidos na aba vigente.
+# RN-05: ECs confirmados pelo financeiro. CNPJs conferidos na aba vigente.
 [[vinculos]]
 id = "EC_NOVO_HORIZONTE"
 ec = "1043300981"
 cnpj = "66564512000199"
-fonte = "Context/regrasdenegocio.md RN-03, Slack 20:24; XLSX Taxas vigentes L28"
-aprovacao = "Financeiro, conforme RN-03; data da resposta não informada no registro"
+fonte = "docs/documentação-geral.md RN-05; Slack 2026-10-16 20:24; XLSX Taxas vigentes"
+aprovacao = "Condição financeira confirmada na fonte; não autoriza taxa da aba antiga nem funcionalidades do alvo."
+aprovador = "Financeiro (papel documentado; nome não individualizado)"
+aprovado_em = "2026-10-16T20:24:00-03:00"
+natureza = "FINANCEIRA"
 
 [[vinculos]]
 id = "EC_HORIZONTE_VIAGENS"
 ec = "1043396662"
 cnpj = "78576234000179"
-fonte = "Context/regrasdenegocio.md RN-03, Slack 20:24; XLSX Taxas vigentes L8"
-aprovacao = "Financeiro, conforme RN-03; data da resposta não informada no registro"
+fonte = "docs/documentação-geral.md RN-05; Slack 2026-10-16 20:24; XLSX Taxas vigentes"
+aprovacao = "Condição financeira confirmada na fonte; não autoriza taxa da aba antiga nem funcionalidades do alvo."
+aprovador = "Financeiro (papel documentado; nome não individualizado)"
+aprovado_em = "2026-10-16T20:24:00-03:00"
+natureza = "FINANCEIRA"
 
 [[vinculos]]
 id = "EC_KIWI"
 ec = "1038867654"
 cnpj = "07752116000126"
-fonte = "Context/regrasdenegocio.md RN-03, Slack 20:24; XLSX Taxas vigentes L9"
-aprovacao = "Financeiro, conforme RN-03; data da resposta não informada no registro"
+fonte = "docs/documentação-geral.md RN-05; Slack 2026-10-16 20:24; XLSX Taxas vigentes"
+aprovacao = "Condição financeira confirmada na fonte; não autoriza taxa da aba antiga nem funcionalidades do alvo."
+aprovador = "Financeiro (papel documentado; nome não individualizado)"
+aprovado_em = "2026-10-16T20:24:00-03:00"
+natureza = "FINANCEIRA"
 
 [[vinculos]]
 id = "IDENTIDADE_ATLAS"
 ec = "1076801732"
 cnpj = "39566044000119"
-fonte = "Context/regrasdenegocio.md RN-15; XLSX ANTIGO 2025 - nao usar L8, somente identidade"
-aprovacao = "Usuário relatou autorização do financeiro para identidade na aba antiga; D-07 não ratificada"
+fonte = "docs/documentação-geral.md RN-07 e RN-17; Slack 2026-10-17 11:41; aba antiga somente identidade"
+aprovacao = "Condição financeira confirmada na fonte; não autoriza taxa da aba antiga nem funcionalidades do alvo."
+aprovador = "Financeiro (identidade e suspensão de faturamento; apresentação decidida separadamente pelo time)"
+aprovado_em = "2026-10-17T11:41:00-03:00"
+natureza = "FINANCEIRA"
 
 [[contratos_bloqueados]]
 id = "ATLAS_SEM_CONTRATO"
 cnpj = "39566044000119"
-motivo = "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07 permanece pendente."
-fonte = "Context/regrasdenegocio.md RN-15 e RN-16"
-aprovacao = "Financeiro, Slack 20:24, conforme contexto; retirar bloqueio apenas com confirmação comercial documentada"
+motivo = "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07: fora das comissões, mantendo identidade e cobrança da Orbe na pendência."
+fonte = "docs/documentação-geral.md RN-07 e RN-17; Slack 2026-10-17 11:41; aba antiga somente identidade"
+aprovacao = "Condição financeira confirmada na fonte; não autoriza taxa da aba antiga nem funcionalidades do alvo."
+aprovador = "Financeiro (identidade e suspensão de faturamento; apresentação decidida separadamente pelo time)"
+aprovado_em = "2026-10-17T11:41:00-03:00"
+natureza = "FINANCEIRA"
 
 [[isencoes]]
 id = "ISENCAO_CHECKOUT_CASA"
 cnpj = "00520815000100"
 inicio = 2026-09-01
 fim = 2026-12-31
-fonte = "Context/regrasdenegocio.md RN-13 e RN-14; atualização do usuário: vale a data da venda"
-aprovacao = "Financeiro, Slack 20:49 e 09:44 conforme contexto; data de aprovação não informada"
+fonte = "docs/documentação-geral.md RN-15 e RN-16; Slack 2026-10-17 11:41"
+aprovacao = "Condição financeira confirmada na fonte; não autoriza taxa da aba antiga nem funcionalidades do alvo."
+aprovador = "Financeiro (papel documentado; nome não individualizado)"
+aprovado_em = "2026-10-17T11:41:00-03:00"
+natureza = "FINANCEIRA"
 
 # Interpretações técnicas explícitas de observações conhecidas. Não criam taxas.
 # Qualquer texto diferente continua pendente, mesmo para o mesmo CNPJ.
@@ -64,49 +82,71 @@ aprovacao = "Financeiro, Slack 20:49 e 09:44 conforme contexto; data de aprovaç
 id = "OBS_BRIDGE_ANTERIOR"
 cnpj = "22224579000109"
 texto = "renegociado - ver linha de baixo"
-fonte = "XLSX Taxas vigentes L6; RN-10; usuário confirmou prevalência do contrato"
-aprovacao = "Interpretação técnica: utilizar limites explícitos da planilha; não é nova aprovação financeira"
+fonte = "docs/documentação-geral.md RN-08, RN-12 e RN-25; XLSX Taxas vigentes; interpretação técnica restrita ao checkout"
+aprovacao = "Interpretação técnica preservada; data de aprovação não consta do registro."
+aprovador = "Time técnico; interpretação registrada, sem nova aprovação financeira"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
 
 [[observacoes_esclarecidas]]
 id = "OBS_BRIDGE_NOVA"
 cnpj = "22224579000109"
 texto = "só mudou o crédito à vista"
-fonte = "XLSX Taxas vigentes L7; RN-10"
-aprovacao = "Interpretação técnica: ler todas as taxas da própria linha vigente; não é nova aprovação financeira"
+fonte = "docs/documentação-geral.md RN-08, RN-12 e RN-25; XLSX Taxas vigentes; interpretação técnica restrita ao checkout"
+aprovacao = "Interpretação técnica preservada; data de aprovação não consta do registro."
+aprovador = "Time técnico; interpretação registrada, sem nova aprovação financeira"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
 
 [[observacoes_esclarecidas]]
 id = "OBS_KIWI"
 cnpj = "07752116000126"
 texto = "EC pendente"
-fonte = "XLSX Taxas vigentes L9; EC esclarecido pelo financeiro na RN-03"
-aprovacao = "Vínculo confirmado em RN-03; sem alteração de taxa"
+fonte = "docs/documentação-geral.md RN-05; Slack 2026-10-16 20:24; XLSX Taxas vigentes"
+aprovacao = "Condição financeira confirmada na fonte; não autoriza taxa da aba antiga nem funcionalidades do alvo."
+aprovador = "Financeiro (papel documentado; nome não individualizado)"
+aprovado_em = "2026-10-16T20:24:00-03:00"
+natureza = "FINANCEIRA"
 
 [[observacoes_esclarecidas]]
 id = "OBS_CASA"
 cnpj = "00520815000100"
 texto = "cliente estratégico - ver c/ comercial"
-fonte = "XLSX Taxas vigentes L13; condição esclarecida em RN-13/RN-14"
-aprovacao = "Isenção confirmada pelo financeiro; D-08 trata devolução, não a taxa zero"
+fonte = "docs/documentação-geral.md RN-15 e RN-16; Slack 2026-10-17 11:41"
+aprovacao = "Condição financeira confirmada na fonte; não autoriza taxa da aba antiga nem funcionalidades do alvo."
+aprovador = "Financeiro (papel documentado; nome não individualizado)"
+aprovado_em = "2026-10-17T11:41:00-03:00"
+natureza = "FINANCEIRA"
 
 [[observacoes_esclarecidas]]
 id = "OBS_MUNDO_ABERTO"
 cnpj = "17217888000111"
 texto = "spread negociado em jul/26"
-fonte = "XLSX Taxas vigentes L15: observação de spread de remessa"
-aprovacao = "Interpretação técnica restrita ao checkout; não altera spread nem implementa remessa"
+fonte = "docs/documentação-geral.md RN-08 e RN-28; XLSX Taxas vigentes L15 (observação de remessa); interpretação técnica restrita ao checkout"
+aprovacao = "Interpretação técnica preservada; data de aprovação não consta do registro."
+aprovador = "Time técnico; interpretação registrada, sem nova aprovação financeira"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
 
-# Registro explícito; estas decisões não são aplicadas como regras financeiras.
-[[decisoes_pendentes]]
+# Decisões já documentadas; funcionalidades do alvo continuam não implementadas.
+[[decisoes_documentadas]]
 id = "D-07"
-descricao = "Atlas fora ou zerada no arquivo de comissões?"
-tratamento_atual = "Identidade histórica permitida, taxas antigas proibidas. Sem comissão calculada; pendência com CNPJ e referência. Não ratifica a apresentação final de D-07."
+descricao = "Atlas fora das comissões; identidade e cobrança efetiva da Orbe preservadas nas pendências comerciais."
+fonte = "docs/documentação-geral.md D-07 / RN-17"
+aprovador = "Time (apresentação); Financeiro (não faturar)"
+aprovado_em = "NAO_INFORMADO"
 
-[[decisoes_pendentes]]
-id = "D-08"
-descricao = "Ratificar devolução da Casa pelo valor efetivamente cobrado, com recorte das linhas elegíveis."
-tratamento_atual = "Isenção de checkout aplicada por data da venda. Devolução não implementada e D-08 não ratificada."
+[[decisoes_documentadas]]
+id = "RN-64 (antiga D-08)"
+descricao = "Casa: devolução pelo cobrado efetivamente nas linhas elegíveis; referência R$ 15.396,77, nunca constante de cálculo. Devolução pertence ao alvo."
+fonte = "docs/documentação-geral.md RN-64; Financeiro, Slack 2026-10-17 12:50; consolidação 13h15"
+aprovador = "Financeiro"
+aprovado_em = "2026-10-17T12:50:00-03:00"
 
 [[decisoes_pendentes]]
 id = "D-10"
-descricao = "Confirmar se ajuste Ponte representa spread integral ou participação da Tarvo antes de aplicar 50%."
-tratamento_atual = "Remessas fora do escopo."
+descricao = "Financeiro ainda deve confirmar se ajuste Ponte representa spread integral ou participação da Tarvo."
+tratamento_atual = "Time decidiu usar 50% do Spread R$ negativo, sem aplicar duas vezes; decisão registrada, mas remessas continuam fora do mínimo e não foram implementadas."
+fonte = "docs/documentação-geral.md D-10 e pergunta Slack 17/10 12:04"
+aprovador = "Time; confirmação financeira pendente"
+aprovado_em = "NAO_INFORMADO"

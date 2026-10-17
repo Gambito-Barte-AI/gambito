@@ -71,6 +71,148 @@ tratamento_atual = "Amostra de verificação da preservação das decisões"
     def auditar(self, esperar="COMPLETO"):
         return verificar(self.dados, self.saida, self.regras, esperar)
 
+    def arquivo_orbe(self, nome, linhas):
+        colunas = ["id_transacao", "data_movimento", "cod_estabelecimento", "tipo_lancamento",
+                   "modalidade", "qtd_parcelas", "valor_bruto", "id_referencia", "data_venda_original", "valor_taxa"]
+        with (self.dados / nome).open("w", encoding="utf-8", newline="") as arquivo:
+            escritor = csv.DictWriter(arquivo, fieldnames=colunas, delimiter=";")
+            escritor.writeheader()
+            for campos in linhas:
+                linha = dict.fromkeys(colunas, "")
+                linha.update(id_transacao="A", data_movimento="02/04/2032", cod_estabelecimento="42",
+                             tipo_lancamento="VENDA", modalidade="PIX", qtd_parcelas="1", valor_bruto="1,00")
+                linha.update(campos)
+                escritor.writerow(linha)
+
+    def test_ajuste_em_outro_arquivo_usa_original_e_preserva_origem(self):
+        self.arquivo_orbe("qualquer_nome.csv", [dict(id_transacao="E", data_movimento="03/04/2032",
+            tipo_lancamento="ESTORNO", valor_bruto="-1,00", id_referencia="A", data_venda_original="02/04/2032")])
+        self.executar()
+        self.assertEqual(self.auditar()["total_brl"], "0.00")
+        with (self.saida / "rastro.csv").open(encoding="utf-8") as arquivo:
+            rastros = list(csv.DictReader(arquivo, delimiter=";"))
+        estorno = next(r for r in rastros if r["ref_origem"] == "E")
+        self.assertEqual((estorno["arquivo_origem"], estorno["arquivo_evento_original"]),
+                         ("qualquer_nome.csv", "orbe.csv"))
+        self.assertEqual(estorno["data_base_taxa"], "2032-04-02")
+
+    def test_reversao_em_outro_arquivo_mesmo_antes_do_original(self):
+        from openpyxl import load_workbook
+        livro = load_workbook(self.dados / "taxas.xlsx")
+        livro["Taxas"].cell(1, 9, "Antecipação")
+        livro["Taxas"].cell(2, 9, .021)
+        livro.save(self.dados / "taxas.xlsx")
+        livro.close()
+        self.arquivo_orbe("orbe.csv", [dict(tipo_lancamento="ANTECIPACAO", valor_bruto="100,00")])
+        self.arquivo_orbe("antes.csv", [dict(id_transacao="R", data_movimento="03/04/2032",
+            tipo_lancamento="REVERSAO ANTECIPACAO", valor_bruto="-100,00", id_referencia="A", data_venda_original="02/04/2032")])
+        self.executar()
+        self.assertEqual(self.auditar()["total_brl"], "0.00")
+
+    def test_duplicata_identica_uma_comissao_e_dois_destinos_fisicos(self):
+        (self.dados / "copia.csv").write_bytes((self.dados / "orbe.csv").read_bytes())
+        self.executar(2)
+        aceite = self.auditar("PROVISORIO")
+        self.assertEqual(aceite["total_brl"], "0.01")
+        self.assertEqual(aceite["cobertura"], dict(linhas_lidas=2, calculadas=1, pendentes=1, bloqueadas=0))
+
+    def test_auditor_detecta_csv_orbe_omitido(self):
+        self.executar()
+        self.arquivo_orbe("recebido_depois.csv", [dict(id_transacao="B")])
+        with self.assertRaisesRegex(ErroAceite, "omite.*CSV Orbe"):
+            self.auditar()
+
+    def test_coluna_opcional_com_campo_faltante_vira_pendencia(self):
+        self.arquivo_orbe("ajuste.csv", [dict(id_transacao="B")])
+        caminho = self.dados / "ajuste.csv"
+        texto = caminho.read_text(encoding="utf-8")
+        caminho.write_text(texto.rstrip("\n").removesuffix(";") + "\n", encoding="utf-8")
+        self.executar(2)
+        self.assertEqual(self.auditar("PROVISORIO")["cobertura"]["pendentes"], 1)
+
+    def test_duplicata_com_ocorrencia_invalida_nao_libera_comissao(self):
+        self.arquivo_orbe("invalido.csv", [dict(valor_bruto="NaN")])
+        self.executar(2)
+        aceite = self.auditar("PROVISORIO")
+        self.assertEqual(aceite["cobertura"]["calculadas"], 0)
+        self.assertEqual(aceite["cobertura"]["pendentes"], 2)
+
+    def test_ids_conflitantes_nao_escolhem_valor_nem_liberam_referencia(self):
+        self.arquivo_orbe("conflito.csv", [dict(valor_bruto="2,00")])
+        self.arquivo_orbe("ajuste.csv", [dict(id_transacao="E", tipo_lancamento="ESTORNO",
+            valor_bruto="-1,00", id_referencia="A", data_venda_original="02/04/2032")])
+        self.executar(2)
+        aceite = self.auditar("PROVISORIO")
+        self.assertEqual(aceite["cobertura"], dict(linhas_lidas=3, calculadas=0, pendentes=3, bloqueadas=0))
+
+    def test_orbe_valida_e_adicional_com_layout_quebrado_fecha_provisorio(self):
+        (self.dados / "ruim.csv").write_text("id_transacao;outra\nB;1\n", encoding="utf-8")
+        self.executar(2)
+        self.assertEqual(self.auditar("PROVISORIO")["total_brl"], "0.01")
+
+    def test_mudanca_na_coluna_id_nao_descarta_arquivo_silenciosamente(self):
+        self.arquivo_orbe("layout_mudou.csv", [dict(id_transacao="B")])
+        caminho = self.dados / "layout_mudou.csv"
+        caminho.write_text(caminho.read_text(encoding="utf-8").replace("id_transacao;", "novo_id;"), encoding="utf-8")
+        self.executar(2)
+        self.assertEqual(self.auditar("PROVISORIO")["total_brl"], "0.01")
+
+    def test_referencia_do_mes_ausente_vira_pendencia(self):
+        self.arquivo_orbe("ajuste.csv", [dict(id_transacao="E", tipo_lancamento="ESTORNO",
+            valor_bruto="-1,00", id_referencia="NAO_EXISTE", data_venda_original="02/04/2032")])
+        self.executar(2)
+        self.assertEqual(self.auditar("PROVISORIO")["cobertura"]["pendentes"], 1)
+
+    def test_escolha_explicita_de_competencia_e_mes_invalido(self):
+        from tarvo.execucao import executar
+        from tarvo.exportacao import publicar
+        self.arquivo_orbe("outro_mes.csv", [dict(id_transacao="B", data_movimento="01/05/2032")])
+        self.assertEqual(executar(self.dados, self.regras).situacao, "BLOQUEADO")
+        resultado = executar(self.dados, self.regras, "2032-05")
+        self.assertEqual(resultado.situacao, "COMPLETO")
+        self.assertEqual(resultado.ingestao["fora_competencia"], 1)
+        publicar(resultado, self.saida)
+        self.assertEqual(self.auditar()["competencia"], "2032-05")
+        self.assertEqual(executar(self.dados, self.regras, "2032-13").situacao, "BLOQUEADO")
+
+    def test_pendencia_comercial_preserva_cobrado_sem_tornar_provisorio(self):
+        with self.regras.open("a", encoding="utf-8") as arquivo:
+            arquivo.write('''
+[[contratos_bloqueados]]
+id = "SEM_CONTRATO"
+cnpj = "01234567800012"
+motivo = "Comercial deve confirmar contrato; não faturar"
+fonte = "Amostra sintética"
+aprovacao = "Teste"
+aprovador = "Teste sintético"
+aprovado_em = "2032-01-01"
+natureza = "FINANCEIRA"
+''')
+        self.arquivo_orbe("orbe.csv", [dict(valor_taxa="12,34")])
+        self.executar()
+        self.auditar()
+        manifesto = json.loads((self.saida / "manifesto.json").read_text(encoding="utf-8"))
+        pendencia = manifesto["pendencias"][0]
+        self.assertEqual(pendencia["valor_orbe_brl"], "12.34")
+        self.assertEqual(pendencia["valor_bruto_brl"], "1.00")
+        self.assertEqual(pendencia["categoria"], "NEGOCIO")
+        self.assertTrue(pendencia["proximo_passo"])
+        self.assertEqual(manifesto["cobertura"]["calculadas"], 0)
+
+    def test_metadados_de_aprovacao_obrigatorios_sem_inventar_datas(self):
+        from tarvo.regras import carregar
+        from tarvo.modelos import ErroEntrada
+        original = Path(__file__).resolve().parents[1] / "regras.toml"
+        texto = original.read_text(encoding="utf-8")
+        config = carregar(original)
+        self.assertTrue(any(r["aprovado_em"] == "NAO_INFORMADO" for r in config["observacoes_esclarecidas"]))
+        self.regras.write_text(texto.replace('aprovador = ', 'aprovador_omitido = ', 1), encoding="utf-8")
+        with self.assertRaisesRegex(ErroEntrada, "RN-61"):
+            carregar(self.regras)
+        self.regras.write_text(texto.replace('2026-10-16T20:24:00-03:00', 'ontem', 1), encoding="utf-8")
+        with self.assertRaisesRegex(ErroEntrada, "data de aprovação"):
+            carregar(self.regras)
+
     def regravar_hash(self, nome):
         caminho = self.saida / "manifesto.json"
         m = json.loads(caminho.read_text(encoding="utf-8"))
@@ -97,14 +239,16 @@ tratamento_atual = "Amostra de verificação da preservação das decisões"
         (self.dados / "taxas.xlsx").unlink()
         self.executar(1)
         self.auditar("BLOQUEADO")
-        self.assertFalse((self.saida / "rastro.csv").exists())
-        self.assertFalse((self.saida / "comissoes_por_lojista.csv").exists())
+        self.assertEqual(len((self.saida / "rastro.csv").read_text().splitlines()), 1)
+        self.assertEqual(len((self.saida / "comissoes_por_lojista.csv").read_text().splitlines()), 1)
 
-    def test_layout_invalido_falha_sem_csvs(self):
+    def test_layout_invalido_publica_apenas_cabecalhos(self):
         (self.dados / "orbe.csv").write_text("id_transacao;outra\nA;1\n", encoding="utf-8")
         self.executar(1)
         self.auditar("BLOQUEADO")
-        self.assertEqual(list(self.saida.glob("*.csv")), [])
+        self.assertEqual(len(list(self.saida.glob("*.csv"))), 2)
+        for p in self.saida.glob("*.csv"):
+            self.assertEqual(len(p.read_text().splitlines()), 1)
 
     def test_auditor_detecta_soma_errada_mesmo_com_hash_atualizado(self):
         self.executar()
@@ -145,7 +289,9 @@ tratamento_atual = "Amostra de verificação da preservação das decisões"
         self.assertEqual(resultado.situacao, "BLOQUEADO")
         publicar(resultado, self.saida)
         self.auditar("BLOQUEADO")
-        self.assertEqual(list(self.saida.glob("*.csv")), [])
+        self.assertEqual(len(list(self.saida.glob("*.csv"))), 2)
+        for p in self.saida.glob("*.csv"):
+            self.assertEqual(len(p.read_text().splitlines()), 1)
 
     def test_publicacao_interrompida_nao_deixa_manifesto_valido(self):
         from tarvo.execucao import executar

@@ -27,6 +27,7 @@ class Evento:
     bruto: Decimal
     referencia: str
     data_original: date | None
+    valor_taxa: Decimal | None = None
 
 
 @dataclass(frozen=True)
@@ -67,6 +68,10 @@ class Pendencia:
     cnpj: str | None = None
     identidade_origem: Origem | None = None
     vinculo: str = ""
+    categoria: str = "DADOS"
+    proximo_passo: str = "Conferir a linha na origem e reenviar os dados corrigidos."
+    valor_orbe: Decimal | None = None
+    tipo: str = "DADO_NAO_RESOLVIDO"
 
 
 @dataclass(frozen=True)
@@ -101,3 +106,6 @@ class Resultado:
     linhas_lidas: int = 0
     validado: bool = False
     decisoes_pendentes: list[dict] = field(default_factory=list)
+    decisoes_documentadas: list[dict] = field(default_factory=list)
+    ingestao: dict = field(default_factory=dict)
+    avisos: list[str] = field(default_factory=list)

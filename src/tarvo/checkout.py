@@ -56,23 +56,29 @@ def calcular(eventos: list[Evento], cadastro: Cadastro, regras: dict):
     for evento in ordenados:
         identidade, problema_identidade = identificar(evento.ec, cadastro, regras)
 
-        def pendente(motivo, responsavel="Financeiro"):
+        def pendente(motivo, responsavel="Financeiro", categoria="DADOS"):
             pendencias.append(Pendencia(
                 evento.origem, motivo, responsavel, evento.bruto,
                 identidade.cnpj if identidade else None, identidade.origem if identidade else None,
                 identidade.vinculo if identidade else "",
+                categoria=categoria,
+                proximo_passo=("Confirmar identidade e contrato vigente com o Comercial; anexar aprovação e reprocessar."
+                               if categoria == "NEGOCIO" else
+                               "Conferir tipo, valores e referências na origem; corrigir ou fornecer o arquivo faltante e reprocessar."),
+                valor_orbe=evento.valor_taxa,
+                tipo="CONTRATO_PENDENTE" if categoria == "NEGOCIO" else "EVENTO_NAO_RESOLVIDO",
             ))
 
         bloqueios = [b for b in regras.get("contratos_bloqueados", [])
                      if identidade and b["cnpj"] == identidade.cnpj]
         if bloqueios:
-            pendente("; ".join(b["motivo"] for b in bloqueios), "Comercial")
+            pendente("; ".join(b["motivo"] for b in bloqueios), "Comercial", "NEGOCIO")
             continue
         if evento.tipo not in {"VENDA", "ESTORNO", "ANTECIPACAO", "REVERSAO ANTECIPACAO"}:
             pendente("Tipo de evento não reconhecido no checkout")
             continue
         if identidade is None:
-            pendente(problema_identidade, "Comercial")
+            pendente(problema_identidade, "Comercial", "NEGOCIO")
             continue
         negativo = evento.tipo in {"ESTORNO", "REVERSAO ANTECIPACAO"}
         if (negativo and evento.bruto >= 0) or (not negativo and evento.bruto <= 0):
@@ -117,19 +123,19 @@ def calcular(eventos: list[Evento], cadastro: Cadastro, regras: dict):
             continue
         contrato, motivo = resolver(identidade, data_base, cadastro, regras)
         if contrato is None:
-            pendente(motivo, "Comercial")
+            pendente(motivo, "Comercial", "NEGOCIO")
             continue
         contratada = contrato.taxas.get(faixa)
         isencoes = [i for i in regras.get("isencoes", []) if i["cnpj"] == identidade.cnpj
                     and i["inicio"] <= data_base <= i["fim"]]
         if len(isencoes) > 1:
-            pendente("Isenções sobrepostas", "Comercial")
+            pendente("Isenções sobrepostas", "Comercial", "NEGOCIO")
             continue
         regra = isencoes[0]["id"] if isencoes else "PLANILHA"
         if isencoes:
             contratada = Decimal(0)
         if contratada is None:
-            pendente("Taxa contratada ausente ou com formato não reconhecido", "Comercial")
+            pendente("Taxa contratada ausente ou com formato não reconhecido", "Comercial", "NEGOCIO")
             continue
         valor = (evento.bruto * contratada).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
         original = por_ref.get(evento.referencia)

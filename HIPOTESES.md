@@ -1,3 +1,21 @@
+# Atualização P0/P1 — fonte atual e tratamentos aprovados
+
+A referência atual é `docs/documentação-geral.md` da develop, que prevalece sobre a numeração e o estado histórico abaixo. Arquitetura monolítica modular e escopo checkout mínimo preservados.
+
+- **D-07 documentada:** Atlas fora das comissões, sem faturamento estimado; identidade e `valor_taxa` da Orbe preservados por linha no manifesto. O contrato segue pendente para o Comercial. As 57 origens ficam nas pendências, sem inserir comissão fictícia no rastro de valores calculados.
+- **RN-64 (antiga D-08) confirmada:** Casa usa cobrança efetiva nas linhas elegíveis para a devolução. Referência R$ 15.396,77. Devolução não implementada no mínimo; a comissão segue a isenção e a vigência original.
+- **D-10 pendente de confirmação financeira:** decisão do time de aplicar 50% do Spread R$ negativo registrada; é preciso confirmar se a linha já representa a participação. Nenhuma remessa implementada.
+- **RN-61:** aprovador, data e natureza separados nas regras. Datas não presentes no registro técnico/time ficam `NAO_INFORMADO` e aparecem no manifesto; completar quando houver evidência. Isso não representa aprovação financeira.
+- **RN-65/RF-22:** reunir CSVs por cabeçalho. Repetição idêntica entre arquivos conta uma vez; conteúdo conflitante fica integralmente pendente. Origem canônica dos idênticos escolhida pela ordem de nomes, sem dependência de nome específico. Duplicata dentro do mesmo arquivo continua invalidando essa fonte por ambiguidade de origem.
+- **RN-13 versus referência ausente em RN-65:** preservado o caso confirmado de estorno de mês anterior sem relatório histórico, usando referência/data declaradas; referência do próprio mês ausente, reversão sem original e referência conflitante viram pendências. Não exigir agosto evita rejeitar o exemplo explicitamente aprovado. Validar com o time se RN-65 pretendia revogar esse caso histórico; nenhuma taxa é estimada.
+- **D-12/D-13:** bloqueio gera cabeçalhos e total indisponível. Pendência de negócio não torna o resultado provisório; pendência de dados ou aviso de fonte rejeitada torna. Fonte rejeitada tem hash/motivo e não entra na cobertura de linhas lidas com sucesso.
+- **D-14:** `--competencia AAAA-MM` quando necessário; contabilizar separadamente eventos de outros meses. Reversão com original fora do recorte continua pendente, sem reconstrução histórica.
+- **D-02 e D-04:** tolerância de 0,01 p.p. e Aurora iniciando em L9 físico pertencem aos módulos futuros. Nenhum cálculo de spread ou leitura bancária antecipado.
+
+Os registros seguintes descrevem o histórico das Entregas 1–4; menções a D-07/D-08 abertas e ao bloqueio por dois arquivos foram superadas por esta atualização. Evidência vigente: `docs/ACEITE_MINIMO.md`, `saida/aceite-multiorbe/`.
+
+---
+
 # Hipóteses, limites e decisões pendentes
 
 ## Escopo autorizado

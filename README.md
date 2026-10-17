@@ -27,9 +27,11 @@ Para o data pack local, se disponível:
 .\.venv\Scripts\python.exe -m tarvo --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml
 ```
 
-O data pack e `Context/` não estão versionados. A banca precisa fornecer os arquivos originais. O comando não depende desses nomes: descobre um CSV com `id_transacao` e um único XLSX; a aba vigente é configurada em `regras.toml`. Mais de um candidato bloqueia a fonte, sem escolher arbitrariamente. A competência é obtida de `data_movimento`; arquivos vazios ou com múltiplos meses ficam bloqueados nesta entrega.
+O data pack e `Context/` não estão versionados. A banca fornece os arquivos originais. O leitor reconhece **todos os CSVs Orbe pelo cabeçalho**, sem nomes fixos, e um único XLSX de taxas. Relatório e ajustes são reunidos antes das referências. A aba vigente é configurada em `regras.toml`; várias planilhas candidatas continuam bloqueando essa dependência.
 
-Na validação da Entrega 2, a pasta local recebeu também `06_orbe_ajustes_tardios_set2026.csv`. Com dois relatórios Orbe, o comando acima gera corretamente `BLOQUEADO`; não há fusão ou seleção automática. Para reproduzir o recorte aprovado, coloque em `data/raw/` somente o relatório Orbe original e a planilha de taxas, copiados sem alteração, e use o primeiro comando. O relatório adicional permanece intacto e seu processamento não foi incorporado. As evidências anteriores foram preservadas em `saida/entrega2/` e `saida/entrega3/`. A Entrega 4 valida explicitamente o recorte de duas entradas; não significa aceite dos ajustes tardios ou do alvo.
+A competência vem de `data_movimento`, nunca da data da venda original. Com vários meses, escolha explicitamente, por exemplo `--competencia 2026-09`. Linhas válidas de outros meses ficam fora do cálculo e são contadas em `ingestao.fora_competencia`. Linhas com data inválida permanecem pendentes, pois não é seguro atribuir um mês. Uma reversão cujo original esteja fora do recorte exige revisão; não é reconstruída por estimativa.
+
+A pasta completa com `01` e `06` é suportada. Também é possível executar somente relatório e taxas. As evidências antigas em `saida/entrega2/`, `entrega3/` e `entrega4/` foram preservadas; representam a versão anterior. O aceite atualizado está em `docs/ACEITE_MINIMO.md` e `saida/aceite-multiorbe/`.
 
 ## Escopo financeiro
 
@@ -44,8 +46,8 @@ Na validação da Entrega 2, a pasta local recebeu também `06_orbe_ajustes_tard
 - `ANTECIPACAO` usa bruto positivo, taxa da coluna Antecipação e a data do evento como base contratual, pois o relatório não vincula uma venda individual. Não há constante de 2,10% no motor. Taxa ausente gera pendência. Referência temporal diferente da data do evento requer esclarecimento.
 - `REVERSAO ANTECIPACAO` exige a antecipação original disponível e calculável, mesmo que apareça depois no arquivo. Confere tipo, EC, data e bruto integral oposto; o valor é o negativo exato da contribuição original, com sua taxa, contrato e regra. Não usa a taxa atual nem soma outra antecipação. Reversão parcial, original ausente ou múltiplas reversões da mesma antecipação ficam pendentes.
 - As abas em `entrada.abas_identidade` fornecem apenas CNPJ/nome/origem, nunca taxas ou vigência. Ausência dessas abas não bloqueia os contratos vigentes; identidades que dependeriam delas permanecem pendentes.
-- A Atlas é identificada pela aba antiga e vínculo documentado, mas o bloqueio comercial mantém seus eventos pendentes. Nenhuma taxa antiga é importada. D-07 não foi ratificada: a ausência de comissão calculada não decide a representação final fora/zerada.
-- A isenção confirmada da Casa usa a data da venda e o intervalo configurado. Contribuições isentas são zero com rastro. Antes/depois do intervalo, aplica-se o contrato vigente, sem estender a isenção. Devolução ao lojista não é calculada e D-08 permanece pendente.
+- A Atlas é identificada pela aba antiga e vínculo documentado, mas o bloqueio comercial mantém seus eventos pendentes. Nenhuma taxa antiga é importada. D-07 foi decidida pelo time: Atlas fica fora das comissões; cada pendência preserva CNPJ, origem e `valor_taxa` efetivamente cobrado, separado do bruto. Não se estima a comissão nem se importa taxa antiga.
+- A isenção confirmada da Casa usa a data da venda e o intervalo configurado. Contribuições isentas são zero com rastro. Antes/depois do intervalo, aplica-se o contrato vigente, sem estender a isenção. A devolução pelo cobrado foi confirmada na RN-64 (antiga D-08), mas seu cálculo pertence ao alvo e continua não implementado. R$ 15.396,77 é referência de conferência, nunca constante no código.
 - A isenção também vale para a antecipação no seu período. A reversão de antecipação isenta permanece zero, mesmo após o fim da isenção. Estornos anteriores à isenção usam a condição anterior, com saldo negativo permitido nas comissões.
 - D-10 continua fora do escopo. Saldos zero/negativos são preservados nas comissões; nenhuma nota, transferência de saldo ou devolução é gerada.
 - Remessas, divergências, notas, extratos, devoluções, IA e `pendencias.csv` não são implementados.
@@ -56,21 +58,23 @@ Na validação da Entrega 2, a pasta local recebeu também `06_orbe_ajustes_tard
 
 - `comissoes_por_lojista.csv`: somente contribuições calculadas, agrupadas por CNPJ; layout obrigatório.
 - `rastro.csv`: uma contribuição assinada por evento calculado; soma exata por `id_saida`, incluindo zero e negativos. Colunas adicionais registram contrato, taxa, faixa, regra, vínculo, tipo, data base contratual e referência original. O vínculo ao original é metadado, sem repetir seu valor e duplicar a soma. Arquivo histórico não disponível permanece vazio.
-- `manifesto.json`: situação, competência, hashes das fontes e saídas, cobertura, limitações, decisões pendentes e todas as pendências por referência. O valor bruto de uma pendência não representa comissão nem valor a cobrar.
+- `manifesto.json`: situação, competência, hashes de cada fonte e saída, cobertura física, duplicidades, avisos, limitações, decisões documentadas/pendentes e todas as pendências por referência, tipo, categoria, próximo passo e responsável. O valor bruto de uma pendência não representa comissão nem valor a cobrar.
 
-O terminal exibe resumo e pendências com motivo e responsável. IDs e ordenação são estáveis; mesma entrada e regras geram os mesmos arquivos.
+O terminal exibe resumo, decisões e pendências com motivo e responsável; `proximo_passo` fica no manifesto. O CSV de pendências permanece reservado ao alvo, preservando o contrato oficial. IDs e ordenação são estáveis; mesma entrada e regras geram os mesmos arquivos.
 
 | Situação | Significado | Código de saída |
 | --- | --- | --- |
-| `COMPLETO` | Todas as linhas de checkout calculadas, sem pendências. Não significa alvo concluído. | `0` |
-| `PROVISORIO` | CSVs válidos somente para contribuições calculadas; demais linhas identificadas como pendências. | `2` |
-| `BLOQUEADO` | Dependência inválida/ausente, competência ambígua ou falha de validação; sem CSVs atuais. | `1` |
+| `COMPLETO` | Fontes válidas e rastro reconciliado. Pendências de negócio, como Atlas, continuam explícitas. Não significa alvo concluído. | `0` |
+| `PROVISORIO` | Há pendências de dados ou aviso de fonte adicional inválida; fecha somente o subconjunto validado. | `2` |
+| `BLOQUEADO` | Dependência inválida/ausente, competência ambígua ou rastro quebrado; CSVs apenas com cabeçalhos, total indisponível. | `1` |
 
-Ausência de fontes do alvo não bloqueia checkout. As duas fontes desta entrega são inspecionadas independentemente, mas checkout precisa de ambas e das regras. Linha com dado inválido e ID conhecido pode ficar pendente; ID ausente/duplicado ou erro estrutural bloqueia a fonte. Não se infere como deduplicar Orbe.
+Ausência de fontes do alvo não bloqueia checkout. Orbe, taxas e regras são inspecionadas separadamente. Se todos os candidatos Orbe forem inválidos, bloqueia; se houver fontes válidas e outra identificada com layout inválido, fecha provisoriamente as válidas e registra o arquivo rejeitado, hash e motivo. A cobertura de linhas refere-se aos arquivos lidos com sucesso; linhas de fonte estruturalmente inválida não são contadas como processadas.
+
+IDs idênticos entre arquivos são calculados uma vez, com ocorrência repetida em pendência e origem canônica pela ordenação dos arquivos. IDs com conteúdo conflitante deixam **todas** as ocorrências pendentes, assim como eventos que os referenciam. Não se escolhe um valor financeiro entre conflitos. ID ausente ou repetido dentro do mesmo arquivo continua sendo falha estrutural da fonte, para não tornar ambígua a referência oficial `arquivo + id_transacao`.
 
 **Consulte sempre `manifesto.json` e verifique seus hashes antes de consumir CSVs.** Ele é publicado por último como marcador de validade. Se a publicação for interrompida, o marcador permanece bloqueado. Só os arquivos registrados em `arquivos` pertencem à execução atual.
 
-Uma execução bloqueada publica diagnóstico e remove apenas os dois CSVs anteriores gerados por este produtor e cujo hash permanece intacto. Arquivos externos ou modificados pelo usuário nunca são sobrescritos/removidos: o comando falha e pede outra pasta de saída. Não use a pasta das entradas como saída. Outros arquivos presentes em `saida/` não fazem parte desta entrega.
+Uma execução bloqueada publica diagnóstico e substitui os dois CSVs próprios, com hash intacto, por arquivos apenas com cabeçalhos. O manifesto marca `BLOQUEADO`, `rastro_validado=false` e total `null`; isso não é comissão zero. Arquivos externos ou modificados pelo usuário nunca são sobrescritos/removidos: o comando falha e pede outra pasta de saída. Não use a pasta das entradas como saída. Outros arquivos presentes em `saida/` não fazem parte desta entrega.
 
 ## Verificação
 
@@ -85,32 +89,32 @@ As amostras são sintéticas e criadas em diretório temporário: arredondamento
 
 ## Configuração e decisões pendentes
 
-`regras.toml` contém os três ECs complementares confirmados, vínculo da Atlas, bloqueio por falta de confirmação comercial, período de isenção da Casa e observações esclarecidas. Valores, datas e identificadores do caso ficam nessa configuração, nunca como constantes no código de cálculo. Cada registro tem fonte e descrição da aprovação conhecida ou da interpretação técnica; datas/pessoas não informadas não são inventadas.
+`regras.toml` contém os três ECs complementares confirmados, vínculo da Atlas, bloqueio por falta de confirmação comercial, período de isenção da Casa e observações esclarecidas. Valores, datas e identificadores do caso ficam nessa configuração, nunca como constantes no código de cálculo. Cada regra exige `fonte`, `aprovacao`, `aprovador`, `aprovado_em` e `natureza`. Datas conhecidas ficam em ISO; `NAO_INFORMADO` explicita lacunas reais do registro, também listadas em `fontes.regras.metadados_incompletos`. Interpretações técnicas não recebem aprovação financeira fictícia.
 
-D-07 (representação da Atlas), D-08 (devolução da Casa) e D-10 (semântica do ajuste Ponte) continuam no manifesto e em `HIPOTESES.md`. Aprovar esta entrega não ratifica essas decisões financeiras. Não é preciso API nem nova dependência para a Entrega 4.
+D-07 e RN-64 constam como decisões documentadas. D-10 permanece com confirmação financeira pendente: o time escolheu 50% do Spread R$ negativo, mas remessas continuam fora do mínimo. Datas ausentes de decisões/interpretações precisam ser completadas com evidência, sem impedir a leitura dos contratos já confirmados. Não é preciso API nem nova dependência para a Entrega 4.
 
 ## Aceite independente e reprodução do zero
 
-Em uma cópia nova do projeto, repita a instalação acima e coloque somente Orbe original e taxas em `data/raw/`. Execute sem chaves e sem configurar `PYTHONPATH`:
+Em uma cópia nova do projeto, repita a instalação acima e coloque todos os CSVs Orbe e o XLSX de taxas em `data/raw/`. Execute sem chaves e sem configurar `PYTHONPATH`:
 
 ```powershell
 .\.venv\Scripts\python.exe -m tarvo --dados data/raw --saida saida --regras regras.toml
 $codigo = $LASTEXITCODE
 ```
 
-Código `2` é esperado quando há pendências documentadas (como Atlas). O processo gerou resultados provisórios, não falhou na validação financeira. Código `1` indica bloqueio ou erro. Não trate qualquer saída diferente de zero como fechamento concluído.
+Código `0` é esperado para o case com as pendências comerciais da Atlas e fontes válidas. Código `2` indica dados não reconhecidos ou aviso de fonte rejeitada, com subconjunto validado. Código `1` indica bloqueio ou erro. Não trate qualquer saída diferente de zero como fechamento concluído.
 
 O verificador independente usa apenas a biblioteca padrão, sem importar o motor:
 
 ```powershell
-.\.venv\Scripts\python.exe tests/validar_saida.py --dados data/raw --saida saida --regras regras.toml --esperar PROVISORIO
+.\.venv\Scripts\python.exe tests/validar_saida.py --dados data/raw --saida saida --regras regras.toml --esperar COMPLETO
 ```
 
 Ele confere cabeçalhos e domínios, hashes das fontes/saídas, IDs de todas as linhas Orbe, destino único em rastro ou pendência, contagens, datas/competência, soma exata por comissão e preservação das decisões pendentes. Ele audita os artefatos; os testes de regras verificam as fórmulas e a seleção contratual.
 
 Para determinismo, rode o mesmo comando em duas pastas de saída novas (por exemplo, `saida-a` e `saida-b`) e compare os bytes dos dois CSVs e `manifesto.json`. O teste `test_execucao_instalada_fora_da_raiz_sem_chaves_e_repeticao` também verifica repetição sem depender do diretório do código. Os demais testes de aceite exercitam outro mês sintético, modalidade desconhecida, 13x, EC sem cadastro, fonte ausente, layout inválido, soma/referência adulterada e publicação interrompida.
 
-Os testes de subprocesso exigem o pacote instalado pelo comando de instalação. Nenhum dado do `Context/`, do `.env` ou de serviços externos é necessário. O verificador retorna `0` quando o artefato tem a situação esperada e é coerente; `1` quando detecta inconsistência. Aceite técnico do mínimo não encerra D-07/D-08/D-10 nem valida relatórios não processados.
+Os testes de subprocesso exigem o pacote instalado pelo comando de instalação. Nenhum dado do `Context/`, do `.env` ou de serviços externos é necessário. O verificador retorna `0` quando o artefato tem a situação esperada e é coerente; `1` quando detecta inconsistência. Aceite técnico não confirma o contrato da Atlas, não responde à pergunta financeira de D-10 e não valida funcionalidades do alvo. D-02 (spread 0,01 p.p. = fração 0,0001) e D-04 (Aurora L9 físico) continuam documentadas para a implementação futura, sem leitor ou motor de remessas/extratos nesta entrega.
 
 ## Estrutura
 

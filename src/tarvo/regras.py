@@ -1,6 +1,6 @@
 """Configuração explícita de vínculos e condições, com origem documentada."""
 
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 import re
 import tomllib
@@ -45,6 +45,16 @@ def carregar(caminho: Path) -> dict:
             if linha["id"] in ids or not re.fullmatch(r"[0-9]{14}", linha["cnpj"]):
                 raise ErroEntrada(f"{caminho}: regra duplicada ou CNPJ inválido em {tabela}")
             ids.add(linha["id"])
+            if not all(isinstance(linha.get(k), str) and linha[k].strip()
+                       for k in ("aprovador", "aprovado_em", "natureza")):
+                raise ErroEntrada(f"{caminho}: {linha['id']} exige aprovador, aprovado_em e natureza (RN-61)")
+            if linha["natureza"] not in {"FINANCEIRA", "DECISAO_TIME", "INTERPRETACAO_TECNICA"}:
+                raise ErroEntrada(f"{caminho}: natureza inválida em {linha['id']}")
+            if linha["aprovado_em"] != "NAO_INFORMADO":
+                try:
+                    datetime.fromisoformat(linha["aprovado_em"])
+                except ValueError as exc:
+                    raise ErroEntrada(f"{caminho}: data de aprovação inválida em {linha['id']}") from exc
             if tabela == "vinculos" and not re.fullmatch(r"[0-9]+", linha["ec"]):
                 raise ErroEntrada(f"{caminho}: EC inválido no vínculo {linha['id']}")
             if tabela == "isencoes":

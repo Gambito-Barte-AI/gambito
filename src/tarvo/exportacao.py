@@ -36,7 +36,8 @@ def resumo(resultado: Resultado) -> dict:
     return {
         "versao": 1, "escopo": "CHECKOUT_MINIMO", "etapa": "ENTREGA_4", "situacao": resultado.situacao,
         "competencia": resultado.competencia, "motivos": resultado.motivos,
-        "fontes": resultado.fontes, "rastro_validado": resultado.validado,
+        "fontes": resultado.fontes, "rastro_validado": resultado.validado and resultado.situacao != "BLOQUEADO",
+        "ingestao": resultado.ingestao, "avisos": resultado.avisos,
         "cobertura": {
             "linhas_lidas": resultado.linhas_lidas, "calculadas": processados,
             "pendentes": pendentes,
@@ -54,8 +55,11 @@ def resumo(resultado: Resultado) -> dict:
             "identidade_origem": p.identidade_origem.arquivo if p.identidade_origem else None,
             "ref_identidade": p.identidade_origem.ref if p.identidade_origem else None,
             "vinculo_identidade": p.vinculo,
+            "categoria": p.categoria, "tipo": p.tipo, "proximo_passo": p.proximo_passo,
+            "valor_orbe_brl": format(p.valor_orbe, ".2f") if p.valor_orbe is not None else None,
         } for p in resultado.pendencias],
         "decisoes_financeiras_pendentes": resultado.decisoes_pendentes,
+        "decisoes_documentadas": resultado.decisoes_documentadas,
         "fora_do_escopo": ["remessas", "divergencias", "notas", "extratos", "pendencias.csv"],
     }
 
@@ -83,12 +87,11 @@ def publicar(resultado: Resultado, pasta: Path) -> dict:
         ):
             raise ErroEntrada(f"{arquivo}: não sobrescrito; arquivo externo ou modificado pelo usuário")
     dados = resumo(resultado)
-    conteudos = {}
-    if resultado.situacao != "BLOQUEADO":
-        conteudos = {
-            "comissoes_por_lojista.csv": csv_bytes(resultado.comissoes, ARQUIVOS["comissoes_por_lojista.csv"]),
-            "rastro.csv": csv_bytes(resultado.rastro, ARQUIVOS["rastro.csv"]),
-        }
+    conteudos = {
+        "comissoes_por_lojista.csv": csv_bytes(resultado.comissoes if resultado.situacao != "BLOQUEADO" else [], ARQUIVOS["comissoes_por_lojista.csv"]),
+        "rastro.csv": csv_bytes(resultado.rastro if resultado.situacao != "BLOQUEADO" else [], ARQUIVOS["rastro.csv"]),
+    }
+    dados["publicacao_concluida"] = True
     dados["arquivos"] = {nome: sha256(valor).hexdigest() for nome, valor in conteudos.items()}
     # Prepara todos os bytes antes de trocar o marcador de validade.
     with TemporaryDirectory(prefix=".publicacao-", dir=pasta) as temporario:
@@ -99,6 +102,7 @@ def publicar(resultado: Resultado, pasta: Path) -> dict:
             json.dumps(dados, ensure_ascii=False, indent=2) + "\n", encoding="utf-8",
         )
         interrompido = dict(dados, situacao="BLOQUEADO", rastro_validado=False,
+                            publicacao_concluida=False,
                             total_parcial_brl=None, arquivos={},
                             motivos=["Publicação interrompida; arquivos não são válidos até o manifesto final"])
         marcador = staging / "interrompido.json"

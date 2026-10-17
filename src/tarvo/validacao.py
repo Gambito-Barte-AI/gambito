@@ -46,6 +46,11 @@ def validar(resultado: Resultado) -> None:
         raise ErroEntrada("Cobertura inválida: cada linha lida deve ter exatamente um destino principal")
     if not {chave(e.origem) for e in resultado.eventos} <= set(destinos):
         raise ErroEntrada("Evento sem destino principal")
+    if len({c.origem.ref for c in resultado.contribuicoes}) != len(resultado.contribuicoes):
+        raise ErroEntrada("ID econômico calculado mais de uma vez entre arquivos")
+    if any(p.categoria not in {"DADOS", "NEGOCIO"} or not p.tipo or not p.proximo_passo.strip()
+           for p in resultado.pendencias):
+        raise ErroEntrada("Pendência sem categoria, tipo ou próximo passo (RN-58)")
     originais = {(c.origem.arquivo, c.origem.ref): c for c in resultado.contribuicoes}
     reversoes = set()
     for contribuicao in resultado.contribuicoes:

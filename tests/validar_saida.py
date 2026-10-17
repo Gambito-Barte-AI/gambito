@@ -49,53 +49,103 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
     configuracao = tomllib.loads(regras.read_text(encoding="utf-8"))
     exigir(manifesto.get("decisoes_financeiras_pendentes") == configuracao.get("decisoes_pendentes", []),
            "Decisões financeiras pendentes foram omitidas ou alteradas")
-    if situacao == "BLOQUEADO":
+    exigir(manifesto.get("decisoes_documentadas", []) == configuracao.get("decisoes_documentadas", []),
+           "Decisões documentadas foram omitidas ou alteradas")
+    nomes = {"comissoes_por_lojista.csv", "rastro.csv"}
+    if situacao == "BLOQUEADO" and manifesto.get("publicacao_concluida") is False:
         exigir(manifesto.get("arquivos") == {} and manifesto.get("rastro_validado") is False
                and manifesto.get("total_parcial_brl") is None and manifesto.get("motivos"),
-               "Bloqueio apresenta arquivos ou valores como válidos")
-        return {"situacao": situacao, "motivos": manifesto["motivos"], "arquivos_validos": 0}
-
-    nomes = {"comissoes_por_lojista.csv", "rastro.csv"}
+               "Publicação interrompida apresenta valores válidos")
+        return {"situacao": situacao, "arquivos_validos": 0, "publicacao_concluida": False}
     exigir(set(manifesto.get("arquivos", {})) == nomes, "Lista de arquivos diferente do mínimo")
-    exigir(manifesto.get("rastro_validado") is True, "Rastro não marcado como validado")
     for nome, digest in manifesto["arquivos"].items():
         exigir(sha256((saida / nome).read_bytes()).hexdigest() == digest, f"Hash de {nome} não confere")
+    comissoes = ler_csv(saida / "comissoes_por_lojista.csv",
+                        {"id_saida", "cnpj", "lojista", "linha_negocio", "comissao_brl"})
+    rastros = ler_csv(saida / "rastro.csv", {"id_saida", "arquivo_origem", "ref_origem", "valor"})
+    if situacao == "BLOQUEADO":
+        exigir(not comissoes and not rastros and manifesto.get("rastro_validado") is False
+               and manifesto.get("total_parcial_brl") is None and manifesto.get("motivos"),
+               "Bloqueio deve ter apenas cabeçalhos, sem valores válidos")
+        return {"situacao": situacao, "motivos": manifesto["motivos"], "arquivos_validos": 0}
+    exigir(manifesto.get("rastro_validado") is True, "Rastro não marcado como validado")
     fontes = manifesto.get("fontes", {})
     exigir(set(fontes) == {"orbe", "taxas", "regras"}, "Dependências do mínimo não identificadas")
-    for nome, fonte in fontes.items():
+    for nome in ("taxas", "regras"):
+        fonte = fontes[nome]
         arquivo = fonte.get("arquivo", "")
         exigir(arquivo and Path(arquivo).name == arquivo and fonte.get("situacao") == "DISPONIVEL",
                f"Fonte inválida: {nome}")
         caminho = regras if nome == "regras" else dados / arquivo
         exigir(sha256(caminho.read_bytes()).hexdigest() == fonte.get("sha256"), f"Fonte {nome} mudou")
-
-    arquivo_orbe = fontes["orbe"]["arquivo"]
-    original = dados / arquivo_orbe
-    bruto = original.read_bytes()
-    try:
-        texto = bruto.decode("utf-8-sig")
-    except UnicodeDecodeError:
-        texto = bruto.decode("cp1252")
     from io import StringIO
-    origem = list(csv.DictReader(StringIO(texto), delimiter=";", strict=True))
-    ids_origem = [l.get("id_transacao", "").strip() for l in origem]
-    exigir(all(ids_origem) and len(set(ids_origem)) == len(ids_origem), "IDs de entrada ausentes/duplicados")
-    por_ref = dict(zip(ids_origem, origem))
-    comissoes = ler_csv(saida / "comissoes_por_lojista.csv",
-                        {"id_saida", "cnpj", "lojista", "linha_negocio", "comissao_brl"})
-    rastros = ler_csv(saida / "rastro.csv", {"id_saida", "arquivo_origem", "ref_origem", "valor"})
+    origem, por_origem, por_ref, linhas_fisicas = [], {}, {}, {}
+    competencia = manifesto.get("competencia")
+    entradas = fontes["orbe"].get("arquivos", [])
+    exigir(entradas and fontes["orbe"].get("situacao") in {"DISPONIVEL", "PROVISORIO"}, "Fonte Orbe inválida")
+    candidatos = set()
+    for caminho in dados.glob("*.csv"):
+        try:
+            bruto = caminho.read_bytes()
+            try:
+                texto = bruto.decode("utf-8-sig")
+            except UnicodeDecodeError:
+                texto = bruto.decode("cp1252")
+            cabecalho = next(csv.reader(StringIO(texto), delimiter=";"), [])
+            assinatura = {"id_transacao", "data_movimento", "cod_estabelecimento", "tipo_lancamento",
+                          "modalidade", "qtd_parcelas", "valor_bruto", "id_referencia", "data_venda_original"}
+            if "id_transacao" in cabecalho or len(assinatura.intersection(cabecalho)) >= 3:
+                candidatos.add(caminho.name)
+        except (UnicodeError, csv.Error):
+            continue
+    exigir({e.get("arquivo") for e in entradas} == candidatos and len(entradas) == len(candidatos),
+           "Manifesto omite ou duplica um CSV Orbe reconhecido na pasta")
+    for fonte in entradas:
+        arquivo = fonte.get("arquivo", "")
+        exigir(arquivo and Path(arquivo).name == arquivo, "Nome de fonte Orbe inválido")
+        bruto = (dados / arquivo).read_bytes()
+        exigir(sha256(bruto).hexdigest() == fonte.get("sha256"), f"Fonte Orbe {arquivo} mudou")
+        if fonte.get("situacao") == "BLOQUEADO":
+            exigir(fonte.get("motivo") and fonte["motivo"] in manifesto.get("avisos", []), "Fonte inválida sem aviso")
+            continue
+        try:
+            texto = bruto.decode("utf-8-sig")
+        except UnicodeDecodeError:
+            texto = bruto.decode("cp1252")
+        leitor = csv.DictReader(StringIO(texto), delimiter=";", strict=True)
+        linhas = [(leitor.line_num, l) for l in leitor]
+        exigir(len(linhas) == fonte.get("linhas"), "Contagem física da fonte incorreta")
+        for fisica, l in linhas:
+            ref = l.get("id_transacao", "").strip()
+            exigir(ref and (arquivo, ref) not in por_origem, "IDs de entrada ausentes/duplicados no mesmo arquivo")
+            try:
+                mes = datetime.strptime(l.get("data_movimento", ""), "%d/%m/%Y").strftime("%Y-%m")
+            except ValueError:
+                mes = competencia  # data inválida tem de aparecer como pendência
+            if mes != competencia:
+                continue
+            por_origem[arquivo, ref] = l
+            linhas_fisicas[arquivo, ref] = fisica
+            por_ref.setdefault(ref, (arquivo, l))
+            origem.append((arquivo, ref))
     pendencias = manifesto.get("pendencias", [])
     exigir(isinstance(pendencias, list), "Pendências inválidas")
     for p in pendencias:
-        exigir(all(p.get(k) for k in ("ref_origem", "motivo", "quem_decide"))
-               and p.get("arquivo_origem") == arquivo_orbe, "Pendência sem origem, motivo ou responsável")
-
-    destinos = [l["ref_origem"] for l in rastros] + [p["ref_origem"] for p in pendencias]
-    exigir(Counter(destinos) == Counter(ids_origem), "Entrada sem destino, duplicada ou com referência inventada")
+        exigir(all(p.get(k) for k in ("ref_origem", "motivo", "quem_decide", "tipo", "proximo_passo"))
+               and p.get("categoria") in {"DADOS", "NEGOCIO"}, "Pendência sem origem, motivo, categoria ou próximo passo")
+        if p.get("valor_orbe_brl") is not None:
+            dinheiro(p["valor_orbe_brl"])
+        exigir(p.get("linha") == linhas_fisicas.get((p.get("arquivo_origem"), p.get("ref_origem"))),
+               "Pendência perdeu a linha física de origem")
+    destinos = [(l["arquivo_origem"], l["ref_origem"]) for l in rastros]
+    destinos += [(p["arquivo_origem"], p["ref_origem"]) for p in pendencias]
+    exigir(Counter(destinos) == Counter(origem), "Entrada sem destino, duplicada ou com referência inventada")
+    exigir(len({l["ref_origem"] for l in rastros}) == len(rastros), "ID econômico calculado mais de uma vez")
     cobertura = manifesto.get("cobertura", {})
     exigir(cobertura == {"linhas_lidas": len(origem), "calculadas": len(rastros),
                          "pendentes": len(pendencias), "bloqueadas": 0}, "Cobertura declarada não corresponde aos arquivos")
-    exigir((situacao == "PROVISORIO") == bool(pendencias), "Situação omite pendências ou as declara sem registros")
+    provisorio = bool(manifesto.get("avisos")) or any(p["categoria"] == "DADOS" for p in pendencias)
+    exigir((situacao == "PROVISORIO") == provisorio, "Situação incompatível com D-13")
     ids = [l["id_saida"] for l in comissoes]
     exigir(len(set(ids)) == len(ids), "IDs de saída duplicados")
     exigir(len({l["cnpj"] for l in comissoes}) == len(comissoes), "CNPJ duplicado nas comissões do mês")
@@ -110,15 +160,18 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
                and linha["linha_negocio"] == "CHECKOUT", "Domínio da comissão inválido")
         dinheiro(linha["comissao_brl"])
     for linha in rastros:
-        exigir(linha["arquivo_origem"] == arquivo_orbe and linha["id_saida"] in por_saida,
+        exigir((linha["arquivo_origem"], linha["ref_origem"]) in por_origem and linha["id_saida"] in por_saida,
                "Rastro aponta para arquivo ou saída inexistentes")
         somas[linha["id_saida"]] += dinheiro(linha["valor"])
-        evento = por_ref[linha["ref_origem"]]
+        evento = por_origem[linha["arquivo_origem"], linha["ref_origem"]]
         exigir(linha.get("tipo_lancamento") == evento["tipo_lancamento"], "Rastro mudou tipo de evento")
         movimento = datetime.strptime(evento["data_movimento"], "%d/%m/%Y").date()
         exigir(movimento.strftime("%Y-%m") == competencia, "Competência não corresponde ao movimento de origem")
         if evento["tipo_lancamento"] in {"ESTORNO", "REVERSAO ANTECIPACAO"}:
             exigir(linha.get("ref_evento_original") == evento["id_referencia"], "Referência original perdida")
+        if evento.get("id_referencia") in por_ref:
+            exigir(linha.get("arquivo_evento_original") == por_ref[evento["id_referencia"]][0],
+                   "Arquivo da referência original incorreto")
         if evento["tipo_lancamento"] == "REVERSAO ANTECIPACAO":
             anterior = por_rastro.get(evento["id_referencia"])
             exigir(anterior is not None and anterior["tipo_lancamento"] == "ANTECIPACAO"
@@ -127,7 +180,8 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
                    "Reversão não anula sua antecipação")
         base = (datetime.strptime(evento["data_venda_original"], "%d/%m/%Y").date()
                 if evento["tipo_lancamento"] in {"ESTORNO", "REVERSAO ANTECIPACAO"} else movimento)
-        exigir(linha.get("data_base_taxa") and date.fromisoformat(linha["data_base_taxa"]) == base,
+        exigir(re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", linha.get("data_base_taxa", ""))
+               and date.fromisoformat(linha["data_base_taxa"]) == base,
                "Data base não corresponde ao evento de origem")
     exigir(set(somas) == set(ids), "Comissão sem rastro ou rastro sem comissão")
     exigir(all(somas[l["id_saida"]] == dinheiro(l["comissao_brl"]) for l in comissoes),
