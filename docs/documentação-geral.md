@@ -336,11 +336,24 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RN-24 | **Rota Global:** contrato não mudou; os +0,50 p.p. desde 12/09 são divergência. | SLACK 16 20:49 | 87 linhas da Rota |
 | [ ] | RN-25 | **Bridge:** cobrou 2,59% em 5 vendas de 15 a 18/09 com aditivo de 2,19% assinado. É **divergência**, contestada com a Orbe. | SLACK 17 11:37 | 5 linhas da Bridge em divergências e na cobrança da Orbe |
 | [ ] | RN-26 | **Casa do Estudante não é divergência de contrato.** Vira **devolução ao lojista**, paga pela Tarvo: pendência com o total e o detalhe por transação, **separada das divergências de contrato** e **fora da cobrança da Orbe**. Pôr as 118 linhas também em divergências, marcadas como isenção, é opcional. | SLACK 17 09:44, 10:58 e 11:49 | Total cobrável da Orbe sem a Casa |
-| [ ] | RN-64 | **Valor da devolução ao lojista = o que saiu do bolso dele:** o que a Orbe **descontou de fato** (`valor_taxa`) menos a comissão contratada. **Linhas elegíveis da Casa:** vendas e antecipações com **data da venda de 01/09 a 31/12**; o estorno da venda de agosto fica de fora (ele abate a comissão pela taxa de agosto, RN-16). Como a contratada é zero, devolve-se o `valor_taxa` inteiro. O `divergencias_taxa.csv` mantém a fórmula da RN-20; a diferença é o centavo de truncamento da Orbe. **R$ 15.396,77 é referência de conferência, nunca constante no código.** | SLACK 17 12:50 | Pendência da Casa = soma do `valor_taxa` das linhas elegíveis (setembro: R$ 15.396,77) |
+| [ ] | RN-64 | **Valor da devolução ao lojista = o que saiu do bolso dele:** o que a Orbe **descontou de fato** (`valor_taxa`) menos a comissão contratada. **Linhas elegíveis da Casa:** todas as linhas com **data da venda de 01/09 a 31/12**: vendas, antecipações **e estornos dessas vendas**. O estorno de venda isenta entra com o `valor_taxa` negativo, porque a Orbe já devolveu essa taxa; a devolução é **líquida**. O estorno de venda de **agosto** fica de fora, porque ele abate a comissão pela taxa de agosto (RN-16) e gera os −R$ 5,50 da Casa. Como a contratada é zero, devolve-se a soma do `valor_taxa` das linhas elegíveis. Conferência de setembro logo abaixo da tabela. O `divergencias_taxa.csv` mantém a fórmula da RN-20; a diferença é o centavo de truncamento da Orbe. **R$ 15.396,77 é referência de conferência, nunca constante no código.** | SLACK 17 12:50 | Pendência da Casa = soma do `valor_taxa` das linhas elegíveis, com o estorno de venda isenta e sem o de agosto (setembro: 118 linhas, R$ 15.396,77) |
 | [ ] | RN-27 | Lojista sem contrato (Atlas) **não é divergência**; é pendência. | CASE / TIME | Nenhuma linha da Atlas em divergências |
 | [ ] | RN-28 | Divergência de **remessa** = spread % aplicado − contratado, pelo **valor cheio**: Δ% × PTAX × valor em moeda estrangeira. **Mundo Aberto** (1,20% registrado desde julho) é divergência, contestada com a Ponte. | SLACK 16 20:48 e 20:58 / 17 11:37 | 23 linhas da Mundo Aberto pelo valor cheio |
 | [ ] | RN-29 | **Spread negativo não é divergência** (o lojista não pagou a mais). Se aparecer na lista, marcado como outra natureza. | SLACK 17 09:44 | As 4 operações negativas fora de divergências (ou com natureza própria) |
 | [ ] | RN-30 | Tolerância de spread **≤ 0,01 p.p.** = arredondamento da Ponte, não divergência. Número no arquivo de regras. | TIME (SLACK 16 20:58 aceita critério escrito) | Lojistas a 1,5% com 1,4984% a 1,5015% não aparecem |
+
+**Conferência da RN-64 (Casa do Estudante, EC 1018325654, setembro):**
+
+| Linhas | Qtd | `valor_taxa` | Entra na devolução? |
+|---|---|---|---|
+| Vendas com data de 01/09 a 31/12 | 113 | R$ 12.578,29 | Sim |
+| Antecipações | 4 | R$ 2.827,56 | Sim |
+| **Subtotal: o que a Orbe cobrou** | **117** | **R$ 15.405,85** | |
+| Estorno TX88446763 (venda TX88441917, de 28/09) | 1 | −R$ 9,08 | Sim: a Orbe já devolveu essa taxa |
+| **Devolução líquida (pendência)** | **118** | **R$ 15.396,77** | |
+| Estorno TX88445133 (venda de 21/08, taxa 1,49%) | 1 | −R$ 5,50 | Não: entra na comissão pela taxa de agosto (RN-16) |
+
+Devolver os R$ 15.405,85 pagaria de novo os R$ 9,08 que o lojista já recebeu no estorno. O arquivo 06 não tem linhas da Casa. Os valores são **conferência**, nunca constantes no código.
 
 ### II.1.5 Comissão de remessa (Ponte)
 
@@ -697,13 +710,14 @@ Os totais conhecidos do case (Parte I) são **conferências auxiliares**: não s
 - **Ajuste da Ponte** ("AJUSTE REF PC-…"): regra nova para outubro em diante (RN-37, RF-07, D-10).
 - **Estorno com taxa errada** entra em divergências com valor negativo; a faixa vem da linha do estorno (RN-10, RN-21).
 - **Atlas:** o CNPJ da aba antiga pode identificar (RN-07); zerada ou fora é escolha nossa (D-07).
-- **Casa:** isenção pela data da venda (RN-15); devolução = o que a Orbe cobrou, **R$ 15.396,77** (RN-64); linhas em divergências opcionais (D-09).
+- **Casa:** isenção pela data da venda (RN-15); devolução = o que a Orbe ficou de fato, **R$ 15.396,77** líquido em 118 linhas, com o estorno de venda isenta e sem o de agosto (RN-64); linhas em divergências opcionais (D-09).
 - **Provisão do mês** fica fora (RN-48).
 - **Fechamento parcial e validação de layout:** avisar, fechar o que não depende e marcar provisório/bloqueado (RN-62, RF-03, RF-12, RNF-06).
 - **Pendências:** precisam de próximo passo; acompanhamento não é alarme falso; várias origens com `|` (RN-58, RN-59).
 - **Alerta de antecipação:** a preocupação é lojista novo, pelo pico, citando reversões (RN-63, D-03).
 - **Chave de API:** pode ser enviada à banca, exclusiva e com limite de gasto (RNF-13).
 - **Saída:** só setembro, em `saida/` na raiz; não haverá pacote de outubro (RNF-16).
+- **14h45:** a RN-64 passa a dizer por escrito que os estornos de vendas isentas entram na devolução (líquida) e que o estorno de venda de agosto fica de fora. Entrou a tabela de conferência 117 → 118 linhas (R$ 15.405,85 → R$ 15.396,77). A regra e o valor não mudaram.
 - **14h:** a Orbe mandou ajustes tardios (arquivo 06, 13h10). Entraram a RN-65 e o RF-22 (ler todos os arquivos da Orbe pelo cabeçalho, sem nome fixo), a linha 06 na tabela de dados, o caso no fechamento parcial e no checklist. Com o 06, a comissão de checkout de referência passa de R$ 207.039,73 para **R$ 203.735,34** (7 lojistas mudam); divergências, Casa e Atlas não mudam.
 - **13h40:** entrou a Parte IV (arquitetura); RF-02 separa mínimo (Orbe + taxas) de alvo; RNF-16 segue o FORMATO_SAIDA.md (ponto decimal, datas ISO, colunas extras); RN-64 define as linhas elegíveis da Casa; D-07 e D-10 revistas; novas D-11 (valores da pendência de spread negativo), D-12 (CSV de resultado bloqueado), D-13 (situação dos resultados) e D-14 (competência).
 - **13h15:** a devolução pelo valor descontado de fato virou regra confirmada (RN-64, antiga D-08); o alerta pelo pico foi considerado razoável pelo financeiro (D-03).
