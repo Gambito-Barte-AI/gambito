@@ -13,6 +13,9 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+*.egg-info/
+build/
+.tmp/
 
 # Node
 node_modules/
@@ -28,3 +31,7 @@ Tarvo_Data_Pack_set2026/
 
 # Local project context
 /Context/
+/Saida/
+/PROMPTS/
+
+

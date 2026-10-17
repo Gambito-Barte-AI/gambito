@@ -1,0 +1,112 @@
+versao = 1
+fonte = "Arquitetura consolidada e Entregas 1 e 2 autorizadas pelo usuário nesta conversa"
+escopo = "Identidade, faixas e vigências das vendas; outros eventos permanecem para a Entrega 3"
+
+# Configuração de leitura, sem assumir nomes dos arquivos do mês.
+[entrada]
+aba_taxas = "Taxas vigentes"
+abas_identidade = ["ANTIGO 2025 - nao usar"]
+
+# Seleção de faixa parcelada por quantidade, conforme RN-08 e RN-09.
+[modalidades]
+DEBITO = "debito"
+"CREDITO A VISTA" = "credito_vista"
+PIX = "pix"
+"CREDITO PARCELADO" = "parcelado"
+
+# RN-03: ECs confirmados pelo financeiro. CNPJs conferidos na aba vigente.
+[[vinculos]]
+id = "EC_NOVO_HORIZONTE"
+ec = "1043300981"
+cnpj = "66564512000199"
+fonte = "Context/regrasdenegocio.md RN-03, Slack 20:24; XLSX Taxas vigentes L28"
+aprovacao = "Financeiro, conforme RN-03; data da resposta não informada no registro"
+
+[[vinculos]]
+id = "EC_HORIZONTE_VIAGENS"
+ec = "1043396662"
+cnpj = "78576234000179"
+fonte = "Context/regrasdenegocio.md RN-03, Slack 20:24; XLSX Taxas vigentes L8"
+aprovacao = "Financeiro, conforme RN-03; data da resposta não informada no registro"
+
+[[vinculos]]
+id = "EC_KIWI"
+ec = "1038867654"
+cnpj = "07752116000126"
+fonte = "Context/regrasdenegocio.md RN-03, Slack 20:24; XLSX Taxas vigentes L9"
+aprovacao = "Financeiro, conforme RN-03; data da resposta não informada no registro"
+
+[[vinculos]]
+id = "IDENTIDADE_ATLAS"
+ec = "1076801732"
+cnpj = "39566044000119"
+fonte = "Context/regrasdenegocio.md RN-15; XLSX ANTIGO 2025 - nao usar L8, somente identidade"
+aprovacao = "Usuário relatou autorização do financeiro para identidade na aba antiga; D-07 não ratificada"
+
+[[contratos_bloqueados]]
+id = "ATLAS_SEM_CONTRATO"
+cnpj = "39566044000119"
+motivo = "Sem contrato vigente confirmado; Comercial deve confirmar taxa. D-07 permanece pendente."
+fonte = "Context/regrasdenegocio.md RN-15 e RN-16"
+aprovacao = "Financeiro, Slack 20:24, conforme contexto; retirar bloqueio apenas com confirmação comercial documentada"
+
+[[isencoes]]
+id = "ISENCAO_CHECKOUT_CASA"
+cnpj = "00520815000100"
+inicio = 2026-09-01
+fim = 2026-12-31
+fonte = "Context/regrasdenegocio.md RN-13 e RN-14; atualização do usuário: vale a data da venda"
+aprovacao = "Financeiro, Slack 20:49 e 09:44 conforme contexto; data de aprovação não informada"
+
+# Interpretações técnicas explícitas de observações conhecidas. Não criam taxas.
+# Qualquer texto diferente continua pendente, mesmo para o mesmo CNPJ.
+[[observacoes_esclarecidas]]
+id = "OBS_BRIDGE_ANTERIOR"
+cnpj = "22224579000109"
+texto = "renegociado - ver linha de baixo"
+fonte = "XLSX Taxas vigentes L6; RN-10; usuário confirmou prevalência do contrato"
+aprovacao = "Interpretação técnica: utilizar limites explícitos da planilha; não é nova aprovação financeira"
+
+[[observacoes_esclarecidas]]
+id = "OBS_BRIDGE_NOVA"
+cnpj = "22224579000109"
+texto = "só mudou o crédito à vista"
+fonte = "XLSX Taxas vigentes L7; RN-10"
+aprovacao = "Interpretação técnica: ler todas as taxas da própria linha vigente; não é nova aprovação financeira"
+
+[[observacoes_esclarecidas]]
+id = "OBS_KIWI"
+cnpj = "07752116000126"
+texto = "EC pendente"
+fonte = "XLSX Taxas vigentes L9; EC esclarecido pelo financeiro na RN-03"
+aprovacao = "Vínculo confirmado em RN-03; sem alteração de taxa"
+
+[[observacoes_esclarecidas]]
+id = "OBS_CASA"
+cnpj = "00520815000100"
+texto = "cliente estratégico - ver c/ comercial"
+fonte = "XLSX Taxas vigentes L13; condição esclarecida em RN-13/RN-14"
+aprovacao = "Isenção confirmada pelo financeiro; D-08 trata devolução, não a taxa zero"
+
+[[observacoes_esclarecidas]]
+id = "OBS_MUNDO_ABERTO"
+cnpj = "17217888000111"
+texto = "spread negociado em jul/26"
+fonte = "XLSX Taxas vigentes L15: observação de spread de remessa"
+aprovacao = "Interpretação técnica restrita ao checkout; não altera spread nem implementa remessa"
+
+# Registro explícito; estas decisões não são aplicadas como regras financeiras.
+[[decisoes_pendentes]]
+id = "D-07"
+descricao = "Atlas fora ou zerada no arquivo de comissões?"
+tratamento_atual = "Identidade histórica permitida, taxas antigas proibidas. Sem comissão calculada; pendência com CNPJ e referência. Não ratifica a apresentação final de D-07."
+
+[[decisoes_pendentes]]
+id = "D-08"
+descricao = "Ratificar devolução da Casa pelo valor efetivamente cobrado, com recorte das linhas elegíveis."
+tratamento_atual = "Isenção de checkout aplicada por data da venda. Devolução não implementada e D-08 não ratificada."
+
+[[decisoes_pendentes]]
+id = "D-10"
+descricao = "Confirmar se ajuste Ponte representa spread integral ou participação da Tarvo antes de aplicar 50%."
+tratamento_atual = "Remessas fora do escopo."
