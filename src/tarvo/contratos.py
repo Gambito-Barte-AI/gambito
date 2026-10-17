@@ -12,6 +12,11 @@ ARQUIVOS = {
                   "faixa", "regra", "vinculo_identidade", "tipo_lancamento", "data_base_taxa",
                   "ref_evento_original", "arquivo_evento_original", "natureza_valor"],
 }
+# Preserva os bytes/colunas do mínimo; extensões são publicadas apenas em --escopo alvo.
+COLUNAS_MINIMO = {nome: list(colunas) for nome, colunas in ARQUIVOS.items()}
+ARQUIVOS["pendencias.csv"] += ["valor_reportado_brl", "valor_solicitado_brl", "ref_original"]
+ARQUIVOS["rastro.csv"] += ["ref_original", "linha_origem"]
+
 RELATORIOS_ALVO = {"divergencias_taxa.csv", "notas_a_emitir.csv", "lancamentos_classificados.csv"}
 
 CAMPOS_VALOR = {

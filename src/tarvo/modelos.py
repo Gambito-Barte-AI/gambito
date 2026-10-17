@@ -111,6 +111,36 @@ class ResultadoParte:
     validado: bool = False
 
 
+@dataclass(frozen=True)
+class OperacaoPonte:
+    origem: Origem
+    contratacao: date
+    cnpj: str
+    cliente: str
+    spread_brl: Decimal
+    spread_pct: Decimal | None
+    ptax: Decimal | None
+    valor_me: Decimal | None
+    observacao: str = ""
+    status: str = ""
+    competencia_ajuste: str = ""
+
+    @property
+    def competencia(self):
+        return self.competencia_ajuste or self.contratacao.strftime("%Y-%m")
+
+
+@dataclass(frozen=True)
+class ContratoRemessa:
+    origem: Origem
+    cnpj: str
+    nome: str
+    spread: Decimal | None
+    inicio: date | None
+    fim: date | None = None
+    limitacao: str = ""
+
+
 @dataclass
 class Resultado:
     situacao: str = "BLOQUEADO"

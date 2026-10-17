@@ -8,7 +8,7 @@ import unicodedata
 
 from openpyxl import load_workbook
 
-from ..modelos import Cadastro, Contrato, ErroEntrada, Identidade, Origem
+from ..modelos import Cadastro, Contrato, ContratoRemessa, ErroEntrada, Identidade, Origem
 
 COLUNAS = {"lojista", "cnpj", "ec orbe", "debito", "credito a vista", "pix", "vigencia", "obs"}
 
@@ -82,6 +82,51 @@ def descobrir(pasta: Path) -> Path:
     if len(arquivos) != 1:
         raise ErroEntrada(f"Taxas: esperado um XLSX na pasta; encontrados {len(arquivos)}")
     return arquivos[0]
+
+
+def ler_remessas(caminho, aba, padrao, vigencias=()):
+    """Mesmo XLSX, contrato de remessa independente do cadastro de checkout."""
+    livro = load_workbook(caminho, read_only=True, data_only=False)
+    contratos, indices = [], None
+    try:
+        if aba not in livro.sheetnames or "antigo" in normalizar(aba):
+            raise ErroEntrada("Taxas remessa: aba vigente ausente/inválida")
+        for linha, celulas in enumerate(livro[aba].iter_rows(), 1):
+            if indices is None:
+                nomes = [normalizar(c.value) for c in celulas]
+                exigidas = {"lojista", "cnpj", "spread remessa", "vigencia"}
+                if exigidas <= set(nomes):
+                    if any(nomes.count(n) != 1 for n in exigidas):
+                        raise ErroEntrada("Taxas remessa: cabeçalho duplicado")
+                    indices = {n: nomes.index(n) for n in exigidas}
+                continue
+            campos = {n: celulas[p] for n, p in indices.items()}
+            if all(c.value is None for c in campos.values()):
+                continue
+            if (normalizar(campos["lojista"].value).startswith("* spread em branco")
+                    and all(campos[n].value is None for n in ("cnpj", "spread remessa", "vigencia"))):
+                continue
+            cnpj = identificador(campos["cnpj"].value, cnpj=True)
+            if not cnpj:
+                raise ErroEntrada(f"Taxas remessa: L{linha}: CNPJ inválido")
+            inicio, fim, motivo = vigencia(campos["vigencia"].value)
+            bruto = campos["spread remessa"].value
+            usa_padrao = bruto is None or (isinstance(bruto, str) and normalizar(bruto) in {"", "padrao"})
+            spread = padrao if usa_padrao else taxa(bruto)
+            if spread is None:
+                motivo = "Spread contratual não reconhecido"
+            if any(c.data_type == "f" for c in campos.values()):
+                motivo = "Fórmula contratual não suportada"
+            for regra in vigencias:
+                if regra["cnpj"] == cnpj and (inicio is None or inicio < regra["inicio"]):
+                    inicio = regra["inicio"]
+            contratos.append(ContratoRemessa(Origem(caminho.name, f"{aba}!L{linha}", linha), cnpj,
+                str(campos["lojista"].value or "").strip(), spread, inicio, fim, motivo))
+    finally:
+        livro.close()
+    if indices is None or not contratos:
+        raise ErroEntrada("Taxas remessa: cabeçalho ou contratos não encontrados")
+    return contratos
 
 
 def ler(caminho: Path, aba: str, abas_identidade: list[str] | None = None) -> Cadastro:

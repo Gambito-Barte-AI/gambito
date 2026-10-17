@@ -1,6 +1,6 @@
 versao = 1
 fonte = "docs/documentação-geral.md; aprovação técnica P0/P1 pelo usuário nesta conversa"
-escopo = "Checkout com vendas, estornos, antecipações e reversões; sem funcionalidades do alvo"
+escopo = "Checkout mínimo e A1/A2/A3 do alvo; sem notas, extratos ou extras"
 
 # Configuração de leitura, sem assumir nomes dos arquivos do mês.
 [entrada]
@@ -140,7 +140,7 @@ aprovador = "Financeiro (base da devolução); usuário nesta conversa (recorte 
 aprovado_em = "2026-10-17T12:50:00-03:00"
 natureza = "FINANCEIRA"
 
-# Decisões documentadas; A2 implementada, etapas posteriores não iniciadas.
+# Decisões documentadas; A3 implementada, A4 e etapas posteriores não iniciadas.
 [[decisoes_documentadas]]
 id = "D-07"
 descricao = "Atlas fora das comissões; identidade e cobrança efetiva da Orbe preservadas nas pendências comerciais."
@@ -165,7 +165,28 @@ aprovado_em = "2026-10-17"
 [[decisoes_pendentes]]
 id = "D-10"
 descricao = "Financeiro ainda deve confirmar se ajuste Ponte representa spread integral ou participação da Tarvo."
-tratamento_atual = "Time decidiu usar 50% do Spread R$ negativo, sem aplicar duas vezes; decisão registrada, mas remessas continuam fora do mínimo e não foram implementadas."
+tratamento_atual = "Time decidiu usar 50% do Spread R$ negativo, sem aplicar duas vezes; decisão aplicada em A3, sem ratificação financeira; cada ajuste mantém pendência explícita e rastro da operação original. Notas não implementadas (A4)."
 fonte = "docs/documentação-geral.md D-10 e pergunta Slack 17/10 12:04"
 aprovador = "Time; confirmação financeira pendente"
 aprovado_em = "NAO_INFORMADO"
+
+[remessas]
+id = "PONTE_RN31_RN32_D02_D10"
+participacao_fracao = "0.5"
+spread_padrao_fracao = "0.015"
+tolerancia_pp = "0.01"
+fonte = "docs/documentação-geral.md RN-28 a RN-41, D-02, D-05, D-10 e D-11; Slack 2026-10-16 20:48, 20:58 e 21:13; Slack 2026-10-17 11:33"
+aprovacao = "Financeiro confirmou participação e spread padrão; time definiu tolerância D-02, critério percentual D-05 e 50% para ajuste D-10. Natureza do ajuste continua pendente para o Financeiro."
+aprovador = "Financeiro (RN-31/RN-32); time (D-02/D-05/D-10); confirmação financeira de D-10 pendente"
+aprovado_em = "NAO_INFORMADO"
+natureza = "DECISAO_TIME"
+
+[[vigencias_spread]]
+id = "SPREAD_MUNDO_ABERTO_DESDE_JULHO"
+cnpj = "17217888000111"
+inicio = 2026-07-01
+fonte = "docs/documentação-geral.md RN-28; Slack 2026-10-16 20:48 e 20:58; XLSX Taxas vigentes L15, observação spread negociado em jul/26"
+aprovacao = "Spread registrado desde julho; não aplicar retroativamente a meses anteriores sem contrato confirmado."
+aprovador = "Financeiro (papel documentado; nome não individualizado)"
+aprovado_em = "2026-10-16T20:58:00-03:00"
+natureza = "FINANCEIRA"

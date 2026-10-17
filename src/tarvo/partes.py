@@ -13,7 +13,7 @@ PLANO = {
     "REMESSAS": (("ponte", "regras"), (), ("comissoes_por_lojista.csv", "pendencias.csv")),
     "DIVERGENCIAS_CHECKOUT": (("orbe", "taxas", "regras"), (), ("divergencias_taxa.csv", "pendencias.csv")),
     "DEVOLUCAO_CASA": (("orbe", "taxas", "regras"), (), ("pendencias.csv",)),
-    "DIVERGENCIAS_REMESSA": (("ponte", "taxas", "regras"), (), ("divergencias_taxa.csv", "pendencias.csv")),
+    "DIVERGENCIAS_REMESSA": (("ponte", "contratos_remessa", "regras"), (), ("divergencias_taxa.csv", "pendencias.csv")),
     "NOTAS_CHECKOUT": ((), ("CHECKOUT",), ("notas_a_emitir.csv", "pendencias.csv")),
     "NOTAS_REMESSA": ((), ("REMESSAS",), ("notas_a_emitir.csv", "pendencias.csv")),
     "EXTRATO_AURORA": (("aurora", "plano_contas", "regras"), (), ("lancamentos_classificados.csv", "pendencias.csv")),
@@ -90,7 +90,7 @@ def preparar_partes(resultado: Resultado) -> None:
             pendencias.motivos = [f"Falha ao preparar pendências: {exc}"]
     resultado.partes["PENDENCIAS_CHECKOUT"] = pendencias
     for nome, (fontes, anteriores, relatorios) in PLANO.items():
-        a2 = nome in {"DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CASA"}
+        a2 = nome in {"DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CASA", "REMESSAS", "DIVERGENCIAS_REMESSA"}
         resultado.partes.setdefault(nome, ResultadoParte(
             fontes=fontes, depende_de=anteriores, relatorios=relatorios,
             implementado=a2,

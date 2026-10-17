@@ -66,6 +66,9 @@ def verificar_partes(manifesto):
     if manifesto.get("versao", 0) >= 4:
         futuras.remove("DIVERGENCIAS_CHECKOUT")
         implementadas |= {"DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CASA"}
+    if manifesto.get("versao", 0) >= 5:
+        futuras -= {"REMESSAS", "DIVERGENCIAS_REMESSA"}
+        implementadas |= {"REMESSAS", "DIVERGENCIAS_REMESSA"}
     exigir(set(partes) == implementadas | futuras, "Partes ausentes ou desconhecidas")
     for nome, parte in partes.items():
         estado = parte.get("situacao")
@@ -148,7 +151,10 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     for nome in vazios:
         exigir(not arquivos[nome] and resultados[nome].get("situacao") == "BLOQUEADO"
                and resultados[nome].get("motivos"), "Relatório do alvo apresentado como processado")
-    comissoes = arquivos["comissoes_por_lojista.csv"]
+    comissoes = [l for l in arquivos["comissoes_por_lojista.csv"] if l["linha_negocio"] == "CHECKOUT"]
+    if manifesto.get("versao", 0) >= 5:
+        from auditoria_a3 import verificar as verificar_a3
+        verificar_a3(manifesto, arquivos, configuracao, dados)
     rastros = arquivos["rastro.csv"]
     if situacao == "BLOQUEADO" and not any(arquivos.values()):
         exigir(not any(arquivos.values()) and (partes or all(r["situacao"] == "BLOQUEADO" for r in resultados.values()))
@@ -158,7 +164,13 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
         return {"situacao": situacao, "motivos": manifesto["motivos"], "arquivos_validos": 0}
     exigir(manifesto.get("rastro_validado") is (situacao != "BLOQUEADO"), "Rastro não corresponde ao estado do checkout")
     fontes = manifesto.get("fontes", {})
-    exigir(set(fontes) == {"orbe", "taxas", "regras"}, "Dependências do mínimo não identificadas")
+    exigir({"orbe", "taxas", "regras"} <= set(fontes), "Dependências do mínimo não identificadas")
+    if partes and all(not partes[n]["rastro_validado"] for n in ("CHECKOUT", "PENDENCIAS_CHECKOUT")) and any(
+            fontes[n].get("situacao") == "BLOQUEADO" for n in ("orbe", "taxas", "regras")):
+        exigir(not comissoes and not any(r["id_saida"].startswith(("CHECKOUT:", "PENDENCIA:")) for r in rastros),
+               "Parte checkout sem fontes publicou valores")
+        return {"situacao": situacao, "checkout_bloqueado": True, "ponte_auditada": True,
+                "situacao_comando": manifesto["situacao_comando"]}
     for nome in ("taxas", "regras"):
         fonte = fontes[nome]
         arquivo = fonte.get("arquivo", "")
@@ -227,7 +239,14 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
                "Pendência perdeu a linha física de origem")
     if manifesto.get("versao", 0) >= 4:
         from auditoria_a2 import verificar as verificar_a2
-        verificar_a2(manifesto, arquivos, configuracao, por_origem)
+        a2 = dict(arquivos)
+        a2["comissoes_por_lojista.csv"] = comissoes
+        a2["divergencias_taxa.csv"] = [l for l in arquivos["divergencias_taxa.csv"] if l["linha_negocio"] == "CHECKOUT"]
+        a2["pendencias.csv"] = [l for l in arquivos["pendencias.csv"] if l["id_saida"].startswith(
+            ("PENDENCIA:", "CONTESTACAO_ORBE:", "DEVOLUCAO_CHECKOUT:", "REVISAO_DIVERGENCIA:", "REVISAO_DEVOLUCAO:"))]
+        a2["rastro.csv"] = [r for r in arquivos["rastro.csv"] if r["id_saida"].startswith(
+            ("CHECKOUT:", "PENDENCIA:", "DIVERGENCIA:CHECKOUT:", "CONTESTACAO_ORBE:", "DEVOLUCAO_CHECKOUT:", "REVISAO_DIVERGENCIA:", "REVISAO_DEVOLUCAO:"))]
+        verificar_a2(manifesto, a2, configuracao, por_origem)
         rastros = [r for r in rastros if r["id_saida"].startswith(("CHECKOUT:", "PENDENCIA:"))]
     pendencias_csv = [p for p in arquivos["pendencias.csv"] if p["id_saida"].startswith("PENDENCIA:")]
     pendencias_publicadas = pendencias if not partes or partes["PENDENCIAS_CHECKOUT"]["rastro_validado"] else []
@@ -332,7 +351,7 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
             "cobertura": cobertura, "comissoes": len(comissoes), "total_brl": format(total, ".2f") if situacao != "BLOQUEADO" else None,
             "rastro_exato": True, "fontes_e_hashes": True, "decisoes_preservadas": True,
             "pendencias_csv": len(arquivos["pendencias.csv"]), "pendencias_minimo": len(pendencias_csv),
-            "divergencias_checkout": len(arquivos["divergencias_taxa.csv"]),
+            "divergencias_checkout": sum(l["linha_negocio"] == "CHECKOUT" for l in arquivos["divergencias_taxa.csv"]),
             "rastro_pendencias": len(rastros_pendencias), "contratos_csv": len(arquivos), "fechamento": manifesto.get("fechamento", {}).get("situacao"),
             "situacao_comando": manifesto.get("situacao_comando", situacao)}
 

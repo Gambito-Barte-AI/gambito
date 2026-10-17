@@ -1,6 +1,7 @@
 """Uso: python -m tarvo --dados <pasta> --saida <pasta> --regras regras.toml."""
 
 import argparse
+from decimal import Decimal
 from pathlib import Path
 import sys
 
@@ -45,6 +46,18 @@ def main(argv=None) -> int:
         print(f"DECISÃO DOCUMENTADA {decisao['id']}: {decisao['descricao']}")
     for nome, detalhe in manifesto["resultados"].items():
         print(f"RESULTADO {nome}: {detalhe['situacao']} ({detalhe['linhas']} linhas)")
+    if argumentos.escopo == "alvo":
+        for nome in ("REMESSAS", "DIVERGENCIAS_REMESSA"):
+            parte = manifesto["partes"][nome]
+            print(f"PARTE {nome}: {parte['situacao']}")
+            for motivo in parte["motivos"]:
+                print(f"AVISO {nome}: {motivo}")
+        p = resultado.partes["REMESSAS"]
+        total = (format(sum((Decimal(l["comissao_brl"]) for l in p.linhas.get("comissoes_por_lojista.csv", [])), Decimal(0)), ".2f")
+                 if p.validado else "indisponível")
+        print(f"Ponte: competência {resultado.fontes.get('ponte', {}).get('competencia') or 'não determinada'}; participação {total} BRL")
+        for aviso in resultado.fontes.get("ponte", {}).get("avisos", []):
+            print(f"AVISO PONTE: {aviso}")
     print(f"Manifesto: {argumentos.saida / 'manifesto.json'}")
     return {"COMPLETO": 0, "PROVISORIO": 2, "BLOQUEADO": 1}[manifesto["situacao_comando"]]
 

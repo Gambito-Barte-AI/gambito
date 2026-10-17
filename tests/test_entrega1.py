@@ -89,7 +89,7 @@ class FluxoTest(unittest.TestCase):
 
     def test_ausencia_de_fontes_do_alvo_nao_bloqueia(self):
         self.assertEqual(self.executar().situacao, "COMPLETO")
-        self.assertEqual(set(self.executar().fontes), {"orbe", "taxas", "regras"})
+        self.assertTrue({"orbe", "taxas", "regras"} <= set(self.executar().fontes))
 
     def test_evento_futuro_vira_pendencia_sem_comissao_zero(self):
         self.vendas([{"id_transacao": "A"}, {"id_transacao": "B", "tipo_lancamento": "ESTORNO", "valor_bruto": "-1,00"}])

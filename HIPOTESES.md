@@ -1,3 +1,18 @@
+# A3 — Ponte de ponta a ponta
+
+A3 autorizada e implementada, preservando mínimo, A1 e RN-64 corrigida. A4/notas e etapas seguintes não iniciadas. Evidência atual: `docs/ACEITE_A3.md`, `saida/alvo-a3/` e `.tmp/aceite-a3/`. Os registros abaixo passam a ser históricos das entregas anteriores.
+
+- **D-10 permanece pendente:** contribuição do ajuste = participação configurada × Spread R$ negativo, aplicada uma vez, conforme decisão existente do time. Não equivale à confirmação do Financeiro. Pendência individual por ajuste, referência original e motivo explícito; nota não é gerada.
+- **Competência do ajuste (RN-37):** mês declarado no novo relatório; se não declarado, parâmetro explícito --competencia. Sem ambos, considera-se a contratação da nova linha como indicação do mês de chegada. Não inferir o mês a partir do Nº Operação original nem da liquidação; confirmar o período se esses dados não representarem o novo mês. Relações incompatíveis ou autorreferentes ficam pendentes.
+- **Duplicatas:** observação reprocessada não muda o valor; escolher a ocorrência canônica pela ordenação arquivo/linha só quando os campos financeiros e a aprovação forem compatíveis. Conflitos e ocorrência ilegível do mesmo número deixam todas pendentes, sem escolha financeira silenciosa.
+- **Contratos de remessa:** leitura própria da aba vigente; blank/padrão usa RN-32 só para cadastro existente. CNPJ inexistente não recebe spread presumido, mas conserva participação pelo realizado (RN-40). Sem planilha disponível, não declarar todos os lojistas como cadastro inexistente. Vigência da Mundo Aberto só desde julho, conforme RN-28/observação; antes disso exige aprovação contratual.
+- **D-11:** valor principal e rastro = realizado − contratado × PTAX × ME; realizado e solicitado em extras distintos, com sinal original. Sem contrato/PTAX/ME, pedido vazio e provisório; o valor reportado conhecido continua explícito. Não usar o Spread % para reconstruir o Spread R$ negativo.
+- **Isolamento:** ausência/falha da Ponte não muda o checkout; ausência de Orbe ou planilha não impede participação pelo realizado. REMESSAS e DIVERGENCIAS_REMESSA têm rastro/validação separados. Fontes/dados contratuais faltantes bloqueiam/provisorizam a comparação pertinente.
+- **Acompanhamento (RN-39):** valor é participação calculada a conferir com o TED efetivo, sem previsão de recebimento/desconto. Pendência de negócio não gera alarme nem força situação provisória por si só.
+- **Metadados:** datas do time ausentes continuam NAO_INFORMADO; fontes e papéis registrados, sem inventar ratificação financeira. Sem novas dependências, serviços externos ou commits.
+
+---
+
 # A2 — divergências de checkout e devolução da Casa
 
 A2 autorizada e implementada; A3 e etapas seguintes não iniciadas. Mantidos o mínimo, o isolamento de A1 e os seis layouts oficiais. Evidência atual: `docs/ACEITE_A2.md` e `saida/alvo-a2-rn64/`.

@@ -11,7 +11,7 @@ from tempfile import TemporaryDirectory
 
 from .modelos import ErroEntrada, Resultado
 
-from .contratos import ARQUIVOS
+from .contratos import ARQUIVOS, COLUNAS_MINIMO
 from .partes import preparar_partes, selecionar, agregar_situacoes
 
 MANIFESTO = "manifesto.json"
@@ -29,7 +29,7 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
     processados = len(resultado.contribuicoes) if resultado.partes["CHECKOUT"].validado else 0
     pendentes = len(resultado.pendencias) if resultado.partes["PENDENCIAS_CHECKOUT"].validado else 0
     dados = {
-        "versao": 4, "escopo": "CHECKOUT_MINIMO", "etapa": "ALVO_A2", "situacao": resultado.situacao,
+        "versao": 5, "escopo": "CHECKOUT_MINIMO", "etapa": "ALVO_A3", "situacao": resultado.situacao,
         "escopo_situacao": "CHECKOUT",
         "competencia": resultado.competencia, "motivos": resultado.motivos,
         "fontes": resultado.fontes, "rastro_validado": resultado.validado and resultado.situacao != "BLOQUEADO",
@@ -56,7 +56,7 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
         } for p in resultado.pendencias],
         "decisoes_financeiras_pendentes": resultado.decisoes_pendentes,
         "decisoes_documentadas": resultado.decisoes_documentadas,
-        "fora_do_escopo": ["remessas", "divergencias_remessa", "notas", "extratos"],
+        "fora_do_escopo": ["notas", "extratos"],
     }
 
     escolhidas = selecionar(resultado, escopo)
@@ -122,7 +122,7 @@ def publicar(resultado: Resultado, pasta: Path, escopo: str = "checkout") -> dic
         }
         if not participantes:
             dados["resultados"][arquivo]["motivos"] = [f"Relatório fora do escopo {escopo}; consulte --escopo alvo"]
-    conteudos = {nome: csv_bytes(linhas[nome], colunas) for nome, colunas in ARQUIVOS.items()}
+    conteudos = {nome: csv_bytes(linhas[nome], COLUNAS_MINIMO[nome] if escopo == "checkout" else colunas) for nome, colunas in ARQUIVOS.items()}
     dados["publicacao_concluida"] = True
     dados["arquivos"] = {nome: sha256(valor).hexdigest() for nome, valor in conteudos.items()}
     # Prepara todos os bytes antes de trocar o marcador de validade.

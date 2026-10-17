@@ -1,6 +1,7 @@
 """Configuração explícita de vínculos e condições, com origem documentada."""
 
 from datetime import date, datetime
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 import re
 import tomllib
@@ -75,3 +76,44 @@ def carregar(caminho: Path) -> dict:
     ):
         raise ErroEntrada(f"{caminho}: registro de decisões pendentes inválido")
     return regras
+
+
+def parametros_remessa(regras):
+    parametros = regras.get("remessas", {})
+    if not all(isinstance(parametros.get(k), str) and parametros[k].strip() for k in
+               ("id", "fonte", "aprovacao", "aprovador", "aprovado_em", "natureza")):
+        raise ErroEntrada("A3: parâmetros de remessa exigem fonte e aprovação (RN-61)")
+    if parametros["natureza"] not in {"FINANCEIRA", "DECISAO_TIME", "INTERPRETACAO_TECNICA"}:
+        raise ErroEntrada("A3: natureza dos parâmetros de remessa inválida")
+    if parametros["aprovado_em"] != "NAO_INFORMADO":
+        try:
+            datetime.fromisoformat(parametros["aprovado_em"])
+        except ValueError as exc:
+            raise ErroEntrada("A3: data de aprovação inválida") from exc
+    try:
+        if not all(isinstance(parametros.get(k), str) for k in
+                   ("participacao_fracao", "spread_padrao_fracao", "tolerancia_pp")):
+            raise ValueError("parâmetros decimais devem ser strings TOML")
+        participacao = Decimal(parametros["participacao_fracao"])
+        padrao = Decimal(parametros["spread_padrao_fracao"])
+        tolerancia = Decimal(parametros["tolerancia_pp"])
+        if (not all(v.is_finite() for v in (participacao, padrao, tolerancia))
+                or not 0 < participacao <= 1 or not 0 <= padrao <= 1 or tolerancia < 0):
+            raise ValueError("frações/tolerância inválidas")
+    except (KeyError, InvalidOperation, ValueError, TypeError) as exc:
+        raise ErroEntrada("A3: participação, spread padrão ou tolerância inválidos") from exc
+    vigencias = regras.get("vigencias_spread", [])
+    if not isinstance(vigencias, list):
+        raise ErroEntrada("A3: vigências de spread devem ser lista")
+    for regra in vigencias:
+        if (not isinstance(regra, dict) or type(regra.get("inicio")) is not date
+                or not re.fullmatch(r"[0-9]{14}", str(regra.get("cnpj", "")))
+                or not all(isinstance(regra.get(k), str) and regra[k].strip() for k in
+                           ("id", "fonte", "aprovacao", "aprovador", "aprovado_em", "natureza"))):
+            raise ErroEntrada("A3: vigência de spread exige CNPJ, data e fonte/aprovação")
+        if regra["aprovado_em"] != "NAO_INFORMADO":
+            try:
+                datetime.fromisoformat(regra["aprovado_em"])
+            except ValueError as exc:
+                raise ErroEntrada("A3: data de aprovação de spread inválida") from exc
+    return parametros

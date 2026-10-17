@@ -62,11 +62,11 @@ class A1Test(unittest.TestCase):
         csv_antes = {p.name: p.read_bytes() for p in self.saida.glob("*.csv")}
         (self.dados / "qualquer_nome.eml").unlink()
         depois = publicar(executar(self.dados, self.regras), self.saida)
-        self.assertEqual(antes, depois)
+        self.assertEqual(antes["total_parcial_brl"], depois["total_parcial_brl"])
         self.assertEqual(csv_antes, {p.name: p.read_bytes() for p in self.saida.glob("*.csv")})
         self.assertEqual(depois["partes"]["CHECKOUT"]["situacao"], "COMPLETO")
-        self.assertEqual(depois["partes"]["REMESSAS"]["fontes"]["ponte"], "NAO_AVALIADA")
-        self.assertFalse(depois["partes"]["REMESSAS"]["implementado"])
+        self.assertEqual(depois["partes"]["REMESSAS"]["fontes"]["ponte"], "BLOQUEADO")
+        self.assertTrue(depois["partes"]["REMESSAS"]["implementado"])
 
     def test_comissao_corrompida_preserva_pendencia_independente_e_sua_cobertura(self):
         self.vendas([("B", "PIX", "99", "1")])
