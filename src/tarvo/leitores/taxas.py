@@ -100,7 +100,7 @@ def ler(caminho: Path, aba: str, abas_identidade: list[str] | None = None) -> Ca
                         if any(nomes.count(nome) != 1 for nome in COLUNAS):
                             raise ErroEntrada(f"{caminho.name}: L{numero}: colunas duplicadas")
                         indices = {nome: nomes.index(nome) for nome in COLUNAS}
-                        for coluna in ("cred. 2-6x", "cred. 7-12x"):
+                        for coluna in ("cred. 2-6x", "cred. 7-12x", "antecipacao"):
                             if nomes.count(coluna) > 1:
                                 raise ErroEntrada(f"{caminho.name}: L{numero}: faixa duplicada: {coluna}")
                             if coluna in nomes:
@@ -131,7 +131,8 @@ def ler(caminho: Path, aba: str, abas_identidade: list[str] | None = None) -> Ca
                     {chave: taxa(campos[coluna].value) if coluna in campos else None
                      for chave, coluna in (("debito", "debito"), ("credito_vista", "credito a vista"),
                                            ("pix", "pix"), ("parcelado_2_6", "cred. 2-6x"),
-                                           ("parcelado_7_12", "cred. 7-12x"))},
+                                           ("parcelado_7_12", "cred. 7-12x"),
+                                           ("antecipacao", "antecipacao"))},
                     inicio, "; ".join(problemas), fim, str(campos["obs"].value or "").strip(),
                 ))
             if indices is None:

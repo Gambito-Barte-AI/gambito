@@ -20,3 +20,9 @@
 - **Pedido:** implementar identidade, faixas e vigências, mantendo decisões financeiras pendentes.
 - **Resposta da IA:** separou identidade histórica e contrato vigente, com vínculos explícitos e rastro de faixa/regra.
 - **O que fiz:** o agente acrescentou testes que comprovam que a identificação de CNPJ na aba antiga não permite usar suas taxas, e que isenção confirmada não resolve D-08 sobre devolução.
+
+## Momento 4 — Reversão preserva a regra original
+
+- **Pedido:** implementar estornos, antecipações e reversões sem avançar ao alvo.
+- **Resposta da IA:** propôs calcular o original antes da reversão e anular exatamente sua contribuição, preservando taxa e isenção originais.
+- **O que fiz:** o agente verificou casos de taxa alterada, reversão fora da isenção, ordem invertida, duplicidade e referência inválida; os casos não confirmados permaneceram pendentes.

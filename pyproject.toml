@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tarvo-gambito"
 version = "0.1.0"
-description = "Checkout parcial com identidade, faixas, vigências e rastro"
+description = "Checkout com vendas, estornos, antecipações, reversões e rastro"
 requires-python = ">=3.11"
 dependencies = ["openpyxl>=3.1,<4"]
 

@@ -1,1 +1,1 @@
-"""Fechamento parcial da Tarvo: identidade, faixas e vigências de checkout."""
+"""Checkout da Tarvo com identidade, vigências e eventos rastreáveis."""

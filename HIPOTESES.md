@@ -2,7 +2,7 @@
 
 ## Escopo autorizado
 
-Arquitetura consolidada e Entregas 1 e 2 autorizadas pelo usuário nesta conversa em 17/10/2026. Escopo atual: identidade, faixas e vigências das vendas de checkout, com rastro. Não implementar alvo nem antecipar estornos, antecipações e reversões da Entrega 3. O `AGENTS.md` do usuário foi relido e preservado.
+Arquitetura consolidada e Entregas 1, 2 e 3 autorizadas pelo usuário nesta conversa em 17/10/2026. Escopo atual: checkout com vendas, estornos, antecipações e reversões, mantendo identidade, faixas, vigências e rastro. Não implementar alvo nem antecipar o aceite ampliado da Entrega 4. O `AGENTS.md` do usuário foi relido e preservado.
 
 ## Premissas e decisões técnicas da Entrega 1
 
@@ -23,7 +23,7 @@ Registro histórico do primeiro incremento. E1-02 e E1-03 são ampliadas pelas d
 | ID | Questão | Orientação conhecida | Tratamento nesta entrega |
 | --- | --- | --- | --- |
 | D-07 | Atlas fora ou zerada nas comissões? | Usuário informou que ambas são opções do time; identidade pode vir da aba antiga, mas taxas não. | Não ratificada. A identidade histórica está implementada; seus eventos continuam pendentes para o Comercial, sem comissão estimada. O arquivo não ganha linha zerada por contrato desconhecido. Isso é tratamento provisório, não decisão sobre apresentação final. Recuperação futura não implementada. |
-| D-08 | Ratificar devolução da Casa pelo cobrado e recorte elegível? | Usuário relatou fala de Helena: “o que foi cobrado eu devolvo”; referência corrigida para R$ 15.396,77. Concessão paga pela Tarvo, fora da cobrança à Orbe. | A isenção confirmada é aplicada às vendas por data, independentemente de D-08. Não calcular devolução nem usar valor_taxa como comissão. O estorno anterior à isenção permanece para a Entrega 3. |
+| D-08 | Ratificar devolução da Casa pelo cobrado e recorte elegível? | Usuário relatou fala de Helena: “o que foi cobrado eu devolvo”; referência corrigida para R$ 15.396,77. Concessão paga pela Tarvo, fora da cobrança à Orbe. | A isenção confirmada é aplicada independentemente de D-08. Estorno anterior à isenção agora usa a taxa anterior, sem apagar saldo negativo. Não calcular devolução nem usar valor_taxa como comissão. |
 | D-10 | Ajuste Ponte deve abater 50%? | Usuário informou nova linha negativa `AJUSTE REF PC-…`, abatendo nossa participação na nota do mês e vinculada ao original. | Fora do escopo. Confirmar se o valor da linha é spread integral ou participação antes de aplicar 50%. |
 | P-VALORES | Como representar dois valores da pendência de spread negativo? | Preservar valor reportado e diferença até o contrato solicitada à Ponte. | Definir posteriormente valor_brl, colunas adicionais e valor reconciliado no rastro. |
 | P-AJUSTE | Como representar ajuste e operação histórica no rastro? | Preservar a linha atual e o vínculo à operação original, sem dupla contagem. | Definição reservada ao alvo. |
@@ -43,6 +43,20 @@ Não se atribuiu aprovação financeira às escolhas técnicas acima. As novas r
 | E2-07 | Manter bloqueio comercial da Atlas até confirmação documentada. | RN-15/RN-16. Mesmo se surgir linha nova na planilha, retirar bloqueio exige registro de confirmação; D-07 continua pendente. Todos os eventos conhecidos da Atlas são encaminhados ao Comercial. |
 
 Metadados de regra registram as fontes disponíveis. Onde os documentos só informam horário ou papel aprovador, a configuração declara que a data/pessoa não foi informada. Não foi fabricada uma aprovação financeira.
+
+## Decisões técnicas e limites da Entrega 3
+
+| ID | Decisão ou tratamento conservador | Fonte e limite |
+| --- | --- | --- |
+| E3-01 | Estorno na competência do movimento, com faixa da própria linha e taxa/isenção pela data original. | RN-07/RN-11/RN-14 e atualização do usuário sobre faixa. Não reabre o mês da venda. Referência e data original ausentes/inconsistentes ficam pendentes. |
+| E3-02 | Venda de mês anterior pode estar ausente do arquivo corrente. | O data pack contém nove estornos sem venda local, com referências/datas originais. Selecionar contrato comprovável pela data declarada não inventa o valor de uma venda histórica. O rastro identifica essa referência, mas não inventa arquivo de origem ausente. |
+| E3-03 | Venda do próprio mês referenciada mas ausente, tipo/EC/data incompatíveis ou estornos acumulados acima do bruto conhecido exigem revisão. | Tratamento técnico conservador de inconsistências, não nova regra de aprovação financeira. Não escolher qual estorno manter ou inferir dados faltantes. Estornos parciais coerentes usam o bruto da própria linha; relações históricas sem arquivo não permitem conferir limite acumulado. |
+| E3-04 | Antecipação usa taxa da coluna específica e data do próprio evento. | RN-08/RN-12 e formato do relatório: antecipações não indicam venda individual/data original. Não há constante de 2,10% nem inferência de uma data de venda; referência temporal diferente vira pendência. |
+| E3-05 | Reversão é o negativo exato da contribuição da antecipação referenciada. | RN-12. Confere original disponível/calculável, tipo, EC, data e bruto integral oposto; preserva taxa, regra, contrato e base temporal originais. A ordem física do arquivo não interfere. |
+| E3-06 | Reversão parcial, múltiplas reversões do mesmo original ou original ausente ficam pendentes. | Esses cenários não têm tratamento confirmado nos documentos. Não ratear a comissão, reconstruir por taxa atual ou escolher a primeira reversão. Confirmar com o financeiro antes de ampliar. |
+| E3-07 | Contribuição da reversão tem origem na linha nova e vínculo ao original como metadado. | Preserva a soma do rastro sem duplicar valores. O validador também exige anulação exclusiva do original. Comissão negativa/zero não gera nota ou transporte de saldo nesta entrega. |
+
+Os tratamentos conservadores não ratificam D-07, D-08 ou D-10. Não há emissão de nota, relatório de divergência, devolução, recuperação da Atlas ou processamento automático dos ajustes tardios.
 
 ## Nova entrada durante a validação
 

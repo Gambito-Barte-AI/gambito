@@ -81,6 +81,10 @@ class Contribuicao:
     faixa: str = ""
     regra: str = "PLANILHA"
     vinculo: str = ""
+    tipo: str = ""
+    data_base_taxa: date | None = None
+    ref_original: str = ""
+    arquivo_original: str = ""
 
 
 @dataclass

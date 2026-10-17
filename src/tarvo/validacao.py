@@ -27,10 +27,16 @@ def consolidar(resultado: Resultado) -> None:
                 "taxa_contratada_fracao": str(contribuicao.taxa),
                 "faixa": contribuicao.faixa, "regra": contribuicao.regra,
                 "vinculo_identidade": contribuicao.vinculo,
+                "tipo_lancamento": contribuicao.tipo,
+                "data_base_taxa": contribuicao.data_base_taxa.isoformat() if contribuicao.data_base_taxa else "",
+                "ref_evento_original": contribuicao.ref_original,
+                "arquivo_evento_original": contribuicao.arquivo_original,
             })
 
 
 def validar(resultado: Resultado) -> None:
+    resultado.validado = False
+
     def chave(origem):
         return origem.arquivo, origem.ref
 
@@ -41,6 +47,18 @@ def validar(resultado: Resultado) -> None:
     if not {chave(e.origem) for e in resultado.eventos} <= set(destinos):
         raise ErroEntrada("Evento sem destino principal")
     originais = {(c.origem.arquivo, c.origem.ref): c for c in resultado.contribuicoes}
+    reversoes = set()
+    for contribuicao in resultado.contribuicoes:
+        if contribuicao.tipo != "REVERSAO ANTECIPACAO":
+            continue
+        ref = (contribuicao.arquivo_original, contribuicao.ref_original)
+        original = originais.get(ref)
+        if (original is None or original.tipo != "ANTECIPACAO" or ref in reversoes
+                or original.cnpj != contribuicao.cnpj or contribuicao.valor != -original.valor
+                or contribuicao.taxa != original.taxa or contribuicao.contrato != original.contrato
+                or contribuicao.data_base_taxa != original.data_base_taxa or contribuicao.regra != original.regra):
+            raise ErroEntrada("Reversão não anula exclusivamente a antecipação referenciada")
+        reversoes.add(ref)
     if len(resultado.rastro) != len(originais):
         raise ErroEntrada("Quantidade de contribuições diferente do rastro")
     vistos = set()
@@ -54,6 +72,11 @@ def validar(resultado: Resultado) -> None:
         esperado = f"CHECKOUT:{contribuicao.competencia}:{contribuicao.cnpj}"
         if linha["id_saida"] != esperado:
             raise ErroEntrada("Rastro associado ao lojista/competência incorretos")
+        if (linha["ref_evento_original"] != contribuicao.ref_original
+                or linha["arquivo_evento_original"] != contribuicao.arquivo_original
+                or linha["data_base_taxa"] != (contribuicao.data_base_taxa.isoformat() if contribuicao.data_base_taxa else "")
+                or linha["tipo_lancamento"] != contribuicao.tipo):
+            raise ErroEntrada("Rastro perdeu o vínculo ou a data base do evento")
         vistos.add(ref)
         somas[linha["id_saida"]] += valor
     ids = set()

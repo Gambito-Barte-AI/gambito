@@ -194,7 +194,7 @@ class FluxoTest(unittest.TestCase):
         self.vendas([{"tipo_lancamento": "ANTECIPACAO", "qtd_parcelas": ""}])
         resultado = self.executar()
         self.assertEqual(resultado.pendencias[0].valor_bruto, Decimal("1.00"))
-        self.assertIn("Tipo de evento", resultado.pendencias[0].motivo)
+        self.assertIn("Taxa contratada ausente", resultado.pendencias[0].motivo)
 
     def test_manifesto_externo_invalido_nao_e_sobrescrito(self):
         self.saida.mkdir()

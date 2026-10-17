@@ -65,5 +65,5 @@ def executar(pasta: Path, configuracao: Path) -> Resultado:
         return resultado
     resultado.situacao = "PROVISORIO" if resultado.pendencias else "COMPLETO"
     if resultado.pendencias:
-        resultado.motivos.append("Há linhas não calculadas; os CSVs representam somente as vendas validadas até a Entrega 2")
+        resultado.motivos.append("Há linhas não calculadas; os CSVs representam somente os eventos validados até a Entrega 3")
     return resultado

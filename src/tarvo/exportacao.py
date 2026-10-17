@@ -16,7 +16,8 @@ ARQUIVOS = {
     "comissoes_por_lojista.csv": ["id_saida", "cnpj", "lojista", "linha_negocio", "comissao_brl"],
     "rastro.csv": ["id_saida", "arquivo_origem", "ref_origem", "valor",
                   "contrato_origem", "ref_contrato", "taxa_contratada_fracao",
-                  "faixa", "regra", "vinculo_identidade"],
+                  "faixa", "regra", "vinculo_identidade", "tipo_lancamento", "data_base_taxa",
+                  "ref_evento_original", "arquivo_evento_original"],
 }
 MANIFESTO = "manifesto.json"
 
@@ -33,7 +34,7 @@ def resumo(resultado: Resultado) -> dict:
     processados = len(resultado.contribuicoes)
     pendentes = len(resultado.pendencias)
     return {
-        "versao": 1, "escopo": "CHECKOUT_MINIMO", "etapa": "ENTREGA_2", "situacao": resultado.situacao,
+        "versao": 1, "escopo": "CHECKOUT_MINIMO", "etapa": "ENTREGA_3", "situacao": resultado.situacao,
         "competencia": resultado.competencia, "motivos": resultado.motivos,
         "fontes": resultado.fontes, "rastro_validado": resultado.validado,
         "cobertura": {

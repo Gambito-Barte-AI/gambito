@@ -1,6 +1,6 @@
 versao = 1
-fonte = "Arquitetura consolidada e Entregas 1 e 2 autorizadas pelo usuário nesta conversa"
-escopo = "Identidade, faixas e vigências das vendas; outros eventos permanecem para a Entrega 3"
+fonte = "Arquitetura consolidada e Entregas 1, 2 e 3 autorizadas pelo usuário nesta conversa"
+escopo = "Checkout com vendas, estornos, antecipações e reversões; sem funcionalidades do alvo"
 
 # Configuração de leitura, sem assumir nomes dos arquivos do mês.
 [entrada]

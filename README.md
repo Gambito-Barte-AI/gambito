@@ -1,6 +1,6 @@
-# Gambito — Entrega 2
+# Gambito — Entrega 3
 
-Checkout Tarvo com identidade, faixas e vigências: lê Orbe e taxas, calcula **vendas com contrato inequívoco na data da venda**, valida o rastro e publica dois CSVs. O resultado do data pack é **parcial**: estornos, antecipações e reversões ainda pertencem à Entrega 3. Nenhuma funcionalidade do alvo foi implementada.
+Checkout Tarvo com vendas, estornos, antecipações e reversões: lê Orbe e taxas, calcula **eventos com contrato e referências verificáveis**, valida o rastro e publica dois CSVs. Os eventos sem contrato confirmado, como a Atlas, ficam pendentes; não são estimados. Nenhuma funcionalidade do alvo foi implementada.
 
 ## Instalação
 
@@ -29,7 +29,7 @@ Para o data pack local, se disponível:
 
 O data pack e `Context/` não estão versionados. A banca precisa fornecer os arquivos originais. O comando não depende desses nomes: descobre um CSV com `id_transacao` e um único XLSX; a aba vigente é configurada em `regras.toml`. Mais de um candidato bloqueia a fonte, sem escolher arbitrariamente. A competência é obtida de `data_movimento`; arquivos vazios ou com múltiplos meses ficam bloqueados nesta entrega.
 
-Na validação da Entrega 2, a pasta local recebeu também `06_orbe_ajustes_tardios_set2026.csv`. Com dois relatórios Orbe, o comando acima gera corretamente `BLOQUEADO`; não há fusão ou seleção automática. Para reproduzir o recorte aprovado, coloque em `data/raw/` somente o relatório Orbe original e a planilha de taxas, copiados sem alteração, e use o primeiro comando. O relatório adicional permanece intacto e seu processamento não foi incorporado. A evidência desta entrega está em `saida/entrega2/`; o manifesto na raiz de `saida/` registra o bloqueio da pasta completa.
+Na validação da Entrega 2, a pasta local recebeu também `06_orbe_ajustes_tardios_set2026.csv`. Com dois relatórios Orbe, o comando acima gera corretamente `BLOQUEADO`; não há fusão ou seleção automática. Para reproduzir o recorte aprovado, coloque em `data/raw/` somente o relatório Orbe original e a planilha de taxas, copiados sem alteração, e use o primeiro comando. O relatório adicional permanece intacto e seu processamento não foi incorporado. A evidência atual está em `saida/entrega3/`; a da etapa anterior foi preservada em `saida/entrega2/`. O manifesto na raiz de `saida/` registra o bloqueio da pasta completa.
 
 ## Escopo financeiro
 
@@ -39,10 +39,15 @@ Na validação da Entrega 2, a pasta local recebeu também `06_orbe_ajustes_tard
 - Observações desconhecidas continuam pendentes. Apenas os textos explicitamente esclarecidos por CNPJ em `regras.toml` podem ser utilizados, com fonte e interpretação registradas.
 - Taxas XLSX numéricas são frações; taxas textuais exigem `%`. Texto sem unidade, fórmula ou taxa ausente vira pendência.
 - Usa a taxa contratada, nunca `valor_taxa` ou taxa aplicada da Orbe. Arredonda cada contribuição com `Decimal`/`ROUND_HALF_UP` antes de somar.
+- `ESTORNO` tem bruto negativo, referência e data original obrigatórias. Usa a faixa da própria linha e o contrato/isenção na data da venda; a contribuição pertence ao mês do movimento. Venda anterior ao mês pode estar ausente do arquivo: a data e a referência declaradas no estorno sustentam a seleção contratual, sem inventar arquivo histórico nem reabrir o mês anterior.
+- Se a venda original estiver no arquivo, conferem-se tipo, EC, data e total estornado. Relação incompatível, valor acumulado acima da venda, ou referência ausente para venda do próprio mês gera pendência, sem escolher uma linha arbitrariamente. Não se infere outra faixa a partir da venda original.
+- `ANTECIPACAO` usa bruto positivo, taxa da coluna Antecipação e a data do evento como base contratual, pois o relatório não vincula uma venda individual. Não há constante de 2,10% no motor. Taxa ausente gera pendência. Referência temporal diferente da data do evento requer esclarecimento.
+- `REVERSAO ANTECIPACAO` exige a antecipação original disponível e calculável, mesmo que apareça depois no arquivo. Confere tipo, EC, data e bruto integral oposto; o valor é o negativo exato da contribuição original, com sua taxa, contrato e regra. Não usa a taxa atual nem soma outra antecipação. Reversão parcial, original ausente ou múltiplas reversões da mesma antecipação ficam pendentes.
 - As abas em `entrada.abas_identidade` fornecem apenas CNPJ/nome/origem, nunca taxas ou vigência. Ausência dessas abas não bloqueia os contratos vigentes; identidades que dependeriam delas permanecem pendentes.
 - A Atlas é identificada pela aba antiga e vínculo documentado, mas o bloqueio comercial mantém seus eventos pendentes. Nenhuma taxa antiga é importada. D-07 não foi ratificada: a ausência de comissão calculada não decide a representação final fora/zerada.
 - A isenção confirmada da Casa usa a data da venda e o intervalo configurado. Contribuições isentas são zero com rastro. Antes/depois do intervalo, aplica-se o contrato vigente, sem estender a isenção. Devolução ao lojista não é calculada e D-08 permanece pendente.
-- D-10 continua fora do escopo. Estornos, antecipações e reversões não são calculados nesta etapa, inclusive para lojistas isentos.
+- A isenção também vale para a antecipação no seu período. A reversão de antecipação isenta permanece zero, mesmo após o fim da isenção. Estornos anteriores à isenção usam a condição anterior, com saldo negativo permitido nas comissões.
+- D-10 continua fora do escopo. Saldos zero/negativos são preservados nas comissões; nenhuma nota, transferência de saldo ou devolução é gerada.
 - Remessas, divergências, notas, extratos, devoluções, IA e `pendencias.csv` não são implementados.
 
 ## Resultados e fechamento parcial
@@ -50,14 +55,14 @@ Na validação da Entrega 2, a pasta local recebeu também `06_orbe_ajustes_tard
 `saida/` recebe:
 
 - `comissoes_por_lojista.csv`: somente contribuições calculadas, agrupadas por CNPJ; layout obrigatório.
-- `rastro.csv`: contribuições de comissão com referência Orbe; soma exata por `id_saida`, incluindo linhas com valor zero. Colunas adicionais registram arquivo/linha contratual, taxa em fração, faixa, regra aplicada e vínculo de identidade.
+- `rastro.csv`: uma contribuição assinada por evento calculado; soma exata por `id_saida`, incluindo zero e negativos. Colunas adicionais registram contrato, taxa, faixa, regra, vínculo, tipo, data base contratual e referência original. O vínculo ao original é metadado, sem repetir seu valor e duplicar a soma. Arquivo histórico não disponível permanece vazio.
 - `manifesto.json`: situação, competência, hashes das fontes e saídas, cobertura, limitações, decisões pendentes e todas as pendências por referência. O valor bruto de uma pendência não representa comissão nem valor a cobrar.
 
 O terminal exibe resumo e pendências com motivo e responsável. IDs e ordenação são estáveis; mesma entrada e regras geram os mesmos arquivos.
 
 | Situação | Significado | Código de saída |
 | --- | --- | --- |
-| `COMPLETO` | Todas as linhas atendidas pelo recorte até a Entrega 2, sem pendências. Não significa mínimo completo nem alvo concluído. | `0` |
+| `COMPLETO` | Todas as linhas atendidas pelo checkout até a Entrega 3, sem pendências. Não significa alvo concluído nem substitui o aceite reproduzível da Entrega 4. | `0` |
 | `PROVISORIO` | CSVs válidos somente para contribuições calculadas; demais linhas identificadas como pendências. | `2` |
 | `BLOQUEADO` | Dependência inválida/ausente, competência ambígua ou falha de validação; sem CSVs atuais. | `1` |
 
@@ -76,13 +81,13 @@ $env:PYTHONPATH = (Join-Path $PWD 'src')
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-As amostras são sintéticas e criadas em diretório temporário: arredondamento por linha, rastro, faixas 2/6/7/12/13x, limites de vigência, sobreposições, lacunas, vínculos conflitantes, identidade histórica sem taxa antiga, isenção, fontes faltantes, layouts, pendências, determinismo, proteção das saídas e códigos do comando. Totais do case não são usados como regras.
+As amostras são sintéticas e criadas em diretório temporário: arredondamento positivo/negativo, rastro, faixas 2/6/7/12/13x, vigências, conflitos de identidade, histórico sem taxas antigas, estornos de mês anterior e anteriores à isenção, antecipação pela taxa própria, anulação exclusiva da antecipação, ordem das linhas, referências inconsistentes, reversões duplicadas, fontes faltantes, determinismo e proteção das saídas. Totais do case não são usados como regras.
 
 ## Configuração e decisões pendentes
 
 `regras.toml` contém os três ECs complementares confirmados, vínculo da Atlas, bloqueio por falta de confirmação comercial, período de isenção da Casa e observações esclarecidas. Valores, datas e identificadores do caso ficam nessa configuração, nunca como constantes no código de cálculo. Cada registro tem fonte e descrição da aprovação conhecida ou da interpretação técnica; datas/pessoas não informadas não são inventadas.
 
-D-07 (representação da Atlas), D-08 (devolução da Casa) e D-10 (semântica do ajuste Ponte) continuam no manifesto e em `HIPOTESES.md`. Aprovar esta entrega não ratifica essas decisões financeiras. Não é preciso API nem nova dependência para a Entrega 2.
+D-07 (representação da Atlas), D-08 (devolução da Casa) e D-10 (semântica do ajuste Ponte) continuam no manifesto e em `HIPOTESES.md`. Aprovar esta entrega não ratifica essas decisões financeiras. Não é preciso API nem nova dependência para a Entrega 3.
 
 ## Estrutura
 

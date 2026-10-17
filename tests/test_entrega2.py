@@ -265,7 +265,7 @@ aprovacao = "Teste"
             self.configurar(extra)
             self.assertEqual(self.executar().situacao, "BLOQUEADO")
 
-    def test_eventos_da_entrega3_continuam_pendentes(self):
+    def test_eventos_sem_sinal_referencia_ou_taxa_continuam_pendentes(self):
         self.vendas([{"tipo_lancamento": tipo} for tipo in ("ESTORNO", "ANTECIPACAO", "REVERSAO ANTECIPACAO")])
         r = self.executar()
         self.assertEqual(r.contribuicoes, [])

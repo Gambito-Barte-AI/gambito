@@ -10,7 +10,7 @@ from .modelos import ErroEntrada
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(description="Entrega 2: identidade, faixas e vigências do checkout")
+    parser = argparse.ArgumentParser(description="Entrega 3: checkout com estornos, antecipações e reversões")
     parser.add_argument("--dados", required=True, type=Path)
     parser.add_argument("--saida", default=Path("saida"), type=Path)
     parser.add_argument("--regras", default=Path("regras.toml"), type=Path)
@@ -23,7 +23,7 @@ def main(argv=None) -> int:
     except (ErroEntrada, OSError) as exc:
         print(f"ERRO: {exc}", file=sys.stderr)
         return 1
-    print(f"ENTREGA 2 — Checkout {resultado.situacao}")
+    print(f"ENTREGA 3 — Checkout {resultado.situacao}")
     print(f"Competência: {resultado.competencia or 'não determinada'}")
     cobertura = manifesto["cobertura"]
     print(f"Linhas: {cobertura['linhas_lidas']} | calculadas: {cobertura['calculadas']} | "
