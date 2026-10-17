@@ -1,3 +1,15 @@
+# Revisão final do mínimo antes do alvo
+
+A solicitação atual autorizou a exportação das pendências existentes, embora RF-11 esteja originalmente classificado no alvo. Não foram implementados novos cálculos do alvo. Os seis CSVs oficiais passam a ser publicados; divergências, notas e classificação ainda têm apenas cabeçalhos e status BLOQUEADO com motivo no manifesto.
+
+`pendencias.csv` e o rastro monetário das pendências atendem D-07/RN-58: as 57 origens da Atlas preservam o cobrado pela Orbe, separado da comissão. Em outros casos, bruto conhecido é identificado explicitamente como BRUTO_REFERENCIA. Valor desconhecido fica vazio/NAO_INFORMADO, não zero, e não gera rastro monetário; pendências/rastro ficam provisórios quando isso ocorrer. Não é autorização para cobrança ou faturamento.
+
+O status principal continua sendo do checkout; o manifesto versão 2 explicita esse escopo e apresenta o status de cada CSV. A configuração do usuário, os relatórios e os registros anteriores foram preservados. D-07 e RN-64 já são decisões documentadas; não existem mais avisos de decisão financeira pendente para D-07/D-08 na execução normal. A referência docs/documentação-geral.md existe e está versionada nesta branch.
+
+A proposta de alvo está em docs/EVOLUCAO_ALVO.md, exclusivamente como planejamento. Evidência desta revisão: saida/revisao-pre-alvo/ e docs/ACEITE_MINIMO.md. Os registros abaixo refletem entregas anteriores quando divergirem desta revisão.
+
+---
+
 # Atualização P0/P1 — fonte atual e tratamentos aprovados
 
 A referência atual é `docs/documentação-geral.md` da develop, que prevalece sobre a numeração e o estado histórico abaixo. Arquitetura monolítica modular e escopo checkout mínimo preservados.

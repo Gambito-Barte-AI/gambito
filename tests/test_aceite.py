@@ -198,6 +198,79 @@ natureza = "FINANCEIRA"
         self.assertEqual(pendencia["categoria"], "NEGOCIO")
         self.assertTrue(pendencia["proximo_passo"])
         self.assertEqual(manifesto["cobertura"]["calculadas"], 0)
+        with (self.saida / "pendencias.csv").open(encoding="utf-8") as arquivo:
+            linhas = list(csv.DictReader(arquivo, delimiter=";"))
+        self.assertEqual(len(linhas), 1)
+        self.assertEqual(linhas[0]["valor_brl"], "12.34")
+        self.assertEqual(linhas[0]["natureza_valor"], "COBRANCA_ORBE")
+        self.assertTrue(all(linhas[0][k] for k in ("tipo", "ref_origem", "motivo", "quem_decide", "proximo_passo")))
+        self.assertEqual(manifesto["resultados"]["pendencias.csv"]["situacao"], "COMPLETO")
+        for nome in ("divergencias_taxa.csv", "notas_a_emitir.csv", "lancamentos_classificados.csv"):
+            self.assertEqual(manifesto["resultados"][nome]["situacao"], "BLOQUEADO")
+            self.assertEqual(len((self.saida / nome).read_text().splitlines()), 1)
+
+    def test_pendencia_sem_valor_nao_vira_zero_nem_rastro_monetario(self):
+        self.arquivo_orbe("invalido.csv", [dict(id_transacao="B", valor_bruto="NaN")])
+        self.executar(2)
+        aceite = self.auditar("PROVISORIO")
+        self.assertEqual(aceite["pendencias_csv"], 1)
+        self.assertEqual(aceite["rastro_pendencias"], 0)
+        with (self.saida / "pendencias.csv").open(encoding="utf-8") as arquivo:
+            p = next(csv.DictReader(arquivo, delimiter=";"))
+        self.assertEqual(p["valor_brl"], "")
+        self.assertEqual(p["natureza_valor"], "NAO_INFORMADO")
+
+    def test_auditor_detecta_valor_adulterado_na_pendencia(self):
+        self.vendas([("B", "NOVA", "42", "1")])
+        self.executar(2)
+        caminho = self.saida / "pendencias.csv"
+        caminho.write_bytes(caminho.read_bytes().replace(b";1.00;", b";9.99;"))
+        self.regravar_hash(caminho.name)
+        with self.assertRaisesRegex(ErroAceite, "Valor da pendência CSV"):
+            self.auditar("PROVISORIO")
+
+    def test_auditor_detecta_rastro_de_pendencia_adulterado(self):
+        self.vendas([("B", "NOVA", "42", "1")])
+        self.executar(2)
+        caminho = self.saida / "rastro.csv"
+        caminho.write_bytes(caminho.read_bytes().replace(b";1.00;", b";9.99;"))
+        self.regravar_hash(caminho.name)
+        with self.assertRaisesRegex(ErroAceite, "Rastro da pendência"):
+            self.auditar("PROVISORIO")
+
+    def test_referencias_documentais_e_decisoes_resolvidas(self):
+        import re
+        import tomllib
+        raiz = Path(__file__).resolve().parents[1]
+        config = tomllib.loads((raiz / "regras.toml").read_text(encoding="utf-8"))
+        documento = raiz / "docs/documentação-geral.md"
+        self.assertTrue(documento.is_file())
+        texto = documento.read_text(encoding="utf-8")
+        self.assertFalse({"D-07", "D-08"} & {d["id"] for d in config["decisoes_pendentes"]})
+        for tabela in ("vinculos", "contratos_bloqueados", "isencoes", "observacoes_esclarecidas", "decisoes_documentadas", "decisoes_pendentes"):
+            for regra in config.get(tabela, []):
+                self.assertIn("docs/documentação-geral.md", regra["fonte"])
+                for referencia in re.findall(r"\b(?:RN|D)-\d+\b", regra["fonte"]):
+                    self.assertIn(referencia, texto)
+
+    def test_seis_cabecalhos_seguem_o_contrato_oficial_em_ordem(self):
+        import re
+        from tarvo.exportacao import ARQUIVOS
+        raiz = Path(__file__).resolve().parents[1]
+        texto = (raiz / "docs/FORMATO_SAIDA.md").read_text(encoding="utf-8")
+        contratos = dict(re.findall(r"^\| `([^`]+\.csv)` \| `([^`]+)` \|$", texto, re.MULTILINE))
+        self.assertEqual(set(contratos), set(ARQUIVOS))
+        for nome, texto_colunas in contratos.items():
+            obrigatorias = [c.strip() for c in texto_colunas.split(";")]
+            self.assertEqual(ARQUIVOS[nome][:len(obrigatorias)], obrigatorias)
+
+    def test_relatorio_alvo_existente_do_usuario_nao_e_sobrescrito(self):
+        self.saida.mkdir()
+        caminho = self.saida / "notas_a_emitir.csv"
+        caminho.write_text("arquivo externo", encoding="utf-8")
+        self.executar(1)
+        self.assertEqual(caminho.read_text(encoding="utf-8"), "arquivo externo")
+        self.assertFalse((self.saida / "manifesto.json").exists())
 
     def test_metadados_de_aprovacao_obrigatorios_sem_inventar_datas(self):
         from tarvo.regras import carregar
@@ -246,7 +319,7 @@ natureza = "FINANCEIRA"
         (self.dados / "orbe.csv").write_text("id_transacao;outra\nA;1\n", encoding="utf-8")
         self.executar(1)
         self.auditar("BLOQUEADO")
-        self.assertEqual(len(list(self.saida.glob("*.csv"))), 2)
+        self.assertEqual(len(list(self.saida.glob("*.csv"))), 6)
         for p in self.saida.glob("*.csv"):
             self.assertEqual(len(p.read_text().splitlines()), 1)
 
@@ -289,7 +362,7 @@ natureza = "FINANCEIRA"
         self.assertEqual(resultado.situacao, "BLOQUEADO")
         publicar(resultado, self.saida)
         self.auditar("BLOQUEADO")
-        self.assertEqual(len(list(self.saida.glob("*.csv"))), 2)
+        self.assertEqual(len(list(self.saida.glob("*.csv"))), 6)
         for p in self.saida.glob("*.csv"):
             self.assertEqual(len(p.read_text().splitlines()), 1)
 

@@ -1,3 +1,46 @@
+# Revisão final do mínimo antes do alvo — 17/10/2026
+
+**Mínimo de checkout com exportação das pendências existentes validado nesta revisão.** Os seis nomes e cabeçalhos oficiais são publicados, mas os cálculos de divergências, notas e classificação bancária continuam **não implementados e bloqueados**. A validação abaixo não significa nível alvo concluído.
+
+## Checklist solicitado
+
+| Verificação | Estado encontrado / correção | Evidência |
+| --- | --- | --- |
+| Orbe / 06 — RN-65/RF-22 | Já atendido: descobrir retorna múltiplos candidatos por cabeçalho; ler_pasta une/deduplica antes de resolver referências. Nenhuma alteração financeira necessária | 1.957 linhas únicas: 1.900 calculadas + 57 pendências; 14 ajustes novos, 13 referências entre arquivos; 7 lojistas alterados; total R$ 203.735,34 |
+| pendencias.csv / seis arquivos | Corrigido: antes apenas manifesto. Exportadas as pendências existentes, com cobrança Orbe e próximo passo; rastro inclui seus valores sob IDs PENDENCIA, separados dos IDs CHECKOUT. Demais relatórios do alvo só com cabeçalho e motivo de bloqueio | 57 linhas completas; soma do cobrado Orbe R$ 7.876,05; 57 contribuições de pendência no rastro; seis layouts oficiais em ordem e hashes |
+| Status checkout / D-13 | Já atendido no coordenador: pendência NEGOCIO não impõe provisório. Manifesto agora distingue escopo CHECKOUT e situação de cada CSV | Checkout, comissões, pendências e rastro COMPLETO; demais três CSVs BLOQUEADO por escopo não implementado |
+| Mensagens D-07/D-08 | Já corretas na execução: D-07 aplicada e RN-64 documentada; não constam como decisões financeiras pendentes. Histórico anterior preservado e marcado como superado | Log da execução sem DECISÃO PENDENTE D-07/D-08; só D-10 continua nessa lista |
+| Referências regras.toml | A referência suspeita existe e está versionada: docs/documentação-geral.md. Não houve motivo para alterar o arquivo | Teste verifica arquivo, IDs citados e ausência de D-07/D-08 na lista de pendentes |
+| README macOS/Linux | Corrigido: comandos de venv, instalação, execução, testes e auditoria com .venv/bin/python | Instruções no README; plataformas não executadas neste ambiente |
+
+## Validação executada
+
+- **100 testes passaram** em Windows, Python 3.12.10, openpyxl 3.1.5 e et-xmlfile 2.0.0. `pip check` sem inconsistências. Nenhuma dependência nova.
+- O ambiente virtual existente foi reutilizado nesta revisão. Os subprocessos de aceite rodaram fora da raiz do código, sem PYTHONPATH/PYTHONHOME, site-packages do usuário ou chaves de API; não foi feita uma instalação nova nesta rodada. O aceite anterior do zero permanece registrado no histórico abaixo.
+- Auditor independente, sem importar tarvo: seis layouts/hashes, cobertura física, pendências CSV versus manifesto e cobrança original, CNPJ/responsável/próximo passo, datas, competência, reversões e soma por id_saida.
+- **R$ 203.735,34** é resultado recalculado com os dados atuais, também conferido contra a referência documental. Relatório original isolado: R$ 207.039,73; com ajustes, sete lojistas mudam. O motor não contém essas constantes.
+- Comissões são idênticas em bytes ao aceite P0/P1 anterior; as 1.900 contribuições do checkout mantêm os mesmos valores e metadados. A alteração do rastro é a coluna extra de natureza e a inclusão das 57 pendências, totalizando 1.957 registros.
+- Duas execuções em pastas distintas produziram os **seis CSVs e o manifesto idênticos em bytes**; tempos medidos 1.2097 s e 1.1536 s. Hashes das fontes conferidos antes/depois, sem alterar entradas.
+- Testes adicionais: valor/rastro de pendência adulterado, desconhecido sem zero fictício, bloqueio com cabeçalhos, proteção de relatório externo, ordem oficial de colunas e referências documentais. Duplicidades, conflitos, referências ausentes e layouts alterados continuam cobertos.
+
+## Contrato e limites
+
+`manifesto.json` versão 2 mantém `situacao` e código de saída relativos ao checkout, explicitado em `escopo_situacao=CHECKOUT`; `resultados` identifica os seis arquivos individualmente. Um CSV do alvo só com cabeçalho **não** representa resultado financeiro zero ou relatório concluído.
+
+Para Atlas, o valor da pendência é o efetivamente cobrado pela Orbe, não o bruto nem uma comissão estimada. Cada id_saida PENDENCIA tem seu próprio rastro; somar rastro de comissão e de pendência indiscriminadamente misturaria naturezas. Nos casos sintéticos sem valor conhecido, a célula fica vazia/NAO_INFORMADO, o resultado correspondente fica provisório e não se inventa uma contribuição monetária. Isso não ocorre nas 57 pendências do case, cujos campos estão completos.
+
+A autorização atual incluiu exportar as pendências já identificadas, embora RF-11 seja originalmente alvo. Não foram implementadas novas regras de devolução, nota, divergência, remessa ou classificação. D-07 e RN-64 resolvidas permanecem documentadas; contrato da Atlas, resposta financeira de D-10 e datas não documentadas continuam explícitos. A interpretação do estorno histórico RN-13/RN-65 permanece em HIPOTESES.md.
+
+**Evidências atuais:** saida/revisao-pre-alvo/ contém os seis CSVs, manifesto, aceite.json, testes.log, logs das execuções/auditorias e pip-check.log. As evidências anteriores, dados e regras.toml foram preservados. macOS/Linux foram documentados, não executados. Sem commit, push ou troca de branch.
+
+A proposta exclusivamente documental do alvo está em docs/EVOLUCAO_ALVO.md. Próxima etapa sugerida para aprovação: A1, isolamento de resultados e dependências.
+
+---
+
+# Histórico anterior — aceite P0/P1 com dois CSVs
+
+O registro abaixo descreve a entrega anterior. A revisão acima substitui seu contrato de publicação de dois CSVs pela estrutura atual de seis arquivos, incluindo pendências existentes; não altera os valores das comissões.
+
 # Aceite atualizado do mínimo — P0/P1 e ajustes tardios
 
 **Resultado: aprovado tecnicamente com relatório e ajustes tardios, mantendo as pendências comerciais e a arquitetura existente.** Situação `COMPLETO` conforme D-13, sem confundir pendência de contrato da Atlas com erro de processamento. Nenhuma funcionalidade do alvo foi implementada.

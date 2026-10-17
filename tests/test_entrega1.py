@@ -156,7 +156,7 @@ class FluxoTest(unittest.TestCase):
         self.assertEqual(resultado.situacao, "BLOQUEADO")
         self.assertEqual(resultado.fontes["orbe"]["situacao"], "DISPONIVEL")
         manifesto = publicar(resultado, self.saida)
-        self.assertEqual(set(manifesto["arquivos"]), {"rastro.csv", "comissoes_por_lojista.csv"})
+        self.assertEqual(set(manifesto["arquivos"]), {"comissoes_por_lojista.csv", "rastro.csv", "pendencias.csv", "divergencias_taxa.csv", "notas_a_emitir.csv", "lancamentos_classificados.csv"})
         self.assertEqual(len((self.saida / "rastro.csv").read_text().splitlines()), 1)
         self.assertIsNone(manifesto["total_parcial_brl"])
 

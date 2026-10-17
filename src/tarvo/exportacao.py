@@ -14,11 +14,17 @@ from .validacao import validar
 
 ARQUIVOS = {
     "comissoes_por_lojista.csv": ["id_saida", "cnpj", "lojista", "linha_negocio", "comissao_brl"],
+    "divergencias_taxa.csv": ["id_saida", "cnpj", "linha_negocio", "ref_origem", "taxa_contratada_pct", "taxa_aplicada_pct", "diferenca_brl"],
+    "notas_a_emitir.csv": ["id_saida", "tomador_cnpj", "tomador", "linha_negocio", "valor_brl", "discriminacao"],
+    "lancamentos_classificados.csv": ["id_saida", "banco", "ref_origem", "data", "descricao", "valor", "conta_codigo", "metodo", "confianca"],
+    "pendencias.csv": ["id_saida", "tipo", "ref_origem", "valor_brl", "motivo", "quem_decide",
+                       "proximo_passo", "arquivo_origem", "linha_origem", "cnpj", "categoria", "natureza_valor"],
     "rastro.csv": ["id_saida", "arquivo_origem", "ref_origem", "valor",
                   "contrato_origem", "ref_contrato", "taxa_contratada_fracao",
                   "faixa", "regra", "vinculo_identidade", "tipo_lancamento", "data_base_taxa",
-                  "ref_evento_original", "arquivo_evento_original"],
+                  "ref_evento_original", "arquivo_evento_original", "natureza_valor"],
 }
+RELATORIOS_ALVO = {"divergencias_taxa.csv", "notas_a_emitir.csv", "lancamentos_classificados.csv"}
 MANIFESTO = "manifesto.json"
 
 
@@ -30,11 +36,35 @@ def csv_bytes(linhas: list[dict], colunas: list[str]) -> bytes:
     return texto.getvalue().encode("utf-8")
 
 
+def projetar_pendencias(resultado: Resultado) -> tuple[list[dict], list[dict]]:
+    """Publica somente pendências existentes; valores de referência não são comissões."""
+    linhas, rastros = [], []
+    for p in sorted(resultado.pendencias, key=lambda p: (p.origem.arquivo, p.origem.linha, p.origem.ref)):
+        identificador = f"PENDENCIA:{p.origem.arquivo}:L{p.origem.linha}:{p.origem.ref}"
+        valor = p.valor_orbe if p.valor_orbe is not None else p.valor_bruto
+        natureza = "COBRANCA_ORBE" if p.valor_orbe is not None else "BRUTO_REFERENCIA" if valor is not None else "NAO_INFORMADO"
+        if valor is not None and (not valor.is_finite() or valor != valor.quantize(Decimal("0.01"))):
+            raise ErroEntrada("Pendência com valor não finito ou fração de centavo")
+        linhas.append({
+            "id_saida": identificador, "tipo": p.tipo, "ref_origem": p.origem.ref,
+            "valor_brl": format(valor, ".2f") if valor is not None else "",
+            "motivo": p.motivo, "quem_decide": p.quem_decide, "proximo_passo": p.proximo_passo,
+            "arquivo_origem": p.origem.arquivo, "linha_origem": p.origem.linha,
+            "cnpj": p.cnpj or "", "categoria": p.categoria, "natureza_valor": natureza,
+        })
+        if valor is not None:
+            rastros.append({"id_saida": identificador, "arquivo_origem": p.origem.arquivo,
+                            "ref_origem": p.origem.ref, "valor": format(valor, ".2f"),
+                            "natureza_valor": natureza})
+    return linhas, rastros
+
+
 def resumo(resultado: Resultado) -> dict:
     processados = len(resultado.contribuicoes)
     pendentes = len(resultado.pendencias)
     return {
-        "versao": 1, "escopo": "CHECKOUT_MINIMO", "etapa": "ENTREGA_4", "situacao": resultado.situacao,
+        "versao": 2, "escopo": "CHECKOUT_MINIMO", "etapa": "ENTREGA_4", "situacao": resultado.situacao,
+        "escopo_situacao": "CHECKOUT",
         "competencia": resultado.competencia, "motivos": resultado.motivos,
         "fontes": resultado.fontes, "rastro_validado": resultado.validado and resultado.situacao != "BLOQUEADO",
         "ingestao": resultado.ingestao, "avisos": resultado.avisos,
@@ -60,7 +90,7 @@ def resumo(resultado: Resultado) -> dict:
         } for p in resultado.pendencias],
         "decisoes_financeiras_pendentes": resultado.decisoes_pendentes,
         "decisoes_documentadas": resultado.decisoes_documentadas,
-        "fora_do_escopo": ["remessas", "divergencias", "notas", "extratos", "pendencias.csv"],
+        "fora_do_escopo": ["remessas", "divergencias", "notas", "extratos"],
     }
 
 
@@ -87,10 +117,23 @@ def publicar(resultado: Resultado, pasta: Path) -> dict:
         ):
             raise ErroEntrada(f"{arquivo}: não sobrescrito; arquivo externo ou modificado pelo usuário")
     dados = resumo(resultado)
-    conteudos = {
-        "comissoes_por_lojista.csv": csv_bytes(resultado.comissoes if resultado.situacao != "BLOQUEADO" else [], ARQUIVOS["comissoes_por_lojista.csv"]),
-        "rastro.csv": csv_bytes(resultado.rastro if resultado.situacao != "BLOQUEADO" else [], ARQUIVOS["rastro.csv"]),
+    linhas = {nome: [] for nome in ARQUIVOS}
+    if resultado.situacao != "BLOQUEADO":
+        linhas["pendencias.csv"], rastro_pendencias = projetar_pendencias(resultado)
+        linhas["comissoes_por_lojista.csv"] = resultado.comissoes
+        linhas["rastro.csv"] = resultado.rastro + rastro_pendencias
+    dados["resultados"] = {
+        nome: {"situacao": "BLOQUEADO" if nome in RELATORIOS_ALVO else resultado.situacao,
+               "motivos": ["Relatório do nível alvo não implementado; apenas contrato de cabeçalho"]
+               if nome in RELATORIOS_ALVO else resultado.motivos,
+               "linhas": len(linhas[nome])}
+        for nome in ARQUIVOS
     }
+    if any(not p["valor_brl"] for p in linhas["pendencias.csv"]):
+        for nome in ("pendencias.csv", "rastro.csv"):
+            dados["resultados"][nome] = dict(dados["resultados"][nome], situacao="PROVISORIO",
+                motivos=["Há pendências sem valor conhecido; não representam zero e não têm contribuição monetária no rastro"])
+    conteudos = {nome: csv_bytes(linhas[nome], colunas) for nome, colunas in ARQUIVOS.items()}
     dados["publicacao_concluida"] = True
     dados["arquivos"] = {nome: sha256(valor).hexdigest() for nome, valor in conteudos.items()}
     # Prepara todos os bytes antes de trocar o marcador de validade.
@@ -105,6 +148,10 @@ def publicar(resultado: Resultado, pasta: Path) -> dict:
                             publicacao_concluida=False,
                             total_parcial_brl=None, arquivos={},
                             motivos=["Publicação interrompida; arquivos não são válidos até o manifesto final"])
+        interrompido["resultados"] = {
+            nome: {"situacao": "BLOQUEADO", "motivos": interrompido["motivos"], "linhas": 0}
+            for nome in ARQUIVOS
+        }
         marcador = staging / "interrompido.json"
         marcador.write_text(json.dumps(interrompido, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         os.replace(marcador, caminho_manifesto)

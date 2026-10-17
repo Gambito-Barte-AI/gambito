@@ -1,6 +1,6 @@
 # Gambito — Entrega 4: aceite do mínimo
 
-Checkout Tarvo com vendas, estornos, antecipações e reversões: lê Orbe e taxas, calcula **eventos com contrato e referências verificáveis**, valida o rastro e publica dois CSVs. Os eventos sem contrato confirmado, como a Atlas, ficam pendentes; não são estimados. Nenhuma funcionalidade do alvo foi implementada.
+Checkout Tarvo com vendas, estornos, antecipações e reversões: lê Orbe e taxas, calcula **eventos com contrato e referências verificáveis**, valida o rastro e publica comissões, pendências existentes e rastro. Os seis CSVs do contrato são gerados; os três relatórios ainda não implementados contêm só cabeçalhos e ficam bloqueados no manifesto. Os eventos sem contrato confirmado, como a Atlas, ficam pendentes; não são estimados. O cálculo dos módulos do alvo não foi implementado; a exportação das pendências existentes foi autorizada na revisão final do mínimo.
 
 ## Instalação
 
@@ -10,6 +10,15 @@ Python 3.11 ou superior. Na raiz do repositório, em PowerShell:
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e .
 ```
+
+Em **macOS ou Linux**, na raiz do repositório (Python 3.11+ disponível como `python3`):
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -e .
+```
+
+Não é necessário ativar o ambiente: os exemplos usam seu executável diretamente. Em algumas distribuições Linux, o módulo `venv` é fornecido pelo pacote de sistema da distribuição. As instruções para macOS/Linux foram documentadas; o ambiente efetivamente testado está no aceite.
 
 A única dependência de execução é `openpyxl` (XLSX). Não há servidor, banco, acesso a API ou chave obrigatória. `.env.example` fica reservado à eventual IA, fora desta entrega. Nenhuma variável desse arquivo é consumida agora.
 
@@ -27,11 +36,21 @@ Para o data pack local, se disponível:
 .\.venv\Scripts\python.exe -m tarvo --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml
 ```
 
+Execução, testes e auditoria em **macOS/Linux**:
+
+```bash
+.venv/bin/python -m tarvo --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml
+.venv/bin/python -m unittest discover -s tests -v
+.venv/bin/python tests/validar_saida.py --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml --esperar COMPLETO
+```
+
+Substitua `Tarvo_Data_Pack_set2026` por `data/raw` ou pela pasta recebida. Para escolher um mês, acrescente `--competencia AAAA-MM` ao comando de execução. Os mesmos códigos de saída documentados abaixo valem nas três plataformas.
+
 O data pack e `Context/` não estão versionados. A banca fornece os arquivos originais. O leitor reconhece **todos os CSVs Orbe pelo cabeçalho**, sem nomes fixos, e um único XLSX de taxas. Relatório e ajustes são reunidos antes das referências. A aba vigente é configurada em `regras.toml`; várias planilhas candidatas continuam bloqueando essa dependência.
 
 A competência vem de `data_movimento`, nunca da data da venda original. Com vários meses, escolha explicitamente, por exemplo `--competencia 2026-09`. Linhas válidas de outros meses ficam fora do cálculo e são contadas em `ingestao.fora_competencia`. Linhas com data inválida permanecem pendentes, pois não é seguro atribuir um mês. Uma reversão cujo original esteja fora do recorte exige revisão; não é reconstruída por estimativa.
 
-A pasta completa com `01` e `06` é suportada. Também é possível executar somente relatório e taxas. As evidências antigas em `saida/entrega2/`, `entrega3/` e `entrega4/` foram preservadas; representam a versão anterior. O aceite atualizado está em `docs/ACEITE_MINIMO.md` e `saida/aceite-multiorbe/`.
+A pasta completa com `01` e `06` é suportada. Também é possível executar somente relatório e taxas. As evidências antigas em `saida/entrega2/`, `entrega3/` e `entrega4/` foram preservadas; representam a versão anterior. O aceite atualizado está em `docs/ACEITE_MINIMO.md` e `saida/revisao-pre-alvo/`; o aceite anterior em `saida/aceite-multiorbe/` foi preservado.
 
 ## Escopo financeiro
 
@@ -50,17 +69,19 @@ A pasta completa com `01` e `06` é suportada. Também é possível executar som
 - A isenção confirmada da Casa usa a data da venda e o intervalo configurado. Contribuições isentas são zero com rastro. Antes/depois do intervalo, aplica-se o contrato vigente, sem estender a isenção. A devolução pelo cobrado foi confirmada na RN-64 (antiga D-08), mas seu cálculo pertence ao alvo e continua não implementado. R$ 15.396,77 é referência de conferência, nunca constante no código.
 - A isenção também vale para a antecipação no seu período. A reversão de antecipação isenta permanece zero, mesmo após o fim da isenção. Estornos anteriores à isenção usam a condição anterior, com saldo negativo permitido nas comissões.
 - D-10 continua fora do escopo. Saldos zero/negativos são preservados nas comissões; nenhuma nota, transferência de saldo ou devolução é gerada.
-- Remessas, divergências, notas, extratos, devoluções, IA e `pendencias.csv` não são implementados.
+- Remessas, divergências, notas, extratos, devoluções e IA não são calculados. `pendencias.csv` exporta apenas as pendências que o checkout já identificava; não antecipa geração de pendências financeiras dos módulos futuros.
 
 ## Resultados e fechamento parcial
 
 `saida/` recebe:
 
 - `comissoes_por_lojista.csv`: somente contribuições calculadas, agrupadas por CNPJ; layout obrigatório.
-- `rastro.csv`: uma contribuição assinada por evento calculado; soma exata por `id_saida`, incluindo zero e negativos. Colunas adicionais registram contrato, taxa, faixa, regra, vínculo, tipo, data base contratual e referência original. O vínculo ao original é metadado, sem repetir seu valor e duplicar a soma. Arquivo histórico não disponível permanece vazio.
+- `rastro.csv`: uma contribuição assinada por evento calculado e por pendência com valor conhecido; soma exata por `id_saida`, incluindo zero e negativos. Colunas adicionais registram contrato, taxa, faixa, regra, vínculo, tipo, data base contratual e referência original. Os IDs `CHECKOUT:...` e `PENDENCIA:...` separam os números reconciliados: valores cobrados da Atlas não entram na soma das comissões. O vínculo ao original é metadado, sem repetir seu valor e duplicar a soma. Arquivo histórico não disponível permanece vazio.
+- `pendencias.csv`: uma linha por origem, com as seis colunas oficiais e `proximo_passo`, arquivo, linha, CNPJ, categoria e natureza do valor como extras. Para Atlas, `valor_brl` é o cobrado pela Orbe. Em pendências de dados, um bruto disponível é identificado como `BRUTO_REFERENCIA`, nunca como comissão ou cobrança a executar. Valor desconhecido fica vazio e explicitamente provisório, sem rastro monetário inventado.
+- `divergencias_taxa.csv`, `notas_a_emitir.csv`, `lancamentos_classificados.csv`: somente cabeçalhos oficiais; status `BLOQUEADO`, motivo “relatório do alvo não implementado”. Ausência de linhas não declara nenhum desses cálculos concluído.
 - `manifesto.json`: situação, competência, hashes de cada fonte e saída, cobertura física, duplicidades, avisos, limitações, decisões documentadas/pendentes e todas as pendências por referência, tipo, categoria, próximo passo e responsável. O valor bruto de uma pendência não representa comissão nem valor a cobrar.
 
-O terminal exibe resumo, decisões e pendências com motivo e responsável; `proximo_passo` fica no manifesto. O CSV de pendências permanece reservado ao alvo, preservando o contrato oficial. IDs e ordenação são estáveis; mesma entrada e regras geram os mesmos arquivos.
+O terminal exibe resumo, decisões, pendências e status de cada CSV; `proximo_passo` fica no manifesto e no CSV de pendências. A situação principal e o código de saída se referem ao **checkout**, identificados por `escopo_situacao=CHECKOUT`; consulte `resultados` para a situação de cada arquivo. O manifesto agora usa versão 2. IDs e ordenação são estáveis; mesma entrada e regras geram os mesmos arquivos.
 
 | Situação | Significado | Código de saída |
 | --- | --- | --- |
@@ -74,7 +95,7 @@ IDs idênticos entre arquivos são calculados uma vez, com ocorrência repetida 
 
 **Consulte sempre `manifesto.json` e verifique seus hashes antes de consumir CSVs.** Ele é publicado por último como marcador de validade. Se a publicação for interrompida, o marcador permanece bloqueado. Só os arquivos registrados em `arquivos` pertencem à execução atual.
 
-Uma execução bloqueada publica diagnóstico e substitui os dois CSVs próprios, com hash intacto, por arquivos apenas com cabeçalhos. O manifesto marca `BLOQUEADO`, `rastro_validado=false` e total `null`; isso não é comissão zero. Arquivos externos ou modificados pelo usuário nunca são sobrescritos/removidos: o comando falha e pede outra pasta de saída. Não use a pasta das entradas como saída. Outros arquivos presentes em `saida/` não fazem parte desta entrega.
+Uma execução bloqueada publica diagnóstico e substitui os seis CSVs próprios, com hash intacto, por arquivos apenas com cabeçalhos. O manifesto marca `BLOQUEADO`, `rastro_validado=false` e total `null`; isso não é comissão zero. Arquivos externos ou modificados pelo usuário nunca são sobrescritos/removidos: o comando falha e pede outra pasta de saída. Não use a pasta das entradas como saída. Outros arquivos presentes em `saida/` não fazem parte desta entrega.
 
 ## Verificação
 
@@ -110,12 +131,14 @@ O verificador independente usa apenas a biblioteca padrão, sem importar o motor
 .\.venv\Scripts\python.exe tests/validar_saida.py --dados data/raw --saida saida --regras regras.toml --esperar COMPLETO
 ```
 
-Ele confere cabeçalhos e domínios, hashes das fontes/saídas, IDs de todas as linhas Orbe, destino único em rastro ou pendência, contagens, datas/competência, soma exata por comissão e preservação das decisões pendentes. Ele audita os artefatos; os testes de regras verificam as fórmulas e a seleção contratual.
+Ele confere cabeçalhos e domínios, hashes das fontes/saídas, IDs de todas as linhas Orbe, destino único em rastro ou pendência, contagens, datas/competência, soma exata por comissão e pendência com valor conhecido, seis cabeçalhos oficiais em ordem e preservação das decisões pendentes. Ele audita os artefatos; os testes de regras verificam as fórmulas e a seleção contratual.
 
-Para determinismo, rode o mesmo comando em duas pastas de saída novas (por exemplo, `saida-a` e `saida-b`) e compare os bytes dos dois CSVs e `manifesto.json`. O teste `test_execucao_instalada_fora_da_raiz_sem_chaves_e_repeticao` também verifica repetição sem depender do diretório do código. Os demais testes de aceite exercitam outro mês sintético, modalidade desconhecida, 13x, EC sem cadastro, fonte ausente, layout inválido, soma/referência adulterada e publicação interrompida.
+Para determinismo, rode o mesmo comando em duas pastas de saída novas (por exemplo, `saida-a` e `saida-b`) e compare os bytes dos seis CSVs e `manifesto.json`. O teste `test_execucao_instalada_fora_da_raiz_sem_chaves_e_repeticao` também verifica repetição sem depender do diretório do código. Os demais testes de aceite exercitam outro mês sintético, modalidade desconhecida, 13x, EC sem cadastro, fonte ausente, layout inválido, soma/referência adulterada e publicação interrompida.
 
 Os testes de subprocesso exigem o pacote instalado pelo comando de instalação. Nenhum dado do `Context/`, do `.env` ou de serviços externos é necessário. O verificador retorna `0` quando o artefato tem a situação esperada e é coerente; `1` quando detecta inconsistência. Aceite técnico não confirma o contrato da Atlas, não responde à pergunta financeira de D-10 e não valida funcionalidades do alvo. D-02 (spread 0,01 p.p. = fração 0,0001) e D-04 (Aurora L9 físico) continuam documentadas para a implementação futura, sem leitor ou motor de remessas/extratos nesta entrega.
 
 ## Estrutura
 
 `src/tarvo/` separa execução, modelos, leitores, cadastro, cálculo, validação e exportação. `regras.toml` contém a configuração desta fatia e decisões pendentes. `docs/FORMATO_SAIDA.md` conserva o contrato do desafio. `HIPOTESES.md` registra limites e decisões. `PROMPTS/` registra o uso de IA.
+
+A proposta de expansão está em [docs/EVOLUCAO_ALVO.md](docs/EVOLUCAO_ALVO.md), exclusivamente como planejamento. Nenhuma etapa futura é iniciada por executar o comando atual.

@@ -202,12 +202,12 @@ class Entrega3Test(unittest.TestCase):
         with self.assertRaises(ErroEntrada):
             validar(r)
 
-    def test_publicacao_negativa_sem_nota_ou_outros_csvs(self):
+    def test_publicacao_negativa_sem_nota_calculada(self):
         r = self.resultado([self.estorno()])
         self.assertEqual(r.comissoes[0]["comissao_brl"], "-2.00")
         with TemporaryDirectory() as tmp:
             m = publicar(r, Path(tmp))
-            self.assertEqual(set(m["arquivos"]), {"comissoes_por_lojista.csv", "rastro.csv"})
+            self.assertEqual(set(m["arquivos"]), {"comissoes_por_lojista.csv", "rastro.csv", "pendencias.csv", "divergencias_taxa.csv", "notas_a_emitir.csv", "lancamentos_classificados.csv"})
             self.assertEqual(m["etapa"], "ENTREGA_4")
 
     def test_pipeline_completo_le_antecipacao_e_relacoes(self):

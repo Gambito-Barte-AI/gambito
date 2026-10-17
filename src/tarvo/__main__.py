@@ -39,6 +39,8 @@ def main(argv=None) -> int:
         print(f"DECISÃO PENDENTE {decisao['id']}: {decisao['descricao']}")
     for decisao in resultado.decisoes_documentadas:
         print(f"DECISÃO DOCUMENTADA {decisao['id']}: {decisao['descricao']}")
+    for nome, detalhe in manifesto["resultados"].items():
+        print(f"RESULTADO {nome}: {detalhe['situacao']} ({detalhe['linhas']} linhas)")
     print(f"Manifesto: {argumentos.saida / 'manifesto.json'}")
     return {"COMPLETO": 0, "PROVISORIO": 2, "BLOQUEADO": 1}[resultado.situacao]
 

@@ -12,6 +12,16 @@ import re
 import tomllib
 
 
+CONTRATO = {
+    "comissoes_por_lojista.csv": ["id_saida", "cnpj", "lojista", "linha_negocio", "comissao_brl"],
+    "divergencias_taxa.csv": ["id_saida", "cnpj", "linha_negocio", "ref_origem", "taxa_contratada_pct", "taxa_aplicada_pct", "diferenca_brl"],
+    "notas_a_emitir.csv": ["id_saida", "tomador_cnpj", "tomador", "linha_negocio", "valor_brl", "discriminacao"],
+    "lancamentos_classificados.csv": ["id_saida", "banco", "ref_origem", "data", "descricao", "valor", "conta_codigo", "metodo", "confianca"],
+    "pendencias.csv": ["id_saida", "tipo", "ref_origem", "valor_brl", "motivo", "quem_decide"],
+    "rastro.csv": ["id_saida", "arquivo_origem", "ref_origem", "valor"],
+}
+
+
 class ErroAceite(ValueError):
     """Artefato incompatível com as entradas ou com o contrato de saída."""
 
@@ -31,8 +41,10 @@ def ler_csv(caminho, obrigatorias):
     with caminho.open(encoding="utf-8-sig", newline="") as arquivo:
         leitor = csv.DictReader(arquivo, delimiter=";", strict=True)
         colunas = leitor.fieldnames or []
-        exigir(obrigatorias <= set(colunas) and len(colunas) == len(set(colunas)),
+        exigir(set(obrigatorias) <= set(colunas) and len(colunas) == len(set(colunas)),
                f"{caminho.name}: cabeçalho inválido")
+        if isinstance(obrigatorias, list):
+            exigir(colunas[:len(obrigatorias)] == obrigatorias, f"{caminho.name}: ordem das colunas obrigatórias inválida")
         linhas = list(leitor)
         exigir(all(None not in l and all(v is not None for v in l.values()) for l in linhas),
                f"{caminho.name}: linha com quantidade de campos incorreta")
@@ -51,7 +63,7 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
            "Decisões financeiras pendentes foram omitidas ou alteradas")
     exigir(manifesto.get("decisoes_documentadas", []) == configuracao.get("decisoes_documentadas", []),
            "Decisões documentadas foram omitidas ou alteradas")
-    nomes = {"comissoes_por_lojista.csv", "rastro.csv"}
+    nomes = set(CONTRATO)
     if situacao == "BLOQUEADO" and manifesto.get("publicacao_concluida") is False:
         exigir(manifesto.get("arquivos") == {} and manifesto.get("rastro_validado") is False
                and manifesto.get("total_parcial_brl") is None and manifesto.get("motivos"),
@@ -60,11 +72,20 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
     exigir(set(manifesto.get("arquivos", {})) == nomes, "Lista de arquivos diferente do mínimo")
     for nome, digest in manifesto["arquivos"].items():
         exigir(sha256((saida / nome).read_bytes()).hexdigest() == digest, f"Hash de {nome} não confere")
-    comissoes = ler_csv(saida / "comissoes_por_lojista.csv",
-                        {"id_saida", "cnpj", "lojista", "linha_negocio", "comissao_brl"})
-    rastros = ler_csv(saida / "rastro.csv", {"id_saida", "arquivo_origem", "ref_origem", "valor"})
+    arquivos = {nome: ler_csv(saida / nome, colunas) for nome, colunas in CONTRATO.items()}
+    resultados = manifesto.get("resultados", {})
+    exigir(set(resultados) == nomes, "Faltam status por relatório")
+    for nome, linhas in arquivos.items():
+        exigir(resultados[nome].get("linhas") == len(linhas), f"Contagem incorreta: {nome}")
+        exigir(resultados[nome].get("situacao") in {"COMPLETO", "PROVISORIO", "BLOQUEADO"}, f"Status inválido: {nome}")
+    for nome in ("divergencias_taxa.csv", "notas_a_emitir.csv", "lancamentos_classificados.csv"):
+        exigir(not arquivos[nome] and resultados[nome].get("situacao") == "BLOQUEADO"
+               and resultados[nome].get("motivos"), "Relatório do alvo apresentado como processado")
+    comissoes = arquivos["comissoes_por_lojista.csv"]
+    rastros = arquivos["rastro.csv"]
     if situacao == "BLOQUEADO":
-        exigir(not comissoes and not rastros and manifesto.get("rastro_validado") is False
+        exigir(not any(arquivos.values()) and all(r["situacao"] == "BLOQUEADO" for r in resultados.values())
+               and manifesto.get("rastro_validado") is False
                and manifesto.get("total_parcial_brl") is None and manifesto.get("motivos"),
                "Bloqueio deve ter apenas cabeçalhos, sem valores válidos")
         return {"situacao": situacao, "motivos": manifesto["motivos"], "arquivos_validos": 0}
@@ -137,6 +158,46 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
             dinheiro(p["valor_orbe_brl"])
         exigir(p.get("linha") == linhas_fisicas.get((p.get("arquivo_origem"), p.get("ref_origem"))),
                "Pendência perdeu a linha física de origem")
+    pendencias_csv = arquivos["pendencias.csv"]
+    exigir(len(pendencias_csv) == len(pendencias), "Contagem de pendencias.csv difere do manifesto")
+    por_pendencia = {(p["arquivo_origem"], p["ref_origem"], str(p["linha"])): p for p in pendencias}
+    ids_pendencias = set()
+    valores_pendencias = {}
+    for linha in pendencias_csv:
+        chave = (linha.get("arquivo_origem"), linha["ref_origem"], linha.get("linha_origem"))
+        p = por_pendencia.get(chave)
+        exigir(p is not None, "Pendência CSV sem origem no manifesto")
+        esperado = f"PENDENCIA:{chave[0]}:L{chave[2]}:{chave[1]}"
+        exigir(linha["id_saida"] == esperado and esperado not in ids_pendencias, "ID de pendência incorreto ou duplicado")
+        ids_pendencias.add(esperado)
+        for campo in ("tipo", "motivo", "quem_decide", "proximo_passo", "categoria"):
+            exigir(linha.get(campo) == p.get(campo) and linha[campo], f"Pendência CSV perdeu {campo}")
+        exigir(linha.get("cnpj") == (p.get("cnpj") or ""), "Pendência CSV perdeu o CNPJ")
+        valor = p.get("valor_orbe_brl") if p.get("valor_orbe_brl") is not None else p.get("valor_bruto_brl")
+        natureza = "COBRANCA_ORBE" if p.get("valor_orbe_brl") is not None else "BRUTO_REFERENCIA" if valor is not None else "NAO_INFORMADO"
+        exigir(linha.get("natureza_valor") == natureza, "Natureza do valor da pendência incorreta")
+        if valor is None:
+            exigir(linha["valor_brl"] == "", "Valor desconhecido de pendência virou zero")
+        else:
+            exigir(dinheiro(linha["valor_brl"]) == Decimal(valor), "Valor da pendência CSV difere da origem")
+            if natureza == "COBRANCA_ORBE":
+                bruto_origem = por_origem[chave[0], chave[1]].get("valor_taxa", "").strip()
+                exigir(bruto_origem and Decimal(bruto_origem.replace(".", "").replace(",", ".")) == dinheiro(linha["valor_brl"]),
+                       "Valor cobrado da pendência difere da Orbe")
+            valores_pendencias[esperado] = linha
+    rastros_pendencias = [r for r in rastros if r["id_saida"].startswith("PENDENCIA:")]
+    exigir(Counter(r["id_saida"] for r in rastros_pendencias) == Counter(valores_pendencias.keys()),
+           "Rastro das pendências incompleto ou duplicado")
+    for r in rastros_pendencias:
+        p = valores_pendencias[r["id_saida"]]
+        exigir(r["arquivo_origem"] == p["arquivo_origem"] and r["ref_origem"] == p["ref_origem"]
+               and dinheiro(r["valor"]) == dinheiro(p["valor_brl"])
+               and r.get("natureza_valor") == p["natureza_valor"], "Rastro da pendência não reconcilia")
+    rastros = [r for r in rastros if not r["id_saida"].startswith("PENDENCIA:")]
+    exigir(resultados["comissoes_por_lojista.csv"]["situacao"] == situacao, "Status da comissão diverge do checkout")
+    esperado_pendencias = "PROVISORIO" if any(not p["valor_brl"] for p in pendencias_csv) else situacao
+    for nome in ("pendencias.csv", "rastro.csv"):
+        exigir(resultados[nome]["situacao"] == esperado_pendencias, f"Status incoerente em {nome}")
     destinos = [(l["arquivo_origem"], l["ref_origem"]) for l in rastros]
     destinos += [(p["arquivo_origem"], p["ref_origem"]) for p in pendencias]
     exigir(Counter(destinos) == Counter(origem), "Entrada sem destino, duplicada ou com referência inventada")
@@ -190,7 +251,8 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None):
     exigir(total == dinheiro(manifesto.get("total_parcial_brl")), "Total do manifesto não confere")
     return {"situacao": situacao, "competencia": manifesto.get("competencia"),
             "cobertura": cobertura, "comissoes": len(comissoes), "total_brl": format(total, ".2f"),
-            "rastro_exato": True, "fontes_e_hashes": True, "decisoes_preservadas": True}
+            "rastro_exato": True, "fontes_e_hashes": True, "decisoes_preservadas": True, "pendencias_csv": len(pendencias_csv),
+            "rastro_pendencias": len(rastros_pendencias), "contratos_csv": len(arquivos)}
 
 
 def main():
