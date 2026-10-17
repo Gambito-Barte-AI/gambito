@@ -1,6 +1,6 @@
 # Documentação · Gambito · fechamento mensal da Tarvo
 
-**Desafio Barte AI · 17/10/2026 · versão das 14h (Slack lido até 13h10, com o arquivo 06)**
+**Desafio Barte AI · 17/10/2026 · versão das 17h30 (Slack lido até 16h52)**
 
 > **Correção RN-64 em A2 — 17/10/2026, esclarecimento do usuário nesta conversa:** a devolução é líquida. As fontes confirmam R$ 15.405,85 em 117 vendas/antecipações menos R$ 9,08 do estorno TX88446763, referente à venda isenta TX88441917 (28/09), resultando em **R$ 15.396,77 em 118 linhas**. O estorno TX88445133, da venda não isenta de agosto, fica fora da devolução e mantém a taxa original na comissão. A interpretação anterior de excluir todos os estornos estava incorreta e está substituída por este esclarecimento; não se atribui nova aprovação ao Financeiro no Slack. Os totais são referências conferidas nas fontes, nunca constantes de cálculo.
 
@@ -304,7 +304,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 
 | ✓ | ID | Regra | Fonte | Como verificar |
 |---|---|---|---|---|
-| [ ] | RN-03 | CNPJ sempre com 14 dígitos, sem máscara (completar com zeros à esquerda). | CASE | Nenhum CNPJ na saída com menos de 14 dígitos ou com ponto/barra |
+| [ ] | RN-03 | CNPJ sempre com 14 dígitos, sem máscara (completar com zeros à esquerda). A planilha perde o zero à esquerda quando transforma o CNPJ em número (ex.: Fluente 03229837000103, Campus Global 08780784000120). | CASE · SLACK 17 15:47 | Nenhum CNPJ na saída com menos de 14 dígitos ou com ponto/barra |
 | [ ] | RN-04 | A chave do lojista é o **CNPJ**. A Orbe chega ao CNPJ pelo **EC** da planilha. | CASE | Toda linha de `comissoes_por_lojista` tem CNPJ; nenhum lojista duplicado por grafia |
 | [ ] | RN-05 | ECs que faltam na planilha: 1043300981 = Novo Horizonte Intercâmbio; 1043396662 = Horizonte Viagens (empresas **diferentes**); 1038867654 = Kiwi Experience. Ficam no arquivo de regras. | SLACK 16 20:24 | Os 3 com o CNPJ certo; buscar esses números no código = 0 |
 | [ ] | RN-06 | **Proibido casar por semelhança de nome.** Nome do banco só liga a um lojista quando é inequívoco; senão, vira pendência. | TIME | As duas "Horizonte" saem separadas; teste com nome ambíguo gera pendência |
@@ -321,12 +321,14 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RN-12 | **Vigência pela data da venda.** A planilha traz "até dd/mm" e "a partir de dd/mm". Bridge: **aditivo assinado**, 2,19% a partir de 15/09. | CASE / SLACK 17 11:37 | Bridge: venda de 14/09 a 2,59%; de 15/09 a 2,19% |
 | [ ] | RN-13 | **Estorno** abate no **mês do estorno** (inclusive venda de agosto), pela taxa da **data da venda original**. Agosto não é reaberto. | SLACK 16 20:06 / 17 11:38 | TX88444848 (Oxford Prep) abate em setembro pela taxa de 22/08 |
 | [ ] | RN-14 | **Antecipação** (2,10%) entra na comissão e na mesma nota do lojista. A **reversão** anula só a antecipação que ela referencia. | SLACK 16 20:47 | AN88445114 anula exatamente a AN88444915 |
-| [ ] | RN-15 | **Casa do Estudante:** tarifa **zero** no checkout (MDR e antecipação) para **vendas a partir de 01/09** até 31/12. Remessa normal. Fica no arquivo de regras. | SLACK 16 20:49 / 17 11:41 | Comissão de checkout da Casa em setembro só tem o estorno de agosto |
+| [ ] | RN-15 | **Casa do Estudante:** tarifa **zero** no checkout (MDR e antecipação) para **vendas a partir de 01/09** até 31/12. Remessa normal. Fica no arquivo de regras. A **antecipação** vale pela **data da antecipação** (é um serviço prestado no dia), sem procurar as vendas de origem. Período confirmado: 01/09/2026 a 31/12/2026. Renovar em 2027 é decisão do comercial, ainda sem previsão. | SLACK 16 20:49 / 17 11:41 · SLACK 17 13:34 (antecipação); 15:47 e 16:08 (período e 2027) | Comissão de checkout da Casa em setembro só tem o estorno de agosto |
 | [ ] | RN-16 | Estorno de venda da Casa **anterior** a 01/09 usa a taxa da venda original. | SLACK 17 09:44 e 11:41 | TX88445133 abate pela taxa de agosto; Casa fecha em −R$ 5,50 |
-| [ ] | RN-17 | **Lojista sem contrato** (Atlas, EC 1076801732): **não fatura**, vira pendência para o comercial. Aparecer com zero ou ficar fora do arquivo de comissões é escolha nossa (ver D-07); **faturar é proibido**. | SLACK 16 20:24 / 17 11:38 e 11:41 | Atlas sem nota; pendência com as 57 linhas |
-| [ ] | RN-18 | Atlas: quando o comercial confirmar, a taxa vale **desde 10/09** e o mês seguinte fatura as linhas de setembro junto. | SLACK 17 09:47 | (Extra) linhas guardadas num formato que o próximo fechamento lê |
+| [ ] | RN-66 | **Bandeira não muda a taxa.** A Orbe às vezes troca a bandeira no estorno: o vínculo é pela referência (`id_referencia`), sem contestar e sem abrir pendência. | SLACK 17 14:08 | Os 7 estornos do 06 com bandeira diferente não geram pendência |
+| [ ] | RN-67 | **Condição da planilha diferente do padrão vale como contrato.** Fluente: Pix a **0,79%** é condição negociada; a Orbe cobrou certo. Não é divergência nem pendência. | SLACK 17 15:47 | Nenhuma linha da Fluente em divergências ou pendências |
+| [ ] | RN-17 | **Lojista sem contrato** (Atlas, EC 1076801732): **não fatura**, vira pendência para o comercial. Aparecer com zero ou ficar fora do arquivo de comissões é escolha nossa (ver D-07); **faturar é proibido**. Quem decide a taxa é o **Diego, do comercial**, ainda sem previsão. | SLACK 16 20:24 / 17 11:38 e 11:41 · SLACK 17 16:08 | Atlas sem nota; pendência com as 57 linhas |
+| [ ] | RN-18 | Atlas: quando o comercial confirmar, a taxa vale **desde 10/09** e o mês seguinte fatura as linhas de setembro junto. | SLACK 17 09:47 · SLACK 17 16:50 (confirmado) | (Extra) linhas guardadas num formato que o próximo fechamento lê |
 | [ ] | RN-19 | **O repasse ao lojista não para** sem contrato; só o faturamento da taxa fica suspenso. | SLACK 17 11:03 | Pix enviado à Atlas classificado como repasse normal |
-| [ ] | RN-65 | **Ajustes tardios da Orbe:** arquivos no **mesmo formato do 01** que chegam depois do relatório (ex.: `06_orbe_ajustes_tardios_set2026.csv`) **entram no fechamento** da competência do `data_movimento`, com as mesmas regras (RN-08 a RN-19, RN-64). O `id_referencia` pode apontar para linhas do relatório principal (estorno → venda; reversão → antecipação). O mesmo `id_transacao` em dois arquivos conta uma vez e vira pendência; referência não encontrada vira pendência. É o caso real descrito pelo financeiro ("a Orbe manda ajuste depois do relatório"), não um erro. | ORG 17 13:10 / SLACK 17 12:31 | Rodar com 01 + 06: as 14 linhas entram, o rastro delas aponta para o arquivo 06 e a comissão de checkout muda em 7 lojistas |
+| [ ] | RN-65 | **Ajustes tardios da Orbe:** arquivos no **mesmo formato do 01** que chegam depois do relatório (ex.: `06_orbe_ajustes_tardios_set2026.csv`) **entram no fechamento** da competência do `data_movimento`, com as mesmas regras (RN-08 a RN-19, RN-64). O `id_referencia` pode apontar para linhas do relatório principal (estorno → venda; reversão → antecipação). O mesmo `id_transacao` em dois arquivos conta uma vez e vira pendência; referência não encontrada vira pendência. É o caso real descrito pelo financeiro ("a Orbe manda ajuste depois do relatório"), não um erro. Ajuste que chega **depois da aprovação** do fechamento entra no **mês seguinte**. Correção de uma linha com o mesmo `id_transacao` e valores diferentes nunca aconteceu: o critério é nosso, e as linhas conflitantes viram pendência para o financeiro (linha idêntica conta uma vez). Ajuste cuja original **não está em nenhum arquivo** entra **pelo valor que veio** e vira pendência para o financeiro pedir a original à Orbe (não ocorre em setembro). | ORG 17 13:10 / SLACK 17 12:31 · SLACK 17 13:34 (Lucca) e 14:10 (Desbravadores) | Rodar com 01 + 06: as 14 linhas entram, o rastro delas aponta para o arquivo 06 e a comissão de checkout muda em 7 lojistas |
 
 ### II.1.4 Divergências de taxa
 
@@ -339,7 +341,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RN-24 | **Rota Global:** contrato não mudou; os +0,50 p.p. desde 12/09 são divergência. | SLACK 16 20:49 | 87 linhas da Rota |
 | [ ] | RN-25 | **Bridge:** cobrou 2,59% em 5 vendas de 15 a 18/09 com aditivo de 2,19% assinado. É **divergência**, contestada com a Orbe. | SLACK 17 11:37 | 5 linhas da Bridge em divergências e na cobrança da Orbe |
 | [ ] | RN-26 | **Casa do Estudante não é divergência de contrato.** Vira **devolução ao lojista**, paga pela Tarvo: pendência com o total e o detalhe por transação, **separada das divergências de contrato** e **fora da cobrança da Orbe**. Pôr as 118 linhas também em divergências, marcadas como isenção, é opcional. | SLACK 17 09:44, 10:58 e 11:49 | Total cobrável da Orbe sem a Casa |
-| [ ] | RN-64 | **Valor da devolução ao lojista = o que saiu do bolso dele:** o que a Orbe **descontou de fato** (`valor_taxa`) menos a comissão contratada. **Linhas elegíveis da Casa:** vendas e antecipações com **data da venda de 01/09 a 31/12**; estornos de vendas isentas também entram, com valor_taxa assinado negativo, conforme vínculo e vigência da venda original. O movimento no período, sozinho, não torna a venda isenta. O estorno da venda de agosto continua abatendo a comissão pela taxa de agosto (RN-16). Como a contratada é zero, soma-se o `valor_taxa` assinado das linhas elegíveis: R$ 15.405,85 de vendas/antecipações menos R$ 9,08 do estorno elegível. O `divergencias_taxa.csv` mantém a fórmula da RN-20; a diferença é o centavo de truncamento da Orbe. **R$ 15.396,77 é referência de conferência, nunca constante no código.** | SLACK 17 12:50 (base); esclarecimento do usuário nesta conversa em 17/10/2026 (recorte) | Pendência da Casa = soma do `valor_taxa` das linhas elegíveis (setembro: R$ 15.396,77) |
+| [ ] | RN-64 | **Valor da devolução ao lojista = o que saiu do bolso dele:** o que a Orbe **descontou de fato** (`valor_taxa`) menos a comissão contratada. **Linhas elegíveis da Casa:** vendas com **data da venda** e antecipações com **data da antecipação** de 01/09 a 31/12 (RN-15); estornos de vendas isentas também entram, com valor_taxa assinado negativo, conforme vínculo e vigência da venda original. O movimento no período, sozinho, não torna a venda isenta. O estorno da venda de agosto continua abatendo a comissão pela taxa de agosto (RN-16). Como a contratada é zero, soma-se o `valor_taxa` assinado das linhas elegíveis: R$ 15.405,85 de vendas/antecipações menos R$ 9,08 do estorno elegível. O `divergencias_taxa.csv` mantém a fórmula da RN-20; a diferença é o centavo de truncamento da Orbe. **R$ 15.396,77 é referência de conferência, nunca constante no código.** | SLACK 17 12:50 (base); esclarecimento do usuário nesta conversa em 17/10/2026 (recorte) | Pendência da Casa = soma do `valor_taxa` das linhas elegíveis (setembro: R$ 15.396,77) |
 | [ ] | RN-27 | Lojista sem contrato (Atlas) **não é divergência**; é pendência. | CASE / TIME | Nenhuma linha da Atlas em divergências |
 | [ ] | RN-28 | Divergência de **remessa** = spread % aplicado − contratado, pelo **valor cheio**: Δ% × PTAX × valor em moeda estrangeira. **Mundo Aberto** (1,20% registrado desde julho) é divergência, contestada com a Ponte. | SLACK 16 20:48 e 20:58 / 17 11:37 | 23 linhas da Mundo Aberto pelo valor cheio |
 | [ ] | RN-29 | **Spread negativo não é divergência** (o lojista não pagou a mais). Se aparecer na lista, marcado como outra natureza. | SLACK 17 09:44 | As 4 operações negativas fora de divergências (ou com natureza própria) |
@@ -357,17 +359,17 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RN-36 | **Mundo Aberto:** nota pelo **realizado** (nossa metade do excesso entra); a diferença fica como pendência de contestação. | SLACK 16 21:45 | Comissão pelo realizado + pendência |
 | [ ] | RN-37 | **Ajuste da Ponte** (outubro em diante): chega como **linha nova**, com Nº de operação próprio, **Spread R$ negativo** e observação **"AJUSTE REF PC-…"**. Entra **no mês em que aparece**, **abate a nossa participação** dentro da nota única da Ponte, e o rastro aponta para a **operação original**. Sem nota complementar. **Não confundir** com spread negativo de trava (RN-35) nem com duplicata (RN-34). | SLACK 17 11:33 | Teste com linha "AJUSTE REF" → abate a comissão do mês |
 | [ ] | RN-38 | "Aprovado c/ ressalva" **não muda nada**. | SLACK 16 20:48 | Operações com ressalva entram |
-| [ ] | RN-39 | Não supor desconto da Ponte no repasse. Conferir o TED quando cair é pendência de acompanhamento. | SLACK 16 22:33 | Nenhum repasse estimado na saída |
+| [ ] | RN-39 | Não supor desconto da Ponte no repasse. Conferir o TED quando cair é pendência de acompanhamento. A **nota sai pela nossa regra** (spread negativo fora, operação repetida contada uma vez), nunca pelo número da Ponte. Se o crédito de 06/10 vier diferente da nota, a diferença vira pendência do financeiro, junto com a contestação. | SLACK 16 22:33 · SLACK 17 16:40 | Nenhum repasse estimado na saída |
 | [ ] | RN-40 | CNPJ da Ponte fora da planilha: calcula a nossa metade e abre pendência de cadastro para o comercial. | SLACK 17 09:45 (premissa aceita) | Teste com CNPJ novo |
-| [ ] | RN-41 | Contestações: considerar **dentro do prazo**. A pendência traz valor e operações, porque é o que vai para a contraparte. | SLACK 16 22:34 | Pendências de contestação com operações listadas |
+| [ ] | RN-41 | Contestações: considerar **dentro do prazo**. A pendência traz valor e operações, porque é o que vai para a contraparte. O prazo de 5 dias úteis do e-mail não venceu: o fechamento é esta semana. | SLACK 16 22:34 · SLACK 17 15:47 e 16:08 | Pendências de contestação com operações listadas |
 
 ### II.1.6 Notas fiscais
 
 | ✓ | ID | Regra | Fonte | Como verificar |
 |---|---|---|---|---|
-| [ ] | RN-42 | **Checkout:** uma nota por lojista por mês, pela comissão da taxa contratada. | SLACK 16 20:47 | Uma linha por CNPJ com comissão positiva |
+| [ ] | RN-42 | **Checkout:** uma nota por lojista por mês, pela comissão da taxa contratada. Tomador: **nome da planilha com o CNPJ**. A razão social vem do contrato de adesão (fora do pacote) e é conferida pela Bia na emissão. | SLACK 16 20:47 · SLACK 17 15:47 | Uma linha por CNPJ com comissão positiva |
 | [ ] | RN-43 | Saldo **zero ou negativo não emite nota**, **não** passa para o mês seguinte e vira pendência. Vale também para a nota da Ponte depois de um ajuste. | SLACK 16 20:47 / 17 11:33 | Casa (−R$ 5,50) sem nota e com pendência |
-| [ ] | RN-44 | **Remessa:** **uma nota só**, tomadora **Ponte Câmbio** (CNPJ 75374179000146), pelo total da participação. Sem nota por lojista; sem nota complementar. | SLACK 16 20:47 / 17 11:33 | Uma única linha de remessa |
+| [ ] | RN-44 | **Remessa:** **uma nota só**, tomadora **Ponte Câmbio** (CNPJ 75374179000146), pelo total da participação. Sem nota por lojista; sem nota complementar. A Ponte **não retém** imposto no pagamento; o ISS da nota vai no DAMSP do mês seguinte, **fora deste fechamento**. | SLACK 16 20:47 / 17 11:33 · SLACK 17 15:47 | Uma única linha de remessa |
 | [ ] | RN-45 | Discriminação simples: serviço + competência. | SLACK 16 20:47 | Texto com a competência do mês |
 
 ### II.1.7 Extratos e plano de contas
@@ -375,17 +377,22 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | ✓ | ID | Regra | Fonte | Como verificar |
 |---|---|---|---|---|
 | [ ] | RN-46 | `conta_codigo` = **contrapartida** do movimento. Se o valor já estava registrado, o pagamento baixa a conta onde ele estava. | SLACK 16 21:14 | — |
-| [ ] | RN-47 | **Folha e impostos são sempre provisionados**; o pagamento no mês seguinte baixa o passivo (2.1.04.x / 2.1.03.x). | SLACK 16 20:49 / 17 09:48 | Salários, INSS, FGTS, ISS e DARFs em passivo |
+| [ ] | RN-47 | **Folha e impostos são sempre provisionados**; o pagamento no mês seguinte baixa o passivo (2.1.04.x / 2.1.03.x). A provisão de agosto foi feita pelo valor pago: a baixa é pelo **valor cheio** do lançamento. | SLACK 16 20:49 / 17 09:48 · SLACK 17 15:55 | Salários, INSS, FGTS, ISS e DARFs em passivo |
 | [ ] | RN-48 | **A provisão do mês corrente NÃO é feita pela solução** (é da contabilidade). O fechamento só classifica o que passou nos extratos. | SLACK 17 11:49 | Nenhum lançamento de provisão de setembro na saída |
 | [ ] | RN-49 | Repasse da Ponte de 04/09 (spread de agosto) baixa a comissão a receber (1.1.03.002). | SLACK 16 20:49 | — |
-| [ ] | RN-50 | Tarifas, aluguel, cloud, assinaturas e serviços → **despesa do mês**. | SLACK 16 21:14 | — |
+| [ ] | RN-50 | Tarifas, aluguel, cloud, assinaturas e serviços → **despesa do mês**. Seguro empresarial vai **direto na despesa**, como as assinaturas. | SLACK 16 21:14 · SLACK 17 15:47 e 16:08 | — |
 | [ ] | RN-51 | Só contas que **aceitam lançamento** no plano Fênix. Conta por conta o financeiro não valida; vale o critério da RN-46. | CASE / SLACK 17 11:01 | Toda conta da saída existe e é analítica |
-| [ ] | RN-52 | Pix de **R$ 7.350 sem pagador**: não é receita → 1.1.09.002, com pendência. | SLACK 16 20:49 | — |
-| [ ] | RN-53 | **Devolução de Pix de R$ 12.400** (Mundo Aberto): repasse que voltou, ainda devido ao lojista; motivo desconhecido → pendência. Conta: ver D-06. | SLACK 16 20:49 / 17 09:48 | — |
-| [ ] | RN-54 | **TED de R$ 300 mil** de 30/09: transferência entre contas próprias (1.1.09.001), em trânsito; cai no Meridiano em 01/10. | SLACK 16 20:49 | — |
-| [ ] | RN-55 | **Pix de R$ 18.240 da Ponte Aérea**: adiantamento de remessa que sai em outubro → 2.1.02.001. A Ponte Aérea é lojista, sem relação com a Ponte Câmbio. | SLACK 17 09:44 | — |
+| [ ] | RN-52 | Pix de **R$ 7.350 sem pagador**: não é receita → 1.1.09.002, com pendência. Quem vai atrás do pagador é o **Caio**, com o banco, até o fechamento de outubro. | SLACK 16 20:49 · SLACK 17 16:08 | — |
+| [ ] | RN-53 | **Devolução de Pix de R$ 12.400** (Mundo Aberto): repasse que voltou, ainda devido ao lojista; motivo desconhecido → pendência. Conta: ver D-06. | SLACK 16 20:49 / 17 09:48 · SLACK 17 16:08 (as duas contas servem; critério nosso) | — |
+| [ ] | RN-54 | **TED de R$ 300 mil** de 30/09: transferência entre contas próprias (1.1.09.001), em trânsito; cai no Meridiano em 01/10. Se a entrada não aparecer em outubro, vira pendência para a **tesouraria** (o financeiro). | SLACK 16 20:49 · SLACK 17 16:08 | — |
+| [ ] | RN-55 | **Pix de R$ 18.240 da Ponte Aérea**: adiantamento de remessa que sai em outubro → 2.1.02.001. A Ponte Aérea é lojista, sem relação com a Ponte Câmbio. A baixa sai quando a remessa **liquidar**, pelo relatório de outubro da Ponte. | SLACK 17 09:44 · SLACK 17 13:34, 16:08 e 16:50 | — |
 | [ ] | RN-56 | **Não conciliar a Orbe parcela a parcela** contra o banco; só classificar os créditos. Saldo negativo do Aurora = conta garantida. | SLACK 16 22:34 | Nenhuma pendência "Orbe não bate com banco" |
-| [ ] | RN-57 | Referência: Aurora = **linha física** do arquivo; Meridiano = **FITID**. | CASE / D-04 | `ref_origem` do 1º lançamento do Aurora = L9 |
+| [ ] | RN-57 | Referência: Aurora = **linha física** do arquivo; Meridiano = **FITID**. Contagem a partir de 1, **incluindo** as linhas de cabeçalho do banco e a de nomes de colunas, sem renumerar depois de tirar cabeçalho ou rodapé. O 1º lançamento é **L9**; o Pix sem pagador é a L50 e a transferência para o Meridiano, a L92. | CASE / D-04 · ORG 17 16:52 | `ref_origem` do 1º lançamento do Aurora = L9 · L50 = Pix de R$ 7.350; L92 = TED de R$ 300 mil |
+| [ ] | RN-68 | **IOF das remessas é do cliente**; a Tarvo só repassa. O TED de liquidação à Ponte (valor + IOF do dia) baixa **inteiro** `2.1.02.001`, sem despesa da Tarvo. | SLACK 17 15:47 | 21 TEDs à Ponte em 2.1.02.001; nenhum IOF de remessa em despesa |
+| [ ] | RN-69 | **IOF de R$ 48,21** (MRD2026090586) é de operação de crédito do **Meridiano**, não da conta garantida do Aurora. A conta é critério nosso pelo plano: despesa financeira (4.3.01). | SLACK 17 15:47 | — |
+| [ ] | RN-70 | **Juros da conta garantida** do Aurora vêm no extrato do mês seguinte: nada a lançar em setembro, sem pendência. | SLACK 17 15:47 | Nenhum lançamento ou pendência de juros em setembro |
+| [ ] | RN-71 | **Aplicação e resgate** automáticos não têm efeito no resultado (conta da aplicação); **rendimento** é receita do mês. | SLACK 17 15:47 e 16:08 | CDB em 1.1.02.001; rendimento de R$ 3.912,66 em receita |
+| [ ] | RN-72 | Em setembro, o **único Pix enviado que não é repasse** é o da contabilidade (R$ 6.800, L53, despesa de serviço). Pix enviado para quem **não é lojista** vira pendência. | SLACK 17 15:47 | L53 em despesa; demais Pix enviados em 2.1.01.001 |
 
 ### II.1.8 Pendências, bloqueios e aprovação
 
@@ -393,9 +400,11 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 |---|---|---|---|---|
 | [ ] | RN-58 | Toda pendência tem **tipo, ref_origem, valor, motivo, próximo passo e quem decide** (o próximo passo vai numa coluna extra `proximo_passo`; o formato oficial permite colunas extras). Pendência de **acompanhamento** (ex.: "conferir o TED quando cair") **não é alarme falso**, desde que tenha motivo e próximo passo. | ORG 17 11:27 | Nenhuma célula vazia em `pendencias.csv` |
 | [ ] | RN-59 | Pendência **por contraparte e por lojista**, com o detalhe das transações. `ref_origem` pode ter várias origens separadas por `\|` ou uma linha por origem. | SLACK 17 11:01 / ORG 17 11:27 | Dá para achar cada origem a partir da pendência |
+| [ ] | RN-73 | **Colunas extras** nos CSVs podem ficar, desde que as colunas pedidas estejam presentes e com os nomes certos. | SLACK 17 15:55 | Validador confere as colunas obrigatórias |
 | [ ] | RN-60 | **Quem decide** (texto livre, coerente): taxa, condição comercial, cadastro e contrato → **comercial decide antes**; regra de fechamento, divergência, contestação, caixa e liberação → **financeiro**. | SLACK 17 09:49, 11:01 e 12:31 / ORG 17 11:27 | Atlas e cadastro com "Comercial"; o resto com "Financeiro" |
-| [ ] | RN-61 | Toda regra registra **quem aprovou e quando**. | SLACK 17 09:49 | Campo de fonte/aprovação em cada regra |
+| [ ] | RN-61 | Toda regra registra **quem aprovou e quando**. O financeiro não confere conta por conta nem número por número: vale o **critério registrado no HIPOTESES.md**. | SLACK 17 09:49 · SLACK 17 16:08 | Campo de fonte/aprovação em cada regra |
 | [ ] | RN-62 | **Fonte faltando ou atrasada, ajuste tardio ou layout mudado:** a solução **avisa** (nunca quebra calada), **fecha o que não depende** daquilo, marca o que é **provisório** e deixa claro o que está **bloqueado e por quê**. Quem libera é o financeiro; se for taxa ou cadastro, o comercial decide antes. | SLACK 17 12:31 | Teste sem o arquivo da Ponte: checkout e extratos saem; remessa marcada como bloqueada |
+| [ ] | RN-74 | **Rastro auditável:** o mínimo é toda comissão e toda nota com `id_saida` e a soma de `valor` por `id_saida` igual ao número reportado. Para ser auditável: rastro também das divergências e da nota da Ponte; registro de cada execução (arquivos, linhas de cada, data e hora); e a regra aplicada em cada linha (taxa contratada, isenção, estorno pela venda original). Quem abrir tem de refazer qualquer número sem perguntar. | ORG 17 14:11 | Manifesto com fontes e contagens; coluna `regra` no rastro |
 | [ ] | RN-63 | **Alerta de antecipação** para o financeiro e o comercial. A antecipação é sobre a agenda inteira do lojista, então comparar com as vendas do mês acende lojista demais. A preocupação é **lojista novo, sem histórico, antecipando alto**. O alerta **não muda nenhum número**. Critério: ver D-03. | SLACK 17 09:44, 11:37 e 11:49 | (Extra) só a Atlas acende em setembro |
 
 ---
@@ -407,10 +416,10 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | ✓ | ID | Decisão | Motivo | Como desfazer |
 |---|---|---|---|---|
 | [ ] | D-02 | Tolerância de spread de **0,01 p.p.** | A Ponte oscila ±0,002 p.p.; a Mundo Aberto difere 0,30 p.p. (30×) | Mudar o número no arquivo de regras |
-| [ ] | D-03 | Alerta de antecipação só para lojista **sem contrato ou sem histórico**, calculado pelo **pico** (o risco existiu quando o dinheiro foi adiantado), **citando as reversões** no texto | O financeiro disse que o critério é nosso e que a preocupação é lojista novo; achou a proposta do pico "razoável" (12:50) | Mudar o critério no arquivo de regras |
-| [ ] | D-04 | Referência do Aurora = **linha física** (1º lançamento = L9) | O enunciado mostra L10, L11 só como exemplo | Mudar uma linha no leitor |
-| [ ] | D-05 | Divergência da Mundo Aberto pelo **Spread %** (R$ 1.418,85), não pelo Spread R$ (R$ 1.418,88) | O % é o que se compara com o contrato; o financeiro pediu um critério escrito | Trocar o critério no motor |
-| [ ] | D-06 | Devolução de R$ 12.400 em **2.1.01.001** | O repasse volta a ser devido ao lojista; o financeiro aceitou 2.1.01.001 ou 2.1.01.002 com motivo | Mudar a conta no arquivo de regras |
+| [ ] | D-03 | Alerta de antecipação só para lojista **sem contrato ou sem histórico**, calculado pelo **pico** (o risco existiu quando o dinheiro foi adiantado), **citando as reversões** no texto **O critério operacional (definição do pico, corte, elegibilidade e saída) ainda não foi decidido pelo time.** | O financeiro disse que o critério é nosso e que a preocupação é lojista novo; achou a proposta do pico "razoável" (12:50) | Mudar o critério no arquivo de regras |
+| [ ] | D-04 | Referência do Aurora = **linha física** (1º lançamento = L9) **Confirmada pela organização** (16:52): linha física contada a partir de 1, incluindo o cabeçalho. | O enunciado mostra L10, L11 só como exemplo | Mudar uma linha no leitor |
+| [ ] | D-05 | Divergência da Mundo Aberto pelo **Spread %** (R$ 1.418,85), não pelo Spread R$ (R$ 1.418,88) O financeiro confirmou que a diferença é de centavos e que basta escolher e registrar (16:08). | O % é o que se compara com o contrato; o financeiro pediu um critério escrito | Trocar o critério no motor |
+| [ ] | D-06 | Devolução de R$ 12.400 em **2.1.01.001** O financeiro repetiu que as duas contas servem e o critério é nosso (16:08). | O repasse volta a ser devido ao lojista; o financeiro aceitou 2.1.01.001 ou 2.1.01.002 com motivo | Mudar a conta no arquivo de regras |
 | [ ] | D-07 | Atlas **fora** do `comissoes_por_lojista.csv`, com pendência para o comercial (valor que a Orbe cobrou e as 57 linhas no rastro) e **identidade preservada** (CNPJ da aba antiga) | O financeiro aceita zerada ou fora; uma linha com zero parece cálculo concluído | Incluir com valor zero |
 | [ ] | D-09 | Casa **só na pendência** (total + detalhe), sem as 118 linhas em divergências | O financeiro disse que não precisa; evita confundir com divergência de contrato | Incluir as linhas marcadas como isenção |
 | [x] | D-10 | **Respondida** (Financeiro, Slack 11:33; confirmado no retorno do checkpoint 2, 16:01). **Ajuste da Ponte** (RN-37) é tratado como **mais uma operação**: contribuição = 50% do Spread R$ (negativo), com a **mesma fórmula** da RN-31. Assim não há como aplicar 50% duas vezes. A linha precisa ser reconhecida **antes** das regras de spread negativo irregular (RN-35) e de duplicata (RN-34). `ref_origem` = Nº da linha do ajuste; coluna extra `ref_original` com o PC original, mesmo de outro mês | Mesma lógica da comissão (50% do Spread R$). Pergunta de outro time (12:04) ainda sem resposta | Abater 100% se o financeiro disser que a linha já vem como a nossa parte |
@@ -668,6 +677,8 @@ Os totais conhecidos do case (Parte I) são **conferências auxiliares**: não s
 
 ## V.2 Perguntas em aberto no Slack (acompanhar)
 
+Nenhuma pergunta nossa está em aberto. O financeiro atende até 17h45; depois disso, o que faltar vira premissa no HIPOTESES.md.
+
 | Desde | Pergunta | O que fazemos enquanto isso |
 |---|---|---|
 | 12:04 | ~~Ajuste da Ponte: o Spread R$ negativo é o spread inteiro ou já a nossa parte?~~ **Respondida:** a organização confirmou no checkpoint 2 (16:01) que a resposta das 11:33 vale. | D-10 decidida: spread inteiro, a nota cai 50% (R$ 117,87 no exemplo da PC-0926-0434) |
@@ -677,6 +688,10 @@ Os totais conhecidos do case (Parte I) são **conferências auxiliares**: não s
 ## V.3 Checklist rápido de aceite (rodar antes de cada marco)
 
 - [ ] Rodou numa pasta limpa, só com o README
+- [ ] Clone limpo no Windows roda o comando do README direto em `saida/` (`.gitattributes` mantém os bytes)
+- [ ] Repositório público; o link abre para quem não é do time
+- [ ] `PROMPTS/` com as sessões de IA desde a liberação do case (preparação, se houver, em `PROMPTS/preparacao/`)
+- [ ] E-mail com o nome do time e de todos os integrantes no assunto, para os três endereços (repositório até 18h30, pitch até 19h)
 - [ ] Os 6 arquivos com as colunas certas, em `saida/` na raiz
 - [ ] Rastro: 100% dos números fecham (R$ 0,00)
 - [ ] Nenhuma linha de entrada sem destino
@@ -695,6 +710,7 @@ Os totais conhecidos do case (Parte I) são **conferências auxiliares**: não s
 
 ## V.4 O que mudou nas últimas versões
 
+- **17h30:** revisão completa do canal (63 respostas do financeiro e da organização). Entraram a RN-66 (bandeira), RN-67 (Fluente), RN-68 a RN-72 (IOF, juros, aplicação, Pix que não é repasse), RN-73 (colunas extras) e RN-74 (rastro auditável). Atualizadas RN-03, RN-15 (antecipação pela data da antecipação; 2027), RN-17, RN-18, RN-39, RN-41, RN-42, RN-44, RN-47, RN-50, RN-52 a RN-55, RN-57, RN-61, RN-64 (antecipação), RN-65 (ajuste após aprovação, correção de linha, ajuste órfão), D-04, D-05 e D-06. D-10 respondida. D-03 segue com o critério operacional em aberto.
 - **Bridge virou regra confirmada:** o contrato decide, não o aviso (antiga D-01 → RN-01 e RN-25).
 - **Spread negativo:** a pendência leva **dois valores** (relatório e diferença até o contrato) (RN-35).
 - **Ajuste da Ponte** ("AJUSTE REF PC-…"): regra nova para outubro em diante (RN-37, RF-07, D-10).
