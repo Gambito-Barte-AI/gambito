@@ -10,7 +10,7 @@
     "regras": {
       "arquivo": "regras.toml",
       "situacao": "DISPONIVEL",
-      "sha256": "e150651f5023a4b71aa550cf701f9e376c33d144ec07725a7a3efcfb50eb6c49",
+      "sha256": "13eb26507c9f8c7a26528f1aa4bebd85b5d7722c66779c0c32fcbaec131c7900",
       "metadados_incompletos": [
         {
           "id": "OBS_BRIDGE_ANTERIOR",
@@ -39,11 +39,6 @@
         },
         {
           "id": "D-06",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "D-10",
           "campo": "aprovado_em",
           "valor": "NAO_INFORMADO"
         },
@@ -194,8 +189,8 @@
         "spread_padrao_fracao": "0.015",
         "tolerancia_pp": "0.01",
         "fonte": "docs/documentação-geral.md RN-28 a RN-41, D-02, D-05, D-10 e D-11; Slack 2026-10-16 20:48, 20:58 e 21:13; Slack 2026-10-17 11:33",
-        "aprovacao": "Financeiro confirmou participação e spread padrão; time definiu tolerância D-02, critério percentual D-05 e 50% para ajuste D-10. Natureza do ajuste continua pendente para o Financeiro.",
-        "aprovador": "Financeiro (RN-31/RN-32); time (D-02/D-05/D-10); confirmação financeira de D-10 pendente",
+        "aprovacao": "Financeiro confirmou participação, spread padrão e o tratamento do ajuste (D-10, 11:33); time definiu tolerância D-02 e critério percentual D-05.",
+        "aprovador": "Financeiro (RN-31/RN-32/D-10); time (D-02/D-05)",
         "aprovado_em": "NAO_INFORMADO",
         "natureza": "DECISAO_TIME"
       },
@@ -226,9 +221,9 @@
           "servico": "Intermediação de remessas",
           "tomador_cnpj": "75374179000146",
           "tomador": "Ponte Câmbio",
-          "fonte": "docs/documentação-geral.md RN-37, RN-43, RN-44 e RN-45; Slack 2026-10-16 20:47 e 2026-10-17 11:33; D-10 continua pendente",
-          "aprovacao": "Uma proposta única à Ponte pelo saldo da participação validada no mês, incluindo ajuste; sem nota por lojista/complementar. Decisão do time sobre D-10 não equivale à ratificação financeira.",
-          "aprovador": "Financeiro (regra de notas); time (D-10, confirmação financeira pendente)",
+          "fonte": "docs/documentação-geral.md RN-37, RN-43, RN-44 e RN-45; Slack 2026-10-16 20:47 e 2026-10-17 11:33 (D-10)",
+          "aprovacao": "Uma proposta única à Ponte pelo saldo da participação validada no mês, incluindo ajuste; sem nota por lojista/complementar. Ajuste D-10 abate a participação do mês dentro dessa nota.",
+          "aprovador": "Financeiro (regra de notas e D-10)",
           "aprovado_em": "2026-10-17T11:33:00-03:00",
           "natureza": "FINANCEIRA"
         }
@@ -1582,16 +1577,7 @@
       "valor_orbe_brl": "60.07"
     }
   ],
-  "decisoes_financeiras_pendentes": [
-    {
-      "id": "D-10",
-      "descricao": "Financeiro ainda deve confirmar se ajuste Ponte representa spread integral ou participação da Tarvo.",
-      "tratamento_atual": "Time decidiu usar 50% do Spread R$ negativo, sem aplicar duas vezes; decisão aplicada em A3, sem ratificação financeira; cada ajuste mantém pendência explícita e rastro da operação original. A4 gera proposta pelo saldo líquido validado, sem emitir nota fiscal.",
-      "fonte": "docs/documentação-geral.md D-10 e pergunta Slack 17/10 12:04",
-      "aprovador": "Time; confirmação financeira pendente",
-      "aprovado_em": "NAO_INFORMADO"
-    }
-  ],
+  "decisoes_financeiras_pendentes": [],
   "decisoes_documentadas": [
     {
       "id": "D-07",
@@ -1613,6 +1599,15 @@
       "fonte": "Esclarecimento explícito do usuário sobre RN-64 nesta conversa em 2026-10-17; docs/documentação-geral.md correção A2",
       "aprovador": "Usuário nesta conversa; não atribuir nova aprovação ao Financeiro no Slack",
       "aprovado_em": "2026-10-17"
+    },
+    {
+      "id": "D-10",
+      "descricao": "Ajuste da Ponte (AJUSTE REF PC-…) é mais uma operação: o Spread R$ negativo é spread, e a participação da Tarvo é 50% dele, aplicada uma vez; abate a nota única do mês em que aparece, com rastro para a operação original e sem nota complementar.",
+      "fonte": "Slack 2026-10-17 11:33 (Financeiro, resposta Desbravadores: ajuste é linha nova com Spread R$ negativo e abate a nossa participação); retorno do checkpoint 2 às 16:01 (ajuste da Ponte já respondido no canal); docs/documentação-geral.md D-10",
+      "aprovacao": "Financeiro definiu o tratamento do ajuste em 11:33; a organização confirmou no checkpoint 2 que a pergunta das 12:04 já estava respondida. A metade segue a RN-31 (participação de 50% do spread realizado).",
+      "aprovador": "Financeiro (regra do ajuste); time (aplicação da RN-31 ao ajuste)",
+      "aprovado_em": "2026-10-17T11:33:00-03:00",
+      "natureza": "FINANCEIRA"
     },
     {
       "id": "D-04",
