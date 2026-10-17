@@ -1,3 +1,14 @@
+# Estado atual (17h40): nenhuma decisão pendente
+
+Todas as decisões estão respondidas pelo Financeiro ou registradas como decisão do time. As seções abaixo são o histórico, do mais recente para o mais antigo: onde um registro antigo diz "D-10 pendente", "decisões pendentes" ou "NAO_INFORMADO", vale este estado atual.
+
+- **D-10:** respondida pelo Financeiro (11h33) e confirmada no retorno do checkpoint 2.
+- **D-03:** decidida pelo time (Alice, 17h36). O alerta de antecipação não entra nesta entrega; o critério para quando entrar está no `regras.toml` e na documentação.
+- **Datas de aprovação:** as 34 regras que estavam com `NAO_INFORMADO` receberam o horário da resposta do Slack que as sustenta (critério do Financeiro) ou da decisão do time. O manifesto não lista mais metadados incompletos.
+- **O que segue aberto é operacional, não decisão:** contrato da Atlas (o Diego, do comercial, decide), pagador do Pix de R$ 7.350 (o Caio identifica), contestações com a Orbe e a Ponte e conferência do crédito da Ponte em 06/10. Cada um é uma pendência no `pendencias.csv`, com motivo, próximo passo e dono.
+
+---
+
 # Respostas do Financeiro e da organização (15h47 às 16h52) e D-10
 
 Registro de 17/10/2026. As respostas abaixo foram dadas no canal a outros times, mas valem para todos. O Financeiro disse às 16h08 que não confere conta por conta: vale o critério registrado aqui. Conferido com uma execução do alvo sobre o pacote completo (7 arquivos): os seis resultados saem COMPLETO.
@@ -34,7 +45,7 @@ Revisão completa do canal às 17h30 (63 respostas do Financeiro e da organizaç
 - **Correção de linha com o mesmo `id_transacao` (13h34).** Nunca aconteceu; o critério é nosso. A linha idêntica em dois arquivos conta uma vez. Se os valores forem diferentes, não escolhemos nenhum: as linhas viram pendência para o Financeiro.
 - **Ajuste órfão (14h10).** Regra do Financeiro: ajuste cuja original não está em nenhum arquivo entra pelo valor que veio e vira pendência para o Financeiro pedir a original à Orbe. **Diferença conhecida:** hoje o motor só abre a pendência para estorno de venda do mesmo mês sem original, sem lançar o valor na comissão. Em setembro não há esse caso (todas as referências do arquivo 06 estão no relatório), então nenhum resultado muda; o ajuste no código fica para o time.
 - **Bandeira no estorno (14h08).** A bandeira não muda a taxa. Estorno com bandeira diferente da venda segue vinculado pela referência, sem contestação e sem pendência (7 casos no arquivo 06).
-- **Alerta de antecipação (D-03).** O Financeiro disse que o alerta é para ele e para o comercial, que não muda nenhum número e que o critério é nosso (11h37, 11h49, 12h50). O critério operacional (pico, corte, elegibilidade e saída) **ainda não foi decidido pelo time**.
+- **Alerta de antecipação (D-03).** O Financeiro disse que o alerta é para ele e para o comercial, que não muda nenhum número e que o critério é nosso (11h37, 11h49, 12h50). Decisão do time (Alice, 17h36): o alerta não entra nesta entrega. Critério para quando entrar: só lojista com contrato bloqueado (hoje a Atlas), sem corte em reais, pico pelo maior saldo ao fim de cada dia (antecipações menos reversões vinculadas) e uma pendência por lojista para Financeiro e Comercial. Referência de setembro: Atlas, R$ 183.581,24 em 24/09.
 
 ---
 
@@ -166,7 +177,7 @@ Os registros seguintes descrevem o histórico das Entregas 1–4; menções a D-
 
 ---
 
-# Hipóteses, limites e decisões pendentes
+# Hipóteses, limites e decisões da entrega 1 (registro histórico)
 
 ## Escopo autorizado
 
