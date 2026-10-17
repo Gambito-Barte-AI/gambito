@@ -2,6 +2,9 @@
 
 **Desafio Barte AI · 17/10/2026 · versão das 14h (Slack lido até 13h10, com o arquivo 06)**
 
+> **Correção RN-64 em A2 — 17/10/2026, esclarecimento do usuário nesta conversa:** a devolução é líquida. As fontes confirmam R$ 15.405,85 em 117 vendas/antecipações menos R$ 9,08 do estorno TX88446763, referente à venda isenta TX88441917 (28/09), resultando em **R$ 15.396,77 em 118 linhas**. O estorno TX88445133, da venda não isenta de agosto, fica fora da devolução e mantém a taxa original na comissão. A interpretação anterior de excluir todos os estornos estava incorreta e está substituída por este esclarecimento; não se atribui nova aprovação ao Financeiro no Slack. Os totais são referências conferidas nas fontes, nunca constantes de cálculo.
+
+
 ## Como este documento está organizado
 
 | Parte | O que tem | Para quê |
@@ -78,7 +81,7 @@ O canvas tem **10 blocos em 3 visões**:
 **Qual é o problema?** O fechamento mensal é lento, manual e frágil. O único controle é uma aba na planilha onde cada analista marca "ok" e a data. `CONFIRMADO`
 
 **Por que é um problema?**
-- Erro de taxa chega ao lojista antes de chegar ao financeiro. Em setembro havia **R$ 2.995,08** de divergência de contrato e **R$ 15.396,77** cobrados durante uma isenção, e ninguém tinha visto. `FATO`
+- Erro de taxa chega ao lojista antes de chegar ao financeiro. Em setembro havia **R$ 2.995,08** de divergência de contrato e **R$ 15.396,77** líquidos a devolver por uma isenção, e ninguém tinha visto. `FATO`
 - Receita de remessa só é paga "mediante nota fiscal". Nota errada ou atrasada é dinheiro parado. `CONFIRMADO`
 - "Nas minhas férias, hoje ninguém fecha." O processo depende de uma pessoa. `CONFIRMADO`
 
@@ -336,7 +339,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RN-24 | **Rota Global:** contrato não mudou; os +0,50 p.p. desde 12/09 são divergência. | SLACK 16 20:49 | 87 linhas da Rota |
 | [ ] | RN-25 | **Bridge:** cobrou 2,59% em 5 vendas de 15 a 18/09 com aditivo de 2,19% assinado. É **divergência**, contestada com a Orbe. | SLACK 17 11:37 | 5 linhas da Bridge em divergências e na cobrança da Orbe |
 | [ ] | RN-26 | **Casa do Estudante não é divergência de contrato.** Vira **devolução ao lojista**, paga pela Tarvo: pendência com o total e o detalhe por transação, **separada das divergências de contrato** e **fora da cobrança da Orbe**. Pôr as 118 linhas também em divergências, marcadas como isenção, é opcional. | SLACK 17 09:44, 10:58 e 11:49 | Total cobrável da Orbe sem a Casa |
-| [ ] | RN-64 | **Valor da devolução ao lojista = o que saiu do bolso dele:** o que a Orbe **descontou de fato** (`valor_taxa`) menos a comissão contratada. **Linhas elegíveis da Casa:** vendas e antecipações com **data da venda de 01/09 a 31/12**; o estorno da venda de agosto fica de fora (ele abate a comissão pela taxa de agosto, RN-16). Como a contratada é zero, devolve-se o `valor_taxa` inteiro. O `divergencias_taxa.csv` mantém a fórmula da RN-20; a diferença é o centavo de truncamento da Orbe. **R$ 15.396,77 é referência de conferência, nunca constante no código.** | SLACK 17 12:50 | Pendência da Casa = soma do `valor_taxa` das linhas elegíveis (setembro: R$ 15.396,77) |
+| [ ] | RN-64 | **Valor da devolução ao lojista = o que saiu do bolso dele:** o que a Orbe **descontou de fato** (`valor_taxa`) menos a comissão contratada. **Linhas elegíveis da Casa:** vendas e antecipações com **data da venda de 01/09 a 31/12**; estornos de vendas isentas também entram, com valor_taxa assinado negativo, conforme vínculo e vigência da venda original. O movimento no período, sozinho, não torna a venda isenta. O estorno da venda de agosto continua abatendo a comissão pela taxa de agosto (RN-16). Como a contratada é zero, soma-se o `valor_taxa` assinado das linhas elegíveis: R$ 15.405,85 de vendas/antecipações menos R$ 9,08 do estorno elegível. O `divergencias_taxa.csv` mantém a fórmula da RN-20; a diferença é o centavo de truncamento da Orbe. **R$ 15.396,77 é referência de conferência, nunca constante no código.** | SLACK 17 12:50 (base); esclarecimento do usuário nesta conversa em 17/10/2026 (recorte) | Pendência da Casa = soma do `valor_taxa` das linhas elegíveis (setembro: R$ 15.396,77) |
 | [ ] | RN-27 | Lojista sem contrato (Atlas) **não é divergência**; é pendência. | CASE / TIME | Nenhuma linha da Atlas em divergências |
 | [ ] | RN-28 | Divergência de **remessa** = spread % aplicado − contratado, pelo **valor cheio**: Δ% × PTAX × valor em moeda estrangeira. **Mundo Aberto** (1,20% registrado desde julho) é divergência, contestada com a Ponte. | SLACK 16 20:48 e 20:58 / 17 11:37 | 23 linhas da Mundo Aberto pelo valor cheio |
 | [ ] | RN-29 | **Spread negativo não é divergência** (o lojista não pagou a mais). Se aparecer na lista, marcado como outra natureza. | SLACK 17 09:44 | As 4 operações negativas fora de divergências (ou com natureza própria) |
@@ -697,7 +700,7 @@ Os totais conhecidos do case (Parte I) são **conferências auxiliares**: não s
 - **Ajuste da Ponte** ("AJUSTE REF PC-…"): regra nova para outubro em diante (RN-37, RF-07, D-10).
 - **Estorno com taxa errada** entra em divergências com valor negativo; a faixa vem da linha do estorno (RN-10, RN-21).
 - **Atlas:** o CNPJ da aba antiga pode identificar (RN-07); zerada ou fora é escolha nossa (D-07).
-- **Casa:** isenção pela data da venda (RN-15); devolução = o que a Orbe cobrou, **R$ 15.396,77** (RN-64); linhas em divergências opcionais (D-09).
+- **Casa:** isenção pela data da venda (RN-15); devolução líquida = cobrança elegível menos estornos de vendas isentas, **R$ 15.396,77** (RN-64); linhas em divergências opcionais (D-09).
 - **Provisão do mês** fica fora (RN-48).
 - **Fechamento parcial e validação de layout:** avisar, fechar o que não depende e marcar provisório/bloqueado (RN-62, RF-03, RF-12, RNF-06).
 - **Pendências:** precisam de próximo passo; acompanhamento não é alarme falso; várias origens com `|` (RN-58, RN-59).
