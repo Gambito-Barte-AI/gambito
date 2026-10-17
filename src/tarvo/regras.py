@@ -62,8 +62,8 @@ def carregar(caminho: Path) -> dict:
                 if any(type(linha.get(k)) is not date for k in ("inicio", "fim")) or linha["inicio"] > linha["fim"]:
                     raise ErroEntrada(f"{caminho}: isenção exige datas TOML início/fim válidas e ordenadas")
             if tabela == "devolucoes_checkout":
-                if linha["politica_estornos"] != "EXCLUIR":
-                    raise ErroEntrada(f"{caminho}: somente exclusão de estornos da devolução está aprovada em A2")
+                if linha["politica_estornos"] != "VENDA_ORIGINAL_ISENTA":
+                    raise ErroEntrada(f"{caminho}: estornos da devolução exigem venda original elegível à isenção (RN-64)")
                 if not any(i["id"] == linha["isencao"] and i["cnpj"] == linha["cnpj"] for i in regras.get("isencoes", [])):
                     raise ErroEntrada(f"{caminho}: devolução sem isenção correspondente")
     decisoes = regras.get("decisoes_pendentes", [])

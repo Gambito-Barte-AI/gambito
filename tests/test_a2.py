@@ -31,7 +31,7 @@ class A2Test(unittest.TestCase):
     def concessao(self):
         with self.regras.open("a", encoding="utf-8") as f:
             for tabela, corpo in (("isencoes", 'inicio=2032-04-02\nfim=2032-04-30'),
-                                  ("devolucoes_checkout", 'isencao="ISENCAO"\npolitica_estornos="EXCLUIR"')):
+                                  ("devolucoes_checkout", 'isencao="ISENCAO"\npolitica_estornos="VENDA_ORIGINAL_ISENTA"')):
                 f.write(f'\n[[{tabela}]]\nid="{"ISENCAO" if tabela == "isencoes" else "DEVOLUCAO"}"\n'
                         'cnpj="01234567800012"\nfonte="Teste sintético"\naprovacao="Amostra"\n'
                         'aprovador="Teste"\naprovado_em="2032-04-01"\nnatureza="FINANCEIRA"\n' + corpo + '\n')
@@ -98,7 +98,7 @@ class A2Test(unittest.TestCase):
         self.assertEqual(p.linhas["divergencias_taxa.csv"][0]["diferenca_brl"], "-1.00")
         self.assertEqual(p.rastro[0]["faixa"], "parcelado_7_12")
 
-    def test_casa_positivos_por_vigencia_ambos_estornos_fora(self):
+    def test_casa_estorno_elegivel_abate_e_anterior_a_isencao_fica_fora(self):
         self.concessao()
         # Antecipação usa sua própria taxa; adicionar a coluna contratual da amostra.
         from openpyxl import load_workbook
@@ -117,10 +117,69 @@ class A2Test(unittest.TestCase):
         r, _ = self.publicar()
         parte = r.partes["DEVOLUCAO_CASA"]
         self.assertEqual(parte.situacao, "COMPLETO")
-        self.assertEqual(parte.linhas["pendencias.csv"][0]["valor_brl"], "2.23")
-        self.assertEqual({l["ref_origem"] for l in parte.rastro}, {"A", "ANT", "ULTIMA"})
+        self.assertEqual(parte.linhas["pendencias.csv"][0]["valor_brl"], "1.73")
+        self.assertEqual({l["ref_origem"] for l in parte.rastro}, {"A", "ANT", "ULTIMA", "E"})
+        estorno = next(l for l in parte.rastro if l["ref_origem"] == "E")
+        self.assertEqual((estorno["valor"], estorno["ref_evento_original"], estorno["arquivo_evento_original"]),
+                         ("-0.50", "A", "orbe.csv"))
         self.assertFalse(r.partes["DIVERGENCIAS_CHECKOUT"].rastro)
         self.assertEqual(next(c.valor for c in r.contribuicoes if c.origem.ref == "EA"), Decimal("-.50"))
+
+    def test_estorno_apos_fim_isencao_usa_venda_original_isenta_em_outro_csv(self):
+        self.concessao()
+        self.regras.write_text(self.regras.read_text(encoding="utf-8").replace("fim=2032-04-30", "fim=2032-04-03"), encoding="utf-8")
+        self.orbe([dict()])
+        with (self.dados / "orbe.csv").open(encoding="utf-8", newline="") as f:
+            colunas = next(csv.reader(f, delimiter=";"))
+        with (self.dados / "ajuste_sem_nome_fixo.csv").open("w", encoding="utf-8", newline="") as f:
+            escritor = csv.DictWriter(f, fieldnames=colunas, delimiter=";")
+            escritor.writeheader()
+            escritor.writerow(dict(id_transacao="E", data_movimento="20/04/2032", cod_estabelecimento="42",
+                tipo_lancamento="ESTORNO", modalidade="PIX", qtd_parcelas="1", valor_bruto="-50,00",
+                id_referencia="A", data_venda_original="02/04/2032", taxa_aplicada_pct="0,5", valor_taxa="-0,25"))
+        r, _ = self.publicar()
+        p = r.partes["DEVOLUCAO_CASA"]
+        self.assertEqual(p.linhas["pendencias.csv"][0]["valor_brl"], "0.25")
+        estorno = next(l for l in p.rastro if l["ref_origem"] == "E")
+        self.assertEqual(estorno["arquivo_origem"], "ajuste_sem_nome_fixo.csv")
+        self.assertEqual(estorno["arquivo_evento_original"], "orbe.csv")
+        self.assertEqual(estorno["data_base_taxa"], "2032-04-02")
+
+    def test_estorno_sem_original_do_mes_nao_e_abate_estimado(self):
+        self.concessao()
+        self.orbe([dict(), dict(id_transacao="E", tipo_lancamento="ESTORNO", valor_bruto="-100,00",
+                               valor_taxa="-0,50", id_referencia="AUSENTE", data_venda_original="02/04/2032")])
+        r = executar(self.dados, self.regras)
+        m = publicar(r, self.saida, "alvo")
+        p = r.partes["DEVOLUCAO_CASA"]
+        self.assertEqual(p.situacao, "PROVISORIO")
+        self.assertEqual(p.linhas["pendencias.csv"][0]["valor_brl"], "0.50")
+        self.assertEqual([l["ref_origem"] for l in p.rastro], ["A"])
+        self.assertTrue(any(p.origem.ref == "E" for p in r.pendencias))
+        verificar(self.dados, self.saida, self.regras, "PROVISORIO")
+
+    def test_estorno_isento_sem_cobrado_fica_pendente_sem_inventar_abate(self):
+        self.concessao()
+        self.orbe([dict(), dict(id_transacao="E", tipo_lancamento="ESTORNO", valor_bruto="-100,00",
+                               valor_taxa="inválido", id_referencia="A", data_venda_original="02/04/2032")])
+        r, _ = self.publicar()
+        p = r.partes["DEVOLUCAO_CASA"]
+        self.assertEqual(p.situacao, "PROVISORIO")
+        self.assertEqual(p.cobertura["pendentes"], 1)
+        revisao = next(l for l in p.linhas["pendencias.csv"] if l["id_saida"].startswith("REVISAO_"))
+        self.assertEqual(revisao["valor_brl"], "")
+
+    def test_auditor_rejeita_omissao_do_estorno_isento_com_soma_reconciliada(self):
+        self.concessao()
+        self.orbe([dict(), dict(id_transacao="E", tipo_lancamento="ESTORNO", valor_bruto="-50,00",
+                               valor_taxa="-0,25", id_referencia="A", data_venda_original="02/04/2032")])
+        r = executar(self.dados, self.regras)
+        p = r.partes["DEVOLUCAO_CASA"]
+        p.rastro = [l for l in p.rastro if l["ref_origem"] != "E"]
+        p.linhas["pendencias.csv"][0]["valor_brl"] = "0.50"
+        publicar(r, self.saida, "alvo")
+        with self.assertRaises(ErroAceite):
+            verificar(self.dados, self.saida, self.regras)
 
     def test_taxa_aplicada_invalida_so_afeta_divergencia(self):
         self.orbe([dict(taxa_aplicada_pct="inválida")])
@@ -178,9 +237,9 @@ class A2Test(unittest.TestCase):
         with self.assertRaises(ErroAceite):
             verificar(self.dados, self.saida, self.regras)
 
-    def test_politica_aprovada_real_exclui_estornos_e_preserva_d10(self):
+    def test_politica_aprovada_real_usa_isencao_original_e_preserva_d10(self):
         from tarvo.regras import carregar
         config = carregar(Path(__file__).resolve().parents[1] / "regras.toml")
-        self.assertEqual(config["devolucoes_checkout"][0]["politica_estornos"], "EXCLUIR")
+        self.assertEqual(config["devolucoes_checkout"][0]["politica_estornos"], "VENDA_ORIGINAL_ISENTA")
         self.assertEqual([d["id"] for d in config["decisoes_pendentes"]], ["D-10"])
 

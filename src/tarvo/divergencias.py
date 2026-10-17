@@ -106,7 +106,9 @@ def calcular_devolucao(eventos, contribuicoes, pendencias_base, regras, linhas_l
         if any(p.cnpj == condicao["cnpj"] for p in pendencias_base):
             devolucao.situacao = "PROVISORIO"
             devolucao.motivos.append("Há operações da concessão sem contrato ou identidade resolvida; total incompleto, não liberar devolução")
-        elegiveis = [c for c in candidatas if c.tipo in {"VENDA", "ANTECIPACAO"}]
+        # Checkout já conferiu o vínculo do estorno e resolveu a isenção pela
+        # data da venda original. Movimento no período não torna venda antiga isenta.
+        elegiveis = [c for c in candidatas if c.tipo in {"VENDA", "ANTECIPACAO", "ESTORNO"}]
         elegiveis_total += len(elegiveis)
         grupos_casa = defaultdict(list)
         for c in elegiveis:

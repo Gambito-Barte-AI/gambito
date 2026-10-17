@@ -75,10 +75,21 @@ def verificar(manifesto, arquivos, config, origens):
             isencao = next(i for i in config["isencoes"] if i["id"] == condicao["isencao"])
             exigir(s["tipo"] == "DEVOLUCAO_LOJISTA" and s.get("natureza_valor") == "DEVOLUCAO_LOJISTA", "Devolução confundida com contestação")
             for r, e in detalhes[identificador]:
-                permitidos = {"VENDA", "ANTECIPACAO"}
-                exigir(condicao["politica_estornos"] == "EXCLUIR", "Política de devolução não aprovada")
+                permitidos = {"VENDA", "ANTECIPACAO", "ESTORNO"}
+                exigir(condicao["politica_estornos"] == "VENDA_ORIGINAL_ISENTA", "Política de devolução não aprovada")
                 exigir(e["tipo_lancamento"] in permitidos and isencao["inicio"].isoformat() <= r["data_base_taxa"] <= isencao["fim"].isoformat()
                        and r["regra"] == isencao["id"], "Recorte da devolução inválido")
+                if e["tipo_lancamento"] == "ESTORNO":
+                    original = origens.get((r.get("arquivo_evento_original"), e["id_referencia"]))
+                    if original is not None:
+                        exigir(original["tipo_lancamento"] == "VENDA"
+                               and original["cod_estabelecimento"] == e["cod_estabelecimento"]
+                               and original["data_movimento"] == e["data_venda_original"],
+                               "Estorno da devolução sem vínculo compatível com a venda original")
+                    else:
+                        exigir(e["data_venda_original"][3:] != e["data_movimento"][3:]
+                               and not r.get("arquivo_evento_original"),
+                               "Estorno do mês sem venda original verificável na devolução")
                 exigir(dinheiro(r["valor"]) == numero_br(e["valor_taxa"]), "Devolução não usa cobrança efetiva isenta")
         else:
             exigir(s["tipo"] == "CONTESTACAO_TAXA_ORBE" and s.get("natureza_valor") == "DIFERENCA_CONTRATUAL_LIQUIDA", "Natureza da contestação incorreta")
@@ -107,7 +118,7 @@ def verificar(manifesto, arquivos, config, origens):
                         esperadas.add(chave)
             elif cnpj in concessoes:
                 condicao = concessoes[cnpj]
-                if r["regra"] == condicao["isencao"] and e["tipo_lancamento"] in {"VENDA", "ANTECIPACAO"}:
+                if r["regra"] == condicao["isencao"] and e["tipo_lancamento"] in {"VENDA", "ANTECIPACAO", "ESTORNO"}:
                     try:
                         numero_br(e["valor_taxa"])
                     except (ValueError, ArithmeticError, KeyError):
