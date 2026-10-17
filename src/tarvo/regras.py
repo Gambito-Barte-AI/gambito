@@ -32,6 +32,7 @@ def carregar(caminho: Path) -> dict:
     ids = set()
     for tabela, campos in (("vinculos", ("ec", "cnpj")), ("isencoes", ("cnpj",)),
                            ("contratos_bloqueados", ("cnpj", "motivo")),
+                           ("devolucoes_checkout", ("cnpj", "isencao", "politica_estornos")),
                            ("observacoes_esclarecidas", ("cnpj", "texto"))):
         linhas = regras.get(tabela, [])
         if not isinstance(linhas, list):
@@ -60,6 +61,11 @@ def carregar(caminho: Path) -> dict:
             if tabela == "isencoes":
                 if any(type(linha.get(k)) is not date for k in ("inicio", "fim")) or linha["inicio"] > linha["fim"]:
                     raise ErroEntrada(f"{caminho}: isenção exige datas TOML início/fim válidas e ordenadas")
+            if tabela == "devolucoes_checkout":
+                if linha["politica_estornos"] != "EXCLUIR":
+                    raise ErroEntrada(f"{caminho}: somente exclusão de estornos da devolução está aprovada em A2")
+                if not any(i["id"] == linha["isencao"] and i["cnpj"] == linha["cnpj"] for i in regras.get("isencoes", [])):
+                    raise ErroEntrada(f"{caminho}: devolução sem isenção correspondente")
     decisoes = regras.get("decisoes_pendentes", [])
     if not isinstance(decisoes, list) or any(
         not isinstance(d, dict) or not all(isinstance(d.get(k), str) and d[k].strip()

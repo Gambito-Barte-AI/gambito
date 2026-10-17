@@ -28,6 +28,9 @@ class Evento:
     referencia: str
     data_original: date | None
     valor_taxa: Decimal | None = None
+    taxa_aplicada_pct: Decimal | None = None
+    erro_taxa_aplicada: str = ""
+    erro_valor_taxa: str = ""
 
 
 @dataclass(frozen=True)

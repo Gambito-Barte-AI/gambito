@@ -12,6 +12,7 @@ PLANO = {
     "PENDENCIAS_CHECKOUT": (("orbe", "taxas", "regras"), (), ("pendencias.csv",)),
     "REMESSAS": (("ponte", "regras"), (), ("comissoes_por_lojista.csv", "pendencias.csv")),
     "DIVERGENCIAS_CHECKOUT": (("orbe", "taxas", "regras"), (), ("divergencias_taxa.csv", "pendencias.csv")),
+    "DEVOLUCAO_CASA": (("orbe", "taxas", "regras"), (), ("pendencias.csv",)),
     "DIVERGENCIAS_REMESSA": (("ponte", "taxas", "regras"), (), ("divergencias_taxa.csv", "pendencias.csv")),
     "NOTAS_CHECKOUT": ((), ("CHECKOUT",), ("notas_a_emitir.csv", "pendencias.csv")),
     "NOTAS_REMESSA": ((), ("REMESSAS",), ("notas_a_emitir.csv", "pendencias.csv")),
@@ -89,9 +90,11 @@ def preparar_partes(resultado: Resultado) -> None:
             pendencias.motivos = [f"Falha ao preparar pendências: {exc}"]
     resultado.partes["PENDENCIAS_CHECKOUT"] = pendencias
     for nome, (fontes, anteriores, relatorios) in PLANO.items():
+        a2 = nome in {"DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CASA"}
         resultado.partes.setdefault(nome, ResultadoParte(
             fontes=fontes, depende_de=anteriores, relatorios=relatorios,
-            motivos=[f"{nome}: etapa não implementada; nenhum valor calculado"],
+            implementado=a2,
+            motivos=[f"{nome}: análise não executada neste resultado" if a2 else f"{nome}: etapa não implementada; nenhum valor calculado"],
         ))
     validar_partes(resultado)
 

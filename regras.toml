@@ -128,7 +128,19 @@ aprovador = "Time técnico; interpretação registrada, sem nova aprovação fin
 aprovado_em = "NAO_INFORMADO"
 natureza = "INTERPRETACAO_TECNICA"
 
-# Decisões já documentadas; funcionalidades do alvo continuam não implementadas.
+# RN-26/RN-64 e D-09: concessão separada de divergência contratual.
+[[devolucoes_checkout]]
+id = "DEVOLUCAO_CHECKOUT_CASA"
+cnpj = "00520815000100"
+isencao = "ISENCAO_CHECKOUT_CASA"
+politica_estornos = "EXCLUIR"
+fonte = "docs/documentação-geral.md RN-26, RN-64 e D-09; Slack 2026-10-17 12:50; confirmação do usuário nesta conversa em 2026-10-17"
+aprovacao = "Base pelo cobrado confirmada pelo Financeiro; usuário confirmou em 2026-10-17 somente vendas e antecipações, excluindo todos os estornos e revisando a referência documental."
+aprovador = "Financeiro (base da devolução); usuário nesta conversa (recorte de estornos)"
+aprovado_em = "2026-10-17T12:50:00-03:00"
+natureza = "FINANCEIRA"
+
+# Decisões documentadas; A2 implementada, etapas posteriores não iniciadas.
 [[decisoes_documentadas]]
 id = "D-07"
 descricao = "Atlas fora das comissões; identidade e cobrança efetiva da Orbe preservadas nas pendências comerciais."
@@ -138,10 +150,17 @@ aprovado_em = "NAO_INFORMADO"
 
 [[decisoes_documentadas]]
 id = "RN-64 (antiga D-08)"
-descricao = "Casa: devolução pelo cobrado efetivamente nas linhas elegíveis; referência R$ 15.396,77, nunca constante de cálculo. Devolução pertence ao alvo."
+descricao = "Casa: devolução pelo cobrado efetivamente nas linhas elegíveis; somente vendas e antecipações, sem estornos, conforme confirmação do usuário em 2026-10-17. Referência revisada R$ 15.405,85 / 117 linhas, nunca constante de cálculo. Implementada em A2."
 fonte = "docs/documentação-geral.md RN-64; Financeiro, Slack 2026-10-17 12:50; consolidação 13h15"
 aprovador = "Financeiro"
 aprovado_em = "2026-10-17T12:50:00-03:00"
+
+[[decisoes_documentadas]]
+id = "RN-64-RECORTE"
+descricao = "Usuário confirmou somente vendas e antecipações na devolução da Casa, excluindo todos os estornos; revisar a referência documental anterior."
+fonte = "Confirmação explícita do usuário nesta conversa em 2026-10-17; docs/documentação-geral.md revisão A2"
+aprovador = "Usuário nesta conversa; não atribuir nova aprovação ao Financeiro no Slack"
+aprovado_em = "2026-10-17"
 
 [[decisoes_pendentes]]
 id = "D-10"

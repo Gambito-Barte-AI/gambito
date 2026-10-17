@@ -1,3 +1,18 @@
+# A2 — divergências de checkout e devolução da Casa
+
+A2 autorizada e implementada; A3 e etapas seguintes não iniciadas. Mantidos o mínimo, o isolamento de A1 e os seis layouts oficiais. Evidência atual: `docs/ACEITE_A2.md` e `saida/alvo-a2/`.
+
+- **RN-64, recorte confirmado pelo usuário em 17/10/2026 nesta conversa:** somente VENDA e ANTECIPACAO elegíveis, sem nenhum ESTORNO. Referência recalculada: 117 linhas / R$ 15.405,85. O valor anterior de R$ 15.396,77 incluía TX88446763 (−R$ 9,08); não é mais a referência vigente. O estorno de agosto continua fora da devolução e preservado na comissão. A fonte da decisão de recorte é o usuário, não uma aprovação financeira inventada no Slack.
+- **RN-20 a RN-27:** divergência por taxa aplicada versus contratada, HALF_UP por linha, sinais de estornos preservados. Mesma taxa com truncamento do valor cobrado não gera divergência. Sem tolerância de spread no checkout: D-02 é de remessa, futura.
+- **Casa / D-09:** só pendência de devolução e detalhe no rastro; nenhuma cobrança contratual à Orbe. Pagamento e contestação dependem de revisão humana; não são executados.
+- **Atlas:** continua fora das comissões e divergências por ausência de contrato confirmado, com as 57 pendências de negócio no exemplo. D-07 resolvida; D-13 preservada.
+- **D-10:** confirmação financeira da natureza do ajuste Ponte continua pendente. Não foi implementada remessa. Datas de aprovação ausentes continuam NAO_INFORMADO.
+- Campos de taxa aplicada/cobrança inválidos tornam provisória apenas a análise que depende deles; não descartam automaticamente o evento contratual do mínimo. IDs das saídas derivadas são distintos das comissões e da cobertura física.
+
+Os registros abaixo são históricos e descrevem o escopo vigente em cada entrega anterior; seus números e afirmações de não implementação não substituem esta revisão.
+
+---
+
 # A1 — isolamento aprovado de resultados e dependências
 
 Apenas A1 foi autorizada nesta sessão. Mantidos os valores, os seis CSVs do mínimo e todas as decisões financeiras; A2 e os leitores/cálculos futuros não foram implementados.

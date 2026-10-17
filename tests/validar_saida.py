@@ -62,7 +62,11 @@ def verificar_partes(manifesto):
     minimo = {"CHECKOUT", "PENDENCIAS_CHECKOUT"}
     futuras = {"REMESSAS", "DIVERGENCIAS_CHECKOUT", "DIVERGENCIAS_REMESSA", "NOTAS_CHECKOUT",
                "NOTAS_REMESSA", "EXTRATO_AURORA", "EXTRATO_MERIDIANO"}
-    exigir(set(partes) == minimo | futuras, "Partes de A1 ausentes ou desconhecidas")
+    implementadas = set(minimo)
+    if manifesto.get("versao", 0) >= 4:
+        futuras.remove("DIVERGENCIAS_CHECKOUT")
+        implementadas |= {"DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CASA"}
+    exigir(set(partes) == implementadas | futuras, "Partes ausentes ou desconhecidas")
     for nome, parte in partes.items():
         estado = parte.get("situacao")
         exigir(estado in {"COMPLETO", "PROVISORIO", "BLOQUEADO"}, "Situação de parte inválida")
@@ -98,7 +102,9 @@ def verificar_partes(manifesto):
            "Código de conclusão não corresponde ao escopo")
     for arquivo, detalhe in manifesto["resultados"].items():
         previstas = {n for n,p in partes.items() if arquivo == "rastro.csv" or arquivo in p.get("relatorios", [])}
-        participantes = previstas & escolhidas or previstas
+        participantes = previstas & escolhidas
+        if manifesto.get("versao", 0) < 4:
+            participantes = participantes or previstas
         exigir(set(detalhe.get("partes", [])) == participantes, "Produtores do relatório incorretos")
         exigir(detalhe.get("situacao") == agregar(partes[n]["situacao"] for n in participantes)
                and detalhe.get("situacao_alvo") == agregar(partes[n]["situacao"] for n in previstas),
@@ -136,7 +142,10 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     partes = verificar_partes(manifesto) if manifesto.get("versao", 0) >= 3 else {}
     if esperar_fechamento:
         exigir(manifesto.get("fechamento", {}).get("situacao") == esperar_fechamento, "Fechamento diferente do esperado")
-    for nome in ("divergencias_taxa.csv", "notas_a_emitir.csv", "lancamentos_classificados.csv"):
+    vazios = ("notas_a_emitir.csv", "lancamentos_classificados.csv")
+    if manifesto.get("versao", 0) < 4 or manifesto.get("escopo_comando") == "checkout":
+        vazios += ("divergencias_taxa.csv",)
+    for nome in vazios:
         exigir(not arquivos[nome] and resultados[nome].get("situacao") == "BLOQUEADO"
                and resultados[nome].get("motivos"), "Relatório do alvo apresentado como processado")
     comissoes = arquivos["comissoes_por_lojista.csv"]
@@ -216,7 +225,11 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
             dinheiro(p["valor_orbe_brl"])
         exigir(p.get("linha") == linhas_fisicas.get((p.get("arquivo_origem"), p.get("ref_origem"))),
                "Pendência perdeu a linha física de origem")
-    pendencias_csv = arquivos["pendencias.csv"]
+    if manifesto.get("versao", 0) >= 4:
+        from auditoria_a2 import verificar as verificar_a2
+        verificar_a2(manifesto, arquivos, configuracao, por_origem)
+        rastros = [r for r in rastros if r["id_saida"].startswith(("CHECKOUT:", "PENDENCIA:"))]
+    pendencias_csv = [p for p in arquivos["pendencias.csv"] if p["id_saida"].startswith("PENDENCIA:")]
     pendencias_publicadas = pendencias if not partes or partes["PENDENCIAS_CHECKOUT"]["rastro_validado"] else []
     exigir(len(pendencias_csv) == len(pendencias_publicadas), "Contagem de pendencias.csv difere da parte validada")
     por_pendencia = {(p["arquivo_origem"], p["ref_origem"], str(p["linha"])): p for p in pendencias}
@@ -317,7 +330,9 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
         exigir(total == dinheiro(manifesto.get("total_parcial_brl")), "Total do manifesto não confere")
     return {"situacao": situacao, "competencia": manifesto.get("competencia"),
             "cobertura": cobertura, "comissoes": len(comissoes), "total_brl": format(total, ".2f") if situacao != "BLOQUEADO" else None,
-            "rastro_exato": True, "fontes_e_hashes": True, "decisoes_preservadas": True, "pendencias_csv": len(pendencias_csv),
+            "rastro_exato": True, "fontes_e_hashes": True, "decisoes_preservadas": True,
+            "pendencias_csv": len(arquivos["pendencias.csv"]), "pendencias_minimo": len(pendencias_csv),
+            "divergencias_checkout": len(arquivos["divergencias_taxa.csv"]),
             "rastro_pendencias": len(rastros_pendencias), "contratos_csv": len(arquivos), "fechamento": manifesto.get("fechamento", {}).get("situacao"),
             "situacao_comando": manifesto.get("situacao_comando", situacao)}
 

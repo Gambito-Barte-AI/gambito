@@ -4,7 +4,7 @@ from hashlib import sha256
 from pathlib import Path
 import re
 
-from . import checkout, regras, validacao
+from . import checkout, divergencias, regras, validacao
 from .leitores import orbe, taxas
 from .modelos import Cadastro, ErroEntrada, Resultado
 from .partes import preparar_partes
@@ -29,7 +29,7 @@ def _executar_checkout(pasta: Path, configuracao: Path, competencia: str | None 
             "sha256": sha256(configuracao.read_bytes()).hexdigest(),
             "metadados_incompletos": [
                 {"id": r["id"], "campo": "aprovado_em", "valor": "NAO_INFORMADO"}
-                for tabela in ("vinculos", "isencoes", "contratos_bloqueados", "observacoes_esclarecidas", "decisoes_documentadas", "decisoes_pendentes")
+                for tabela in ("vinculos", "isencoes", "contratos_bloqueados", "observacoes_esclarecidas", "devolucoes_checkout", "decisoes_documentadas", "decisoes_pendentes")
                 for r in config.get(tabela, []) if r.get("aprovado_em") == "NAO_INFORMADO"
             ],
         }
@@ -79,6 +79,10 @@ def _executar_checkout(pasta: Path, configuracao: Path, competencia: str | None 
     resultado.calculo_executado = True
     resultado.pendencias.extend(pendencias)
     resultado.pendencias.sort(key=lambda p: (p.origem.arquivo, p.origem.linha))
+    (resultado.partes["DIVERGENCIAS_CHECKOUT"], resultado.partes["DEVOLUCAO_CASA"]) = divergencias.calcular(
+        resultado.eventos, resultado.contribuicoes, resultado.pendencias, config,
+        resultado.linhas_lidas, resultado.avisos,
+    )
     validacao.consolidar(resultado)
     try:
         validacao.validar(resultado)

@@ -29,7 +29,7 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
     processados = len(resultado.contribuicoes) if resultado.partes["CHECKOUT"].validado else 0
     pendentes = len(resultado.pendencias) if resultado.partes["PENDENCIAS_CHECKOUT"].validado else 0
     dados = {
-        "versao": 3, "escopo": "CHECKOUT_MINIMO", "etapa": "ALVO_A1", "situacao": resultado.situacao,
+        "versao": 4, "escopo": "CHECKOUT_MINIMO", "etapa": "ALVO_A2", "situacao": resultado.situacao,
         "escopo_situacao": "CHECKOUT",
         "competencia": resultado.competencia, "motivos": resultado.motivos,
         "fontes": resultado.fontes, "rastro_validado": resultado.validado and resultado.situacao != "BLOQUEADO",
@@ -56,7 +56,7 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
         } for p in resultado.pendencias],
         "decisoes_financeiras_pendentes": resultado.decisoes_pendentes,
         "decisoes_documentadas": resultado.decisoes_documentadas,
-        "fora_do_escopo": ["remessas", "divergencias", "notas", "extratos"],
+        "fora_do_escopo": ["remessas", "divergencias_remessa", "notas", "extratos"],
     }
 
     escolhidas = selecionar(resultado, escopo)
@@ -107,7 +107,7 @@ def publicar(resultado: Resultado, pasta: Path, escopo: str = "checkout") -> dic
     dados["resultados"] = {}
     for arquivo in ARQUIVOS:
         previstas = [n for n, p in resultado.partes.items() if arquivo == "rastro.csv" or arquivo in p.relatorios]
-        participantes = [n for n in previstas if n in escolhidas] or previstas
+        participantes = [n for n in previstas if n in escolhidas]
         for nome in participantes:
             parte = resultado.partes[nome]
             if nome in escolhidas and parte.validado and parte.situacao != "BLOQUEADO":
@@ -120,6 +120,8 @@ def publicar(resultado: Resultado, pasta: Path, escopo: str = "checkout") -> dic
             "motivos": list(dict.fromkeys(m for n in participantes for m in resultado.partes[n].motivos)),
             "linhas": len(linhas[arquivo]),
         }
+        if not participantes:
+            dados["resultados"][arquivo]["motivos"] = [f"Relatório fora do escopo {escopo}; consulte --escopo alvo"]
     conteudos = {nome: csv_bytes(linhas[nome], colunas) for nome, colunas in ARQUIVOS.items()}
     dados["publicacao_concluida"] = True
     dados["arquivos"] = {nome: sha256(valor).hexdigest() for nome, valor in conteudos.items()}

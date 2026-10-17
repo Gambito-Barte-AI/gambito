@@ -56,6 +56,21 @@ def dinheiro_br(valor: str) -> Decimal:
     return numero
 
 
+def campo_financeiro(linha: dict, coluna: str, percentual=False):
+    """Campos de A2 não impedem calcular comissão por bruto e contrato."""
+    texto = (linha.get(coluna) or "").strip()
+    if not texto:
+        return None, f"{coluna} ausente ou vazio"
+    try:
+        if percentual:
+            if not re.fullmatch(r"-?[0-9]+(?:,[0-9]+)?", texto):
+                raise ValueError("percentual deve ser número com vírgula decimal, sem símbolo %")
+            return Decimal(texto.replace(",", ".")), ""
+        return dinheiro_br(texto), ""
+    except (ValueError, InvalidOperation) as exc:
+        return None, f"{coluna}: {exc}"
+
+
 def ler(caminho: Path) -> tuple[list[Evento], list[Pendencia], int]:
     try:
         leitor = csv.DictReader(StringIO(texto_csv(caminho)), delimiter=";", strict=True)
@@ -85,11 +100,13 @@ def ler(caminho: Path) -> tuple[list[Evento], list[Pendencia], int]:
                     raise ValueError("qtd_parcelas deve ser inteiro não negativo ou vazio")
                 parcelas = int(texto_parcelas) if texto_parcelas else None
                 original = linha["data_venda_original"].strip()
+                valor_taxa, erro_valor = campo_financeiro(linha, "valor_taxa")
+                aplicada, erro_aplicada = campo_financeiro(linha, "taxa_aplicada_pct", percentual=True)
                 eventos.append(Evento(
                     origem, data, ec, linha["tipo_lancamento"].strip(),
                     linha["modalidade"].strip(), parcelas, dinheiro_br(linha["valor_bruto"].strip()),
                     linha["id_referencia"].strip(), data_br(original) if original else None,
-                    dinheiro_br(linha["valor_taxa"].strip()) if (linha.get("valor_taxa") or "").strip() else None,
+                    valor_taxa, aplicada, erro_aplicada, erro_valor,
                 ))
             except (ValueError, InvalidOperation) as exc:
                 pendencias.append(Pendencia(origem, f"Linha inválida: {exc}", "Financeiro"))
