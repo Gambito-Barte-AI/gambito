@@ -31,6 +31,17 @@ O contexto define **o que** o produto deve fazer; este arquivo define **como** d
 
 Evite ML, serviços externos, infraestrutura ou abstrações sem necessidade demonstrada. A prioridade é uma solução funcional para o nível mínimo e, em seguida, para o alvo descrito no contexto. Extras só entram depois do alvo ou por pedido explícito.
 
+## Data-Agnostic Processing and Official Data Preservation
+
+- O motor deve ser independente dos datasets exploratórios. Novos datasets compatíveis com os contratos documentados devem funcionar sem alterações na lógica central.
+- Valores, IDs, estabelecimentos, datas e nomes de arquivos específicos não podem determinar comportamentos do motor, salvo exigência explícita de regra oficial com fonte e aprovação documentadas. Condições comerciais específicas devem permanecer na configuração apropriada, sem exceções artificiais por nome ou resultado esperado.
+- Regras financeiras devem expressar critérios de negócio generalizáveis, documentados e configuráveis quando apropriado, respeitando a hierarquia de decisão da seção 3.
+- Exemplos oficiais e resultados conhecidos servem para compreender contratos, validar e testar regressões; nunca como valores fixos, atalhos ou condições para reproduzir gabaritos no processamento. Isso inclui a RN-64: o líquido deve resultar das cobranças e dos estornos elegíveis pela origem e vigência da venda, sem fixar totais conhecidos.
+- Todos os arquivos oficiais do parceiro são imutáveis e devem ser tratados exclusivamente como fontes de leitura, incluindo documentos, CSVs, anexos, gabaritos e resultados de referência. Não modificar, sobrescrever, renomear, mover ou excluir esses materiais, nem alterar seu conteúdo, estrutura, nome ou localização para adequá-los ao código. Saídas geradas devem ficar em destinos próprios, separados dos materiais oficiais.
+- Inconsistências dos originais devem ser registradas e tratadas pela lógica ou como pendências, conforme as regras aprovadas; nunca corrigidas manualmente nos arquivos oficiais.
+- Testes que modifiquem entradas devem usar cópias isoladas ou dados sintéticos, preservando integralmente os originais e as referências de validação.
+- Precisão financeira, rastreabilidade e integridade dos dados são obrigatórias, conforme os critérios de cálculo, reconciliação e publicação das seções 2, 5 e 7.
+
 ## 3. Hierarquia de decisão
 
 Ao tomar decisões, siga esta ordem:
@@ -46,7 +57,6 @@ Se houver conflito entre fontes, explicite-o e não transforme silenciosamente u
 ## 4. Regras específicas do case
 
 - O fluxo principal deve ingerir os seis formatos/fontes descritos no contexto: CSV da Orbe, XLSX de taxas, e-mail `.eml` com anexo da Ponte, plano de contas CSV, extrato CSV Aurora e extrato OFX Meridiano.
-- Não codifique setembro, valores do exemplo, nomes de arquivos mensais ou resultados esperados como premissas permanentes. Use os dados de exemplo para conferir comportamento, mantendo a execução parametrizável para outros meses.
 - Comissão de checkout usa a taxa contratada aplicável, e não `valor_taxa` informado pela Orbe. A taxa aplicada serve para identificar divergência.
 - Comissão de remessa segue a participação da Tarvo e o arredondamento documentados nas regras de negócio. Não trate spread negativo, duplicidade ou exceções como receita normal.
 - Não confunda divergência contratual com devolução ao lojista ou outra pendência operacional; respeite a natureza definida no contexto.
