@@ -1,6 +1,6 @@
 # Gambito — fechamento Tarvo (nível alvo)
 
-Monólito modular em Python, sem servidor ou banco. Processa os arquivos locais como recebidos e gera comissões de checkout e remessas, divergências, propostas de notas, classificação dos dois bancos, pendências e rastro. Não emite notas, executa pagamentos ou acessa Slack/e-mail externos. Extras não implementados.
+Monólito modular em Python, sem servidor ou banco. Processa os arquivos locais como recebidos e gera comissões de checkout e remessas, divergências, propostas de notas, classificação dos dois bancos, pendências e rastro. Não emite notas, executa pagamentos ou acessa Slack/e-mail externos. Há módulos extras de rascunhos de contestação, snapshot de pendências para continuidade e alerta de antecipação; o faturamento posterior da Atlas continua desabilitado.
 
 ## Instalar do zero
 
@@ -71,7 +71,7 @@ Os seis arquivos obrigatórios ficam **diretamente em `saida/`**, conforme [FORM
 
 CSV UTF-8, separador `;`, decimal com ponto, datas ISO e CNPJ numérico com 14 dígitos. Colunas extras registram regras, vínculos, natureza do valor e próximo passo, sem substituir o contrato obrigatório. Cada saída monetária tem rastro assinado cuja soma fecha exatamente; valor desconhecido permanece vazio e explicitamente identificado, nunca zero inventado.
 
-`manifesto.json` é o marcador de publicação: guarda hashes, fontes, cobertura, status/motivos por parte e relatório, limitações e decisões pendentes. Consulte-o antes de consumir os CSVs. O manifesto conserva versão 8/etapa ALVO_A6 porque A7 é aceite integrado, sem novo módulo financeiro. Bloqueio é diagnosticado no resumo/manifesto; partes bloqueadas não publicam valores. Se todas estiverem bloqueadas, os seis CSVs têm apenas cabeçalhos.
+`manifesto.json` é o marcador de publicação: guarda hashes, fontes, cobertura, status/motivos por parte e relatório, limitações e decisões pendentes. Consulte-o antes de consumir os CSVs. A versão atual é 9/etapa EXTRA_E3, com alertas de antecipação sem efeito nos cálculos financeiros. Bloqueio é diagnosticado no resumo/manifesto; partes bloqueadas não publicam valores. Se todas estiverem bloqueadas, os seis CSVs têm apenas cabeçalhos.
 
 A CLI só substitui arquivos próprios com manifesto reconhecido e hashes anteriores intactos. Arquivo externo/modificado causa erro e exige destino novo. Publicação interrompida deixa marcador bloqueado; acesso transitório do Windows recebe até quatro tentativas, com espera total máxima de 350 ms. Erro persistente continua explícito.
 
@@ -87,12 +87,13 @@ O cálculo usa `Decimal` e HALF_UP por evento. Fórmulas ficam nos módulos; con
 - Estorno usa sua própria faixa e a condição da data da venda. Reversão de antecipação anula exatamente a contribuição original, sem usar a taxa atual.
 - RN-64: devolução pelo efetivamente cobrado nas operações isentas, abatendo estornos elegíveis pela origem e vigência da venda. Referência validada: R$ 15.405,85 − R$ 9,08 = **R$ 15.396,77**, com 118 origens; estorno de agosto não isento permanece fora. Esses totais servem apenas à regressão.
 - Atlas fica fora das comissões (D-07), identificada pelo CNPJ da aba antiga, sem importar taxa antiga nem estimar divergência. O contrato é decisão do comercial (Diego) e aparece como pendência operacional; quando a taxa for confirmada, setembro é faturado junto com outubro.
+- RN-65 trata o ajuste pela linha, pois o layout não distingue arquivo principal de ajuste. Estorno ou reversão com original do próprio mês ausente em todos os CSVs entra na comissão pelos dados do evento e taxa contratada na data original declarada, com pendência para o Financeiro obter a original e fechamento provisório. Arquivos presentes na pasta são presumidos recebidos antes da aprovação. O operador deve colocar ajustes posteriores à aprovação na pasta/competência seguinte; a entrada não informa horários de chegada ou aprovação, portanto o motor não pode verificar essa premissa.
 - Ponte usa participação pelo spread realizado; negativo irregular não vira receita. Ajuste AJUSTE REF preserva a origem e abate a participação uma vez. **D-10 respondida** (Financeiro, Slack 11:33; confirmada no retorno do checkpoint 2): o ajuste é mais uma operação, 50% do Spread R$ negativo, aplicado uma vez, abatendo a nota única do mês. Em setembro não há linha de ajuste.
 - D-02: tolerância inclusiva de 0,01 p.p. de spread, equivalente à fração 0,0001. Valores reportado/solicitado do negativo têm naturezas distintas (D-11).
 - Notas são propostas por saldo positivo validado; saldos não positivos geram pendência, sem transporte automático entre meses. Não somam divergência/devolução como receita.
 - Classificação bancária usa conta analítica permitida e regra única por histórico/sinal. Sem correspondência, vira pendência. Recursos de lojistas e baixas de passivo não são receita; não são geradas provisões do mês nem conciliação entre bancos. Aurora preserva linha física (L9 no exemplo); Meridiano preserva FITID e dia local.
 
-[HIPOTESES.md](HIPOTESES.md) conserva premissas e registros históricos, com o estado mais recente primeiro. Aceite técnico não ratifica decisões financeiras nem autoriza emissão/pagamento. Não há IA, reaproveitamento automático de Atlas, rascunhos de contestação ou frontend. O alerta de antecipação ficou fora desta entrega por decisão do time (D-03), com o critério registrado para quando entrar.
+[HIPOTESES.md](HIPOTESES.md) conserva premissas e registros históricos, com o estado mais recente primeiro. Aceite técnico não ratifica decisões financeiras nem autoriza emissão/pagamento. Não há IA nem frontend. O módulo de contestação gera apenas rascunhos locais, e o snapshot da Atlas não autoriza faturamento; consulte [EXTRA_ASSISTENCIA_CONTESTACOES.md](docs/EXTRA_ASSISTENCIA_CONTESTACOES.md) e [EXTRA_CONTINUIDADE_ALERTAS.md](docs/EXTRA_CONTINUIDADE_ALERTAS.md). O alerta de antecipação está ativo como pendência revisável, sem alterar comissões ou notas.
 
 ## Testes e reprodução
 

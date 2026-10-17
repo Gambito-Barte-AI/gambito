@@ -155,10 +155,13 @@ def _executar_checkout(pasta: Path, configuracao: Path, competencia: str | None 
         resultado.motivos = [str(exc)]
         return resultado
     dados_pendentes = any(p.categoria == "DADOS" for p in resultado.pendencias)
-    resultado.situacao = "PROVISORIO" if dados_pendentes or resultado.avisos else "COMPLETO"
+    orfaos = any(c.original_ausente for c in resultado.contribuicoes)
+    resultado.situacao = "PROVISORIO" if dados_pendentes or orfaos or resultado.avisos else "COMPLETO"
     resultado.motivos.extend(resultado.avisos)
     if dados_pendentes:
         resultado.motivos.append("Há linhas não calculadas; os CSVs representam somente os eventos de checkout validados")
+    if orfaos:
+        resultado.motivos.append("Ajustes órfãos do próprio mês foram calculados pela linha recebida; solicitar originais à Orbe e conferir antes de aprovar")
     return resultado
 
 

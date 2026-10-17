@@ -93,6 +93,7 @@ class Contribuicao:
     data_base_taxa: date | None = None
     ref_original: str = ""
     arquivo_original: str = ""
+    original_ausente: bool = False
 
 
 @dataclass

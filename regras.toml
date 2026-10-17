@@ -244,7 +244,7 @@ natureza = "DECISAO_TIME"
 
 [[decisoes_documentadas]]
 id = "D-03"
-descricao = "Alerta de antecipação (RN-63): não entra nesta entrega (último item da ordem de corte). Critério do time para quando entrar: só lojista com contrato bloqueado em contratos_bloqueados (hoje a Atlas); sem corte em reais; pico = maior saldo ao fim de cada dia (antecipações menos reversões vinculadas, nos eventos fornecidos); uma pendência ALERTA_ANTECIPACAO por lojista, valor = pico, citando data do pico e reversões, para Financeiro e Comercial. Não altera nenhum outro valor."
+descricao = "Alerta de antecipação (RN-63): o corte original da entrega foi superado pela ativação posterior de E3 aprovada pelo usuário, registrada em extras.alertas. Critério: só lojista com contrato bloqueado em contratos_bloqueados; sem corte em reais; pico = maior saldo ao fim de cada dia (antecipações menos reversões vinculadas, nos eventos fornecidos); uma pendência ALERTA_ANTECIPACAO por lojista, valor = pico, citando data do pico e reversões, para Financeiro e Comercial. Não altera comissões, divergências, notas ou classificações."
 fonte = "docs/documentação-geral.md RN-63 e D-03; Slack 2026-10-17 11:37, 11:49 e 12:50 (o critério do alerta é do time; o pico é razoável)"
 aprovacao = "Decisão do time registrada por Alice Carvalho às 17h36, para não deixar decisão pendente na entrega; proposta preparada com apoio de IA."
 aprovador = "Time (Alice Carvalho)"
@@ -437,7 +437,7 @@ aprovado_em = "2026-10-16T20:49:00-03:00"
 natureza = "INTERPRETACAO_TECNICA"
 pendencia_tipo = "CREDITO_NAO_IDENTIFICADO"
 motivo = "Crédito sem identificação do pagador; não representa receita (RN-52)."
-proximo_passo = "Identificar pagador e finalidade com o Financeiro antes de reclassificar; não reconhecer receita."
+proximo_passo = "Caio deve identificar pagador e finalidade com o banco até o fechamento de outubro; Financeiro revisa antes de reclassificar. Não reconhecer receita."
 quem_decide = "Financeiro"
 
 [[classificacao_aurora]]
