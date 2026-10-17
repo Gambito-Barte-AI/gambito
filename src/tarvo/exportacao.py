@@ -34,7 +34,7 @@ def resumo(resultado: Resultado) -> dict:
     processados = len(resultado.contribuicoes)
     pendentes = len(resultado.pendencias)
     return {
-        "versao": 1, "escopo": "CHECKOUT_MINIMO", "etapa": "ENTREGA_3", "situacao": resultado.situacao,
+        "versao": 1, "escopo": "CHECKOUT_MINIMO", "etapa": "ENTREGA_4", "situacao": resultado.situacao,
         "competencia": resultado.competencia, "motivos": resultado.motivos,
         "fontes": resultado.fontes, "rastro_validado": resultado.validado,
         "cobertura": {

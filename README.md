@@ -1,4 +1,4 @@
-# Gambito — Entrega 3
+# Gambito — Entrega 4: aceite do mínimo
 
 Checkout Tarvo com vendas, estornos, antecipações e reversões: lê Orbe e taxas, calcula **eventos com contrato e referências verificáveis**, valida o rastro e publica dois CSVs. Os eventos sem contrato confirmado, como a Atlas, ficam pendentes; não são estimados. Nenhuma funcionalidade do alvo foi implementada.
 
@@ -29,7 +29,7 @@ Para o data pack local, se disponível:
 
 O data pack e `Context/` não estão versionados. A banca precisa fornecer os arquivos originais. O comando não depende desses nomes: descobre um CSV com `id_transacao` e um único XLSX; a aba vigente é configurada em `regras.toml`. Mais de um candidato bloqueia a fonte, sem escolher arbitrariamente. A competência é obtida de `data_movimento`; arquivos vazios ou com múltiplos meses ficam bloqueados nesta entrega.
 
-Na validação da Entrega 2, a pasta local recebeu também `06_orbe_ajustes_tardios_set2026.csv`. Com dois relatórios Orbe, o comando acima gera corretamente `BLOQUEADO`; não há fusão ou seleção automática. Para reproduzir o recorte aprovado, coloque em `data/raw/` somente o relatório Orbe original e a planilha de taxas, copiados sem alteração, e use o primeiro comando. O relatório adicional permanece intacto e seu processamento não foi incorporado. A evidência atual está em `saida/entrega3/`; a da etapa anterior foi preservada em `saida/entrega2/`. O manifesto na raiz de `saida/` registra o bloqueio da pasta completa.
+Na validação da Entrega 2, a pasta local recebeu também `06_orbe_ajustes_tardios_set2026.csv`. Com dois relatórios Orbe, o comando acima gera corretamente `BLOQUEADO`; não há fusão ou seleção automática. Para reproduzir o recorte aprovado, coloque em `data/raw/` somente o relatório Orbe original e a planilha de taxas, copiados sem alteração, e use o primeiro comando. O relatório adicional permanece intacto e seu processamento não foi incorporado. As evidências anteriores foram preservadas em `saida/entrega2/` e `saida/entrega3/`. A Entrega 4 valida explicitamente o recorte de duas entradas; não significa aceite dos ajustes tardios ou do alvo.
 
 ## Escopo financeiro
 
@@ -62,7 +62,7 @@ O terminal exibe resumo e pendências com motivo e responsável. IDs e ordenaç�
 
 | Situação | Significado | Código de saída |
 | --- | --- | --- |
-| `COMPLETO` | Todas as linhas atendidas pelo checkout até a Entrega 3, sem pendências. Não significa alvo concluído nem substitui o aceite reproduzível da Entrega 4. | `0` |
+| `COMPLETO` | Todas as linhas de checkout calculadas, sem pendências. Não significa alvo concluído. | `0` |
 | `PROVISORIO` | CSVs válidos somente para contribuições calculadas; demais linhas identificadas como pendências. | `2` |
 | `BLOQUEADO` | Dependência inválida/ausente, competência ambígua ou falha de validação; sem CSVs atuais. | `1` |
 
@@ -87,7 +87,30 @@ As amostras são sintéticas e criadas em diretório temporário: arredondamento
 
 `regras.toml` contém os três ECs complementares confirmados, vínculo da Atlas, bloqueio por falta de confirmação comercial, período de isenção da Casa e observações esclarecidas. Valores, datas e identificadores do caso ficam nessa configuração, nunca como constantes no código de cálculo. Cada registro tem fonte e descrição da aprovação conhecida ou da interpretação técnica; datas/pessoas não informadas não são inventadas.
 
-D-07 (representação da Atlas), D-08 (devolução da Casa) e D-10 (semântica do ajuste Ponte) continuam no manifesto e em `HIPOTESES.md`. Aprovar esta entrega não ratifica essas decisões financeiras. Não é preciso API nem nova dependência para a Entrega 3.
+D-07 (representação da Atlas), D-08 (devolução da Casa) e D-10 (semântica do ajuste Ponte) continuam no manifesto e em `HIPOTESES.md`. Aprovar esta entrega não ratifica essas decisões financeiras. Não é preciso API nem nova dependência para a Entrega 4.
+
+## Aceite independente e reprodução do zero
+
+Em uma cópia nova do projeto, repita a instalação acima e coloque somente Orbe original e taxas em `data/raw/`. Execute sem chaves e sem configurar `PYTHONPATH`:
+
+```powershell
+.\.venv\Scripts\python.exe -m tarvo --dados data/raw --saida saida --regras regras.toml
+$codigo = $LASTEXITCODE
+```
+
+Código `2` é esperado quando há pendências documentadas (como Atlas). O processo gerou resultados provisórios, não falhou na validação financeira. Código `1` indica bloqueio ou erro. Não trate qualquer saída diferente de zero como fechamento concluído.
+
+O verificador independente usa apenas a biblioteca padrão, sem importar o motor:
+
+```powershell
+.\.venv\Scripts\python.exe tests/validar_saida.py --dados data/raw --saida saida --regras regras.toml --esperar PROVISORIO
+```
+
+Ele confere cabeçalhos e domínios, hashes das fontes/saídas, IDs de todas as linhas Orbe, destino único em rastro ou pendência, contagens, datas/competência, soma exata por comissão e preservação das decisões pendentes. Ele audita os artefatos; os testes de regras verificam as fórmulas e a seleção contratual.
+
+Para determinismo, rode o mesmo comando em duas pastas de saída novas (por exemplo, `saida-a` e `saida-b`) e compare os bytes dos dois CSVs e `manifesto.json`. O teste `test_execucao_instalada_fora_da_raiz_sem_chaves_e_repeticao` também verifica repetição sem depender do diretório do código. Os demais testes de aceite exercitam outro mês sintético, modalidade desconhecida, 13x, EC sem cadastro, fonte ausente, layout inválido, soma/referência adulterada e publicação interrompida.
+
+Os testes de subprocesso exigem o pacote instalado pelo comando de instalação. Nenhum dado do `Context/`, do `.env` ou de serviços externos é necessário. O verificador retorna `0` quando o artefato tem a situação esperada e é coerente; `1` quando detecta inconsistência. Aceite técnico do mínimo não encerra D-07/D-08/D-10 nem valida relatórios não processados.
 
 ## Estrutura
 

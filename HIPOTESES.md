@@ -2,7 +2,7 @@
 
 ## Escopo autorizado
 
-Arquitetura consolidada e Entregas 1, 2 e 3 autorizadas pelo usuário nesta conversa em 17/10/2026. Escopo atual: checkout com vendas, estornos, antecipações e reversões, mantendo identidade, faixas, vigências e rastro. Não implementar alvo nem antecipar o aceite ampliado da Entrega 4. O `AGENTS.md` do usuário foi relido e preservado.
+Arquitetura consolidada e Entregas 1 a 4 autorizadas pelo usuário nesta conversa em 17/10/2026. Escopo atual: checkout com vendas, estornos, antecipações e reversões, mantendo identidade, faixas, vigências e rastro; aceite e reprodução do mínimo. Não implementar alvo. O `AGENTS.md` do usuário foi relido e preservado.
 
 ## Premissas e decisões técnicas da Entrega 1
 
@@ -57,6 +57,12 @@ Metadados de regra registram as fontes disponíveis. Onde os documentos só info
 | E3-07 | Contribuição da reversão tem origem na linha nova e vínculo ao original como metadado. | Preserva a soma do rastro sem duplicar valores. O validador também exige anulação exclusiva do original. Comissão negativa/zero não gera nota ou transporte de saldo nesta entrega. |
 
 Os tratamentos conservadores não ratificam D-07, D-08 ou D-10. Não há emissão de nota, relatório de divergência, devolução, recuperação da Atlas ou processamento automático dos ajustes tardios.
+
+## Aceite técnico da Entrega 4
+
+Reprodução feita em cópia limpa dos arquivos atuais do workspace, com venv novo, instalação pelo README e sem Context/PYTHONPATH/chaves. Passaram 81 testes e duas execuções produziram CSVs/manifesto idênticos em bytes. Um verificador independente conferiu a cobertura por referência, hashes, datas e soma do rastro.
+
+O aceite se limita às duas entradas originais: 1.886 eventos calculados e 57 pendentes da Atlas, totalizando 1.943 destinos únicos. Os resultados são provisórios, sem ratificar D-07, D-08 ou D-10. A pasta completa com dois CSVs Orbe permanece bloqueada; isso não é aceite dos ajustes tardios. Ambiente efetivamente executado, limites e evidências estão em `docs/ACEITE_MINIMO.md` e `saida/entrega4/aceite.json`.
 
 ## Nova entrada durante a validação
 

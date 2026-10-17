@@ -208,7 +208,7 @@ class Entrega3Test(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             m = publicar(r, Path(tmp))
             self.assertEqual(set(m["arquivos"]), {"comissoes_por_lojista.csv", "rastro.csv"})
-            self.assertEqual(m["etapa"], "ENTREGA_3")
+            self.assertEqual(m["etapa"], "ENTREGA_4")
 
     def test_pipeline_completo_le_antecipacao_e_relacoes(self):
         from openpyxl import Workbook
