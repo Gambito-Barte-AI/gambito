@@ -1,3 +1,42 @@
+# A7 — aceite integrado e reprodução final
+
+A7 autorizada pelo usuário e validada tecnicamente em 17/10/2026 no ambiente Windows/Python 3.12.10. Preservados mínimo, A1–A6, RN-64 corrigida e D-10 pendente. Extras não iniciados. Evidências finais em `docs/ACEITE_A7.md` e `saida/alvo-a7-final/`; registros anteriores permanecem históricos.
+
+- **Aceite técnico:** seis arquivos, origens/cobertura, valores e rastro, determinismo, perda/layout inválido das fontes, publicação parcial sem saída antiga reaparecer e outro mês sintético foram conferidos. Nenhuma regra financeira alterada. Aprovação técnica não ratifica D-10 nem libera pagamento, lançamento externo ou nota fiscal.
+- **Reprodução:** cópia limpa e ambiente virtual novo, sem Context, ambiente anterior ou dados/resultados embutidos. Instalação usa índice de pacotes; execução não usa API/rede. macOS/Linux não executados: não declarar certificação dessas plataformas. Em ambiente restrito, TEMP/TMP graváveis no workspace foram necessários para inicializar pip.
+- **Publicação Windows:** WinError 5 voltou a ocorrer em substituição de arquivo durante os testes. Acrescentadas até quatro tentativas somente para PermissionError Windows 5/32/33, com espera total máxima de 350 ms. Causa externa do bloqueio não determinada; falha persistente continua explícita e não libera o manifesto final. Casos transitório/persistente testados; demais erros não são repetidos.
+- **Auditoria integrada:** produtor validado por resultado, IDs únicos entre arquivos, domínios, precisão, datas e reconciliação global complementam as auditorias por origem. Resultados conhecidos servem apenas à regressão; o cenário sintético usa outros CNPJs, valores, nomes e competência 2032-10.
+- **Pendências preservadas:** D-10 continua aguardando confirmação financeira; Atlas aguarda contrato e não tem comissão estimada; datas sem evidência continuam NAO_INFORMADO. O aceite não elimina as pendências operacionais/financeiras dos relatórios.
+
+---
+
+# A6 — Meridiano
+
+A6 autorizada e implementada em 17/10/2026, preservando mínimo, A1–A5 e RN-64 corrigida. A7 não iniciada. Evidências em `docs/ACEITE_A6.md` e `saida/alvo-a6/`; registros anteriores permanecem históricos.
+
+- **RN-46/RN-49/RN-51/RN-55:** fundos de lojistas, inclusive adiantamento de remessa, são passivo; liquidação à Ponte baixa os recursos a liquidar. Ponte Aérea é lojista, sem confundir com Ponte Câmbio. Comissão recebida baixa o recebível; não gera outra receita. Mapeamentos técnicos sob o critério de contrapartida, sem aprovação individual fictícia, ficam no TOML com proveniência.
+- **Aplicações:** principal de aplicação/resgate usa a conta da aplicação; somente rendimento explicitamente descrito vai a receita financeira. Não inferir rendimento pela diferença entre movimentos nem executar conciliação entre bancos.
+- **RN-57 / integridade:** preservar FITID e dia local do DTPOSTED; linhas físicas só complementam o diagnóstico. OFX SGML cp1252/UTF-8 declarado, sem reparo de mojibake por suposição. Campos-folha podem ter fechamento opcional; agregados precisam estar completos. Estrutura truncada, múltiplas contas/arquivos, status de erro ou moeda incompatível bloqueiam o banco.
+- **FITID repetido:** política técnica conservadora, sem regra financeira de escolha/deduplicação bancária aprovada: todas as ocorrências ficam pendentes, mesmo se iguais. Não escolher por ordem ou ocultar conflito pelo recorte de competência. FITID ausente não é inventado; linha física aparece somente na pendência diagnóstica. Valores conhecidos são preservados, desconhecidos ficam vazios.
+- **Isolamento:** os bancos compartilham o plano e a lógica de classificação, mas não dependem um do outro, do checkout ou da Ponte. Regras/valor/rastro inválidos de um banco não bloqueiam o outro. Não houve alteração das fórmulas ou registros de A1–A5.
+- **Limite da autorização:** status computacional COMPLETO pode ocorrer no pacote fornecido, sem significar aceite integrado de A7. A7 continua pendente de aprovação; extras não iniciados. D-10 continua pendente de confirmação financeira; contrato da Atlas e datas não comprovadas continuam explícitos. Nenhuma integração, instalação ou commit.
+
+---
+
+# A5 — plano de contas e Aurora
+
+A5 autorizada e implementada em 17/10/2026, preservando mínimo, A1–A4 e RN-64 corrigida. A6 não iniciada. Evidências em `docs/ACEITE_A5.md` e `saida/alvo-a5/`; os registros anteriores permanecem históricos.
+
+- **RN-46 a RN-51:** plano original lido sem correções manuais. Contrapartida deve existir, ser ANALITICA e aceitar lançamento. Baixas de folha/impostos usam passivos, sem gerar provisões do mês. Mapeamentos conta/histórico são interpretações técnicas sob o critério documentado do Financeiro, não aprovações individuais inventadas; fonte/papel/data no TOML.
+- **Classificação conservadora:** uma única regra compatível com histórico normalizado e sinal. Aliases confirmados de repasses ficam na configuração; destinatário novo exige revisão. Não há casamento por semelhança de nome nem dependência do cadastro/contrato de checkout. Crédito sem identificação não é receita. Devolução da RN-53 fica em 2.1.01.001 conforme D-06; padrão limitado à contraparte confirmada, sem estender a qualquer retorno de Pix. Transferência própria exige o destino configurado; não confirma sua chegada no outro banco.
+- **RN-52/RN-53/RN-58:** classificação conhecida pode ter pendência adicional de revisão, sem contar o movimento duas vezes na cobertura. Natureza MOVIMENTO_BANCARIO distingue valores do extrato de comissões, devolução da Casa e contestações.
+- **RN-56/RN-57/D-04:** Orbe somente classificada em recebíveis, sem conciliação parcela a parcela. Saldo negativo não gera receita/despesa ou pendência artificial. Saldo anterior/final e rodapé conhecidos são explicitados no inventário; não são movimentos. Referência é a linha física inicial, inclusive em CSV com registro multilinha; L9 pertence ao exemplo, não é constante.
+- **Dados inválidos:** linhas posteriores ao cabeçalho sem formato reconhecido permanecem pendentes. Data/valor inválido não é estimado, preenchido por zero nem descartado silenciosamente. Conta ausente/proibida ou linha inválida torna Aurora provisório; histórico sem regra e ambiguidades viram pendência de negócio, sem impor provisório por si só (D-13).
+- **Competência e isolamento:** banco deriva seu próprio mês; vários meses exigem --competencia. Datas inválidas permanecem para revisão no recorte. Falha de plano/Aurora ou de configuração de classificação não bloqueia A1–A4; falta de Orbe/Ponte/taxas não impede Aurora. Auditor relê fontes; publicação reconfere contexto e não repara adulteração silenciosamente.
+- **Pendências existentes:** D-10 continua aguardando confirmação financeira, Atlas aguarda contrato e RN-64 não foi alterada. Datas não comprovadas continuam NAO_INFORMADO. Nenhuma integração externa, nova dependência ou commit. Meridiano e extras permanecem futuros.
+
+---
+
 # A4 — notas a emitir
 
 A4 autorizada pelo usuário e implementada em 17/10/2026, preservando o mínimo, A1–A3 e a RN-64 corrigida. A5 e etapas seguintes não iniciadas. Evidências em `docs/ACEITE_A4.md` e `saida/alvo-a4/`; os registros anteriores permanecem históricos.

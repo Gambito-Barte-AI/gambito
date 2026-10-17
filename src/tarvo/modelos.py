@@ -161,3 +161,23 @@ class Resultado:
     partes: dict[str, ResultadoParte] = field(default_factory=dict)
     calculo_executado: bool = False
     parametros_notas: dict[str, dict] = field(default_factory=dict)
+    contexto_aurora: dict | None = None
+    contexto_meridiano: dict | None = None
+
+
+@dataclass(frozen=True)
+class ContaContabil:
+    origem: Origem
+    codigo: str
+    descricao: str
+    tipo: str
+    aceita_lancamento: bool
+
+
+@dataclass(frozen=True)
+class MovimentoBanco:
+    origem: Origem
+    data: date | None
+    descricao: str
+    valor: Decimal | None
+    erro: str = ""

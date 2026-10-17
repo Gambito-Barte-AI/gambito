@@ -3,7 +3,7 @@
 from collections import defaultdict
 from decimal import Decimal, DecimalException
 
-from . import notas, validacao
+from . import classificacao, notas, validacao
 from .modelos import ErroEntrada, Resultado, ResultadoParte
 
 # (fontes, resultados anteriores, relatórios). Leitores futuros não são presumidos válidos.
@@ -90,7 +90,7 @@ def preparar_partes(resultado: Resultado) -> None:
             pendencias.motivos = [f"Falha ao preparar pendências: {exc}"]
     resultado.partes["PENDENCIAS_CHECKOUT"] = pendencias
     for nome, (fontes, anteriores, relatorios) in PLANO.items():
-        a2 = nome in {"DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CASA", "REMESSAS", "DIVERGENCIAS_REMESSA", "NOTAS_CHECKOUT", "NOTAS_REMESSA"}
+        a2 = nome in {"DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CASA", "REMESSAS", "DIVERGENCIAS_REMESSA", "NOTAS_CHECKOUT", "NOTAS_REMESSA", "EXTRATO_AURORA", "EXTRATO_MERIDIANO"}
         resultado.partes.setdefault(nome, ResultadoParte(
             fontes=fontes, depende_de=anteriores, relatorios=relatorios,
             implementado=a2,
@@ -143,6 +143,8 @@ def validar_partes(resultado: Resultado) -> None:
                     validacao.validar(resultado)
                 if nome in notas.DEPENDENCIAS:
                     notas.validar(nome, parte, resultado.partes[notas.DEPENDENCIAS[nome]], resultado.parametros_notas.get(nome))
+                if nome in {"EXTRATO_AURORA", "EXTRATO_MERIDIANO"}:
+                    classificacao.validar(parte, getattr(resultado, "contexto_" + nome.removeprefix("EXTRATO_").lower()))
                 validacao.validar_parte(parte)
                 if provisorio:
                     parte.situacao = "PROVISORIO"

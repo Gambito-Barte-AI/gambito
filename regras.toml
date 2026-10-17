@@ -1,6 +1,6 @@
 versao = 1
 fonte = "docs/documentação-geral.md; aprovação técnica P0/P1 pelo usuário nesta conversa"
-escopo = "Checkout mínimo e A1/A2/A3/A4 do alvo; sem extratos ou extras"
+escopo = "Checkout mínimo e A1–A6 do alvo; evidência do aceite em docs/ACEITE_A7.md; sem extras"
 
 # Configuração de leitura, sem assumir nomes dos arquivos do mês.
 [entrada]
@@ -140,7 +140,7 @@ aprovador = "Financeiro (base da devolução); usuário nesta conversa (recorte 
 aprovado_em = "2026-10-17T12:50:00-03:00"
 natureza = "FINANCEIRA"
 
-# Decisões documentadas; A4 implementada, A5 e etapas posteriores não iniciadas.
+# Decisões documentadas; A6 implementada; aceite A7 em docs/ACEITE_A7.md.
 [[decisoes_documentadas]]
 id = "D-07"
 descricao = "Atlas fora das comissões; identidade e cobrança efetiva da Orbe preservadas nas pendências comerciais."
@@ -211,3 +211,334 @@ aprovacao = "Uma proposta única à Ponte pelo saldo da participação validada 
 aprovador = "Financeiro (regra de notas); time (D-10, confirmação financeira pendente)"
 aprovado_em = "2026-10-17T11:33:00-03:00"
 natureza = "FINANCEIRA"
+
+# A5: históricos normalizados (sem acento, minúsculos); nenhum total/data de exemplo.
+# Padrões sem correspondência ou ambíguos ficam pendentes; não identificar lojista por semelhança.
+# Repasse devolvido usa a contraparte documentada na RN-53; outro histórico exige revisão.
+# Transferência própria exige a conta de destino documentada, sem inferir titularidade de outra conta.
+
+[[decisoes_documentadas]]
+id = "D-04"
+descricao = "Aurora usa a linha física inicial do registro; L9 é a primeira transação do exemplo, não uma constante do leitor."
+fonte = "docs/documentação-geral.md RN-57 e D-04; Context/context.md decisões do time"
+aprovacao = "Decisão documentada do time: referência física, inclusive com preâmbulo."
+aprovador = "Time (decisão técnica documentada)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "DECISAO_TIME"
+
+[[decisoes_documentadas]]
+id = "D-06"
+descricao = "Repasse devolvido da RN-53 em 2.1.01.001: volta a ser devido ao lojista; motivo do retorno permanece pendente."
+fonte = "docs/documentação-geral.md RN-53 e D-06; Slack 16/10 20:49 e 17/10 09:48 (critério); decisão do time (conta)"
+aprovacao = "Financeiro aceitou 2.1.01.001 ou 2.1.01.002 com motivo; time escolheu a primeira pela obrigação de repasse."
+aprovador = "Financeiro (critério); time (escolha D-06)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "DECISAO_TIME"
+
+[[classificacao_aurora]]
+id = "AURORA_ORBE_RECEBIVEIS"
+padrao = "^ted recebida (?:[0-9./-]+ )?orbe adquirencia\\b"
+sinal = "CREDITO"
+conta_codigo = "1.1.03.001"
+fonte = "docs/documentação-geral.md RN-46 e RN-56, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_TRANSFERENCIA_PROPRIA"
+padrao = "^transf entre contas p/ bco meridiano ag 0091 cc 90233-5$"
+sinal = "DEBITO"
+conta_codigo = "1.1.09.001"
+fonte = "docs/documentação-geral.md RN-46 e RN-54, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_TARIFAS"
+padrao = "^tar (?:pacote servicos pj|ted/pix avulsas)\\b"
+sinal = "DEBITO"
+conta_codigo = "4.2.01"
+fonte = "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_FOLHA"
+padrao = "^pagto salarios\\b"
+sinal = "DEBITO"
+conta_codigo = "2.1.04.001"
+fonte = "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_INSS"
+padrao = "^gps inss\\b"
+sinal = "DEBITO"
+conta_codigo = "2.1.04.002"
+fonte = "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_FGTS"
+padrao = "^grf fgts\\b"
+sinal = "DEBITO"
+conta_codigo = "2.1.04.003"
+fonte = "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_ISS"
+padrao = "^pagto iss\\b"
+sinal = "DEBITO"
+conta_codigo = "2.1.03.003"
+fonte = "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_IRRF"
+padrao = "^debito darf 0561 irrf\\b"
+sinal = "DEBITO"
+conta_codigo = "2.1.03.004"
+fonte = "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_PIS"
+padrao = "^debito darf 8109 pis\\b"
+sinal = "DEBITO"
+conta_codigo = "2.1.03.001"
+fonte = "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_COFINS"
+padrao = "^debito darf 2172 cofins\\b"
+sinal = "DEBITO"
+conta_codigo = "2.1.03.002"
+fonte = "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_CONDOMINIO"
+padrao = "^boleto (?:condominio|aluguel)\\b"
+sinal = "DEBITO"
+conta_codigo = "4.2.02"
+fonte = "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_CLOUD"
+padrao = "^deb aut amazon web services\\b"
+sinal = "DEBITO"
+conta_codigo = "4.2.03"
+fonte = "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_SOFTWARE"
+padrao = "^cartao pj - google workspace\\b"
+sinal = "DEBITO"
+conta_codigo = "4.2.04"
+fonte = "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_CONTABILIDADE"
+padrao = "^pix enviado contabilidade\\b"
+sinal = "DEBITO"
+conta_codigo = "4.2.06"
+fonte = "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_REPASSE_LOJISTAS"
+padrao = "^pix enviado (?:rota global|novo horizonte|kiwi experience|andes expedicoes|dublin hub|sol nascente|vela turismo|mundo aberto|casa do estudante|edu abroad|oxford prep|bem-vindo exchange|escola bridge|horizonte viagens|atlas idiomas|maple study|lisboa cursos|trilha jovem|canguru intercambios|fluente idiomas|bagagem livre|campus global)(?: |$)"
+sinal = "DEBITO"
+conta_codigo = "2.1.01.001"
+fonte = "docs/documentação-geral.md RN-19 e RN-46, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_aurora]]
+id = "AURORA_CREDITO_NAO_IDENTIFICADO"
+padrao = "^pix recebido .*\\bsem identificacao\\b"
+sinal = "CREDITO"
+conta_codigo = "1.1.09.002"
+fonte = "docs/documentação-geral.md RN-52, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+pendencia_tipo = "CREDITO_NAO_IDENTIFICADO"
+motivo = "Crédito sem identificação do pagador; não representa receita (RN-52)."
+proximo_passo = "Identificar pagador e finalidade com o Financeiro antes de reclassificar; não reconhecer receita."
+quem_decide = "Financeiro"
+
+[[classificacao_aurora]]
+id = "AURORA_REPASSE_DEVOLVIDO"
+padrao = "^devolucao pix - mundo aberto\\b"
+sinal = "CREDITO"
+conta_codigo = "2.1.01.001"
+fonte = "docs/documentação-geral.md RN-53 e D-06, RN-51 e RN-61; plano Fênix (código/descrição analítica)"
+aprovacao = "D-06: repasse devolvido volta a ser devido ao lojista em 2.1.01.001; motivo da devolução requer revisão."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "DECISAO_TIME"
+pendencia_tipo = "REPASSE_DEVOLVIDO"
+motivo = "Repasse devolvido continua devido ao lojista; motivo do retorno desconhecido (RN-53/D-06)."
+proximo_passo = "Investigar motivo do retorno e validar novo repasse; não reconhecer receita nem executar pagamento automaticamente."
+quem_decide = "Financeiro"
+
+# A6: classificação Meridiano por histórico e sinal, sem datas/valores/FITIDs do exemplo.
+# Recursos recebidos de lojistas, inclusive adiantamento, não são receita (RN-46/RN-55).
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_RECURSOS_LOJISTAS"
+padrao = "^pix receb (?:lisboa cursos|mundo aberto|nordica educacao|dublin hub|casa do estudante|edu abroad|rota global|kiwi experience|canguru intercambios|novo horizonte|maple study|ponte aerea estudantil|bagagem livre|bem-vindo exchange)(?: |$)"
+sinal = "CREDITO"
+conta_codigo = "2.1.02.001"
+fonte = "docs/documentação-geral.md RN-46 e RN-55, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_LIQUIDACAO_REMESSAS"
+padrao = "^ted enviada ponte cambio sa liq operacoes$"
+sinal = "DEBITO"
+conta_codigo = "2.1.02.001"
+fonte = "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_COMISSAO_A_RECEBER"
+padrao = "^ted receb ponte cambio sa repasse comissao\\b"
+sinal = "CREDITO"
+conta_codigo = "1.1.03.002"
+fonte = "docs/documentação-geral.md RN-46 e RN-49, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_TRANSFERENCIA_PROPRIA"
+padrao = "^ted recebida tarvo pagamentos ltda - mesma titularidade$"
+sinal = "CREDITO"
+conta_codigo = "1.1.09.001"
+fonte = "docs/documentação-geral.md RN-46 e RN-54, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_APLICACAO"
+padrao = "^aplicacao automatica cdb di$"
+sinal = "DEBITO"
+conta_codigo = "1.1.02.001"
+fonte = "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_RESGATE"
+padrao = "^resgate automatico cdb di$"
+sinal = "CREDITO"
+conta_codigo = "1.1.02.001"
+fonte = "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_RENDIMENTO"
+padrao = "^rendimento aplic automatica$"
+sinal = "CREDITO"
+conta_codigo = "3.2.01"
+fonte = "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_TARIFAS"
+padrao = "^tarifa (?:manutencao conta pj|pacote cambio)$"
+sinal = "DEBITO"
+conta_codigo = "4.2.01"
+fonte = "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_SEGUROS"
+padrao = "^seguro empresarial parc\\b"
+sinal = "DEBITO"
+conta_codigo = "4.2.05"
+fonte = "docs/documentação-geral.md RN-46 e RN-50, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"
+
+[[classificacao_meridiano]]
+id = "MERIDIANO_IOF"
+padrao = "^iof s/ operacao credito$"
+sinal = "DEBITO"
+conta_codigo = "4.3.01"
+fonte = "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido"
+aprovacao = "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia."
+aprovador = "Financeiro (critério); time (mapeamento técnico)"
+aprovado_em = "NAO_INFORMADO"
+natureza = "INTERPRETACAO_TECNICA"

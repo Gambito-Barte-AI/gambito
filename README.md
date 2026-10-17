@@ -1,6 +1,6 @@
-# Gambito — A4: notas a emitir
+# Gambito — A7: aceite integrado e reprodução final
 
-Checkout Tarvo com vendas, estornos, antecipações e reversões, preservando o mínimo validado e o isolamento de A1. A2 calcula divergências contratuais de checkout e a pendência de devolução da Casa; A3 acrescenta comissão realizada da Ponte, divergências de spread e pendências com rastro. A4 gera propostas de notas a partir das comissões validadas, com `--escopo alvo`. Os seis CSVs oficiais continuam obrigatórios. Classificação bancária ainda não foi implementada; o fechamento do alvo permanece provisório. Atlas continua com contrato pendente, sem estimar comissão ou divergência. Não há emissão fiscal externa.
+Checkout Tarvo com vendas, estornos, antecipações e reversões, preservando o mínimo validado e o isolamento de A1. A2 calcula divergências contratuais de checkout e a pendência de devolução da Casa; A3 acrescenta comissão realizada da Ponte, divergências de spread e pendências com rastro. A4 gera propostas de notas a partir das comissões validadas. A5 lê o plano Fênix e classifica o Aurora; A6 acrescenta o OFX do Meridiano, com `--escopo alvo`. Os seis CSVs oficiais continuam obrigatórios. O aceite integrado de A7 está registrado em `docs/ACEITE_A7.md`, com reprodução em ambiente Python novo no Windows e preservação das entregas anteriores. Atlas continua com contrato pendente, sem estimar comissão ou divergência. Não há emissão fiscal externa.
 
 ## Instalação
 
@@ -36,7 +36,7 @@ O padrão é `--escopo checkout`: exige concluir checkout e exportação das pen
 .\.venv\Scripts\python.exe -m tarvo --dados data/raw --saida saida-alvo --regras regras.toml --escopo alvo
 ```
 
-Em macOS/Linux, use `.venv/bin/python` com os mesmos argumentos. Nesta A4, com checkout válido, `--escopo alvo` retorna `2` (`PROVISORIO`), pois os bancos continuam não implementados. O comando padrão preserva o resultado do mínimo: no case atual retorna `0`. O escopo muda o critério de conclusão e a agregação dos relatórios; não executa leitores ou fórmulas inexistentes.
+Em macOS/Linux, use `.venv/bin/python` com os mesmos argumentos. No alvo validado, com o pacote completo fornecido, `--escopo alvo` retorna `0` (`COMPLETO`). Ausência/falha de uma fonte pode produzir `2` (`PROVISORIO`) ou `1` (`BLOQUEADO`), conforme os resultados disponíveis. O aceite técnico não representa ratificação financeira de D-10 nem liberação de pagamentos ou notas. O comando padrão preserva o resultado do mínimo: no case atual retorna `0`. O escopo muda o critério de conclusão e a agregação dos relatórios; não executa leitores ou fórmulas inexistentes.
 
 Para o data pack local, se disponível:
 
@@ -49,7 +49,7 @@ Execução, testes e auditoria em **macOS/Linux**:
 ```bash
 .venv/bin/python -m tarvo --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml
 .venv/bin/python -m unittest discover -s tests -v
-.venv/bin/python tests/validar_saida.py --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml --esperar COMPLETO --esperar-fechamento PROVISORIO
+.venv/bin/python tests/validar_saida.py --dados Tarvo_Data_Pack_set2026 --saida saida --regras regras.toml --esperar COMPLETO --esperar-fechamento COMPLETO
 ```
 
 Substitua `Tarvo_Data_Pack_set2026` por `data/raw` ou pela pasta recebida. Para escolher um mês, acrescente `--competencia AAAA-MM` ao comando de execução. Os mesmos códigos de saída documentados abaixo valem nas três plataformas.
@@ -58,7 +58,7 @@ O data pack e `Context/` não estão versionados. A banca fornece os arquivos or
 
 A competência vem de `data_movimento`, nunca da data da venda original. Com vários meses, escolha explicitamente, por exemplo `--competencia 2026-09`. Linhas válidas de outros meses ficam fora do cálculo e são contadas em `ingestao.fora_competencia`. Linhas com data inválida permanecem pendentes, pois não é seguro atribuir um mês. Uma reversão cujo original esteja fora do recorte exige revisão; não é reconstruída por estimativa.
 
-A pasta completa com `01` e `06` é suportada. Também é possível executar somente relatório e taxas. O aceite atual de A4 está em `docs/ACEITE_A4.md` e `saida/alvo-a4/`. As evidências anteriores, incluindo `docs/ACEITE_A3.md`, `saida/alvo-a3/`, A2 corrigida em `saida/alvo-a2-rn64/`, A1 em `saida/alvo-a1/` e os aceites do mínimo, foram preservadas.
+A pasta completa com `01` e `06` é suportada. Também é possível executar somente relatório e taxas. A evidência final de A7 está em `docs/ACEITE_A7.md` e `saida/alvo-a7-final/`. A6 permanece preservada em `docs/ACEITE_A6.md` e `saida/alvo-a6/`. A5 permanece preservada em `docs/ACEITE_A5.md` e `saida/alvo-a5/`. A evidência de A4 em `docs/ACEITE_A4.md` e `saida/alvo-a4/` permanece preservada. As evidências anteriores, incluindo `docs/ACEITE_A3.md`, `saida/alvo-a3/`, A2 corrigida em `saida/alvo-a2-rn64/`, A1 em `saida/alvo-a1/` e os aceites do mínimo, foram preservadas.
 
 ## Escopo financeiro
 
@@ -77,7 +77,7 @@ A pasta completa com `01` e `06` é suportada. Também é possível executar som
 - A isenção confirmada da Casa usa a data da venda e o intervalo configurado. Contribuições isentas são zero com rastro. Antes/depois do intervalo, aplica-se o contrato vigente, sem estender a isenção. A devolução pelo cobrado foi confirmada na RN-64 (antiga D-08), e implementada em A2. Conforme esclarecimento da RN-64 pelo usuário em 17/10/2026, estornos de vendas isentas abatem a devolução, pelo vínculo e pela data original, mesmo que o movimento ocorra fora da vigência. Estornos de vendas não isentas ficam fora. Referência atual: R$ 15.405,85 em 117 vendas/antecipações menos R$ 9,08 do estorno elegível = R$ 15.396,77 líquidos em 118 linhas. A interpretação anterior de excluir todos os estornos foi corrigida. Nenhum total é constante no código.
 - A isenção também vale para a antecipação no seu período. A reversão de antecipação isenta permanece zero, mesmo após o fim da isenção. Estornos anteriores à isenção usam a condição anterior, com saldo negativo permitido nas comissões.
 - D-10 continua pendente de confirmação financeira. A3 usa a decisão documentada do time para o ajuste; A4 usa sua contribuição já calculada, sem aplicar 50% novamente. Propostas com ajuste mostram D-10 na discriminação e no manifesto, além da pendência de A3; exigem revisão antes da liberação.
-- A2 compara taxas contratuais e aplicadas por evento; valores são bruto × diferença de taxas, com HALF_UP por linha. Estornos entram negativos; taxa menor também diverge; truncamento com mesma taxa não diverge. Casa é concessão separada, somente em pendência; Atlas não tem divergência calculável sem contrato. Extratos e IA não são calculados.
+- A2 compara taxas contratuais e aplicadas por evento; valores são bruto × diferença de taxas, com HALF_UP por linha. Estornos entram negativos; taxa menor também diverge; truncamento com mesma taxa não diverge. Casa é concessão separada, somente em pendência; Atlas não tem divergência calculável sem contrato. IA não é utilizada nesta entrega.
 - RN-42 a RN-45: proposta por CNPJ/competência com saldo positivo no checkout; proposta única à contraparte Ponte configurada, pela soma líquida da participação no mês. Zero/negativo gera pendência financeira `SEM_NOTA:`, com rastro completo, sem nota nem transporte para outro mês. A4 não soma divergências, devoluções ou acompanhamento como receita. A nota depende somente da respectiva comissão validada e da configuração; uma comissão provisória gera proposta provisória, identificada no manifesto.
 
 ## Resultados e fechamento parcial
@@ -87,16 +87,16 @@ A pasta completa com `01` e `06` é suportada. Também é possível executar som
 - `comissoes_por_lojista.csv`: somente contribuições calculadas, agrupadas por CNPJ e linha de negócio; layout obrigatório.
 - `rastro.csv`: uma contribuição assinada por evento calculado e por pendência com valor conhecido; soma exata por `id_saida`, incluindo zero e negativos. Colunas adicionais registram contrato, taxa, faixa, regra, vínculo, tipo, data base contratual e referência original. Os IDs `CHECKOUT:...` e `PENDENCIA:...` separam os números reconciliados: valores cobrados da Atlas não entram na soma das comissões. O vínculo ao original é metadado, sem repetir seu valor e duplicar a soma. Arquivo histórico não disponível permanece vazio.
 - `pendencias.csv`: no mínimo, uma linha por origem; em A2, também grupos de contestação/devolução com detalhe no rastro, com as seis colunas oficiais e `proximo_passo`, arquivo, linha, CNPJ, categoria e natureza do valor como extras. Para Atlas, `valor_brl` é o cobrado pela Orbe. Em pendências de dados, um bruto disponível é identificado como `BRUTO_REFERENCIA`, nunca como comissão ou cobrança a executar. Valor desconhecido fica vazio e explicitamente provisório, sem rastro monetário inventado.
-- `divergencias_taxa.csv`: no escopo alvo, uma linha por diferença de taxa de checkout ou spread de remessa, com os sete campos oficiais. Contestação líquida por lojista em `pendencias.csv`, com detalhe assinado no rastro. Nas pendências agregadas, `ref_origem` mantém um `id_transacao` real (a primeira operação ordenada), com arquivo/linha correspondentes; o conjunto completo de origens e valores é ligado pelo `id_saida` no rastro. Casa tem pendência separada pelo líquido de cobranças e estornos elegíveis de vendas isentas. IDs `DIVERGENCIA:`, `CONTESTACAO_ORBE:` e `DEVOLUCAO_CHECKOUT:` distinguem as naturezas; não some esses valores como comissões. No escopo padrão, A2/A3 não são publicadas.
+- `divergencias_taxa.csv`: no escopo alvo, uma linha por diferença de taxa de checkout ou spread de remessa, com os sete campos oficiais. Contestação líquida por lojista em `pendencias.csv`, com detalhe assinado no rastro. Nas pendências agregadas, `ref_origem` mantém um `id_transacao` real (a primeira operação ordenada), com arquivo/linha correspondentes; o conjunto completo de origens e valores é ligado pelo `id_saida` no rastro. Casa tem pendência separada pelo líquido de cobranças e estornos elegíveis de vendas isentas. IDs `DIVERGENCIA:`, `CONTESTACAO_ORBE:` e `DEVOLUCAO_CHECKOUT:` distinguem as naturezas; não some esses valores como comissões. No escopo padrão, A2–A6 não são publicadas.
 - `notas_a_emitir.csv`: no escopo alvo, propostas com os seis campos oficiais, serviço e competência na discriminação. IDs `NOTA:CHECKOUT:` e `NOTA:REMESSA:`; cada contribuição da comissão é copiada ao rastro, preservando valores, sinais e vínculos. Saldos não positivos ficam em `pendencias.csv`, com IDs `SEM_NOTA:` e natureza própria. No escopo padrão, somente cabeçalho.
-- `lancamentos_classificados.csv`: somente cabeçalho, explicitamente bloqueado como etapa futura.
+- `lancamentos_classificados.csv`: no escopo alvo, movimentos Aurora e Meridiano classificados, com linha física ou FITID respectivamente, data ISO, descrição e valor preservados, conta analítica permitida, método REGRA e confiança 1. IDs `AURORA:`/`MERIDIANO:`. Histórico sem regra única ou conta permitida fica em pendência; crédito sem identificação e repasse devolvido também exigem revisão. O status agregado reflete os dois bancos. No escopo padrão, somente cabeçalho.
 - `manifesto.json`: situação, competência, hashes de cada fonte e saída, cobertura física, duplicidades, avisos, limitações, decisões documentadas/pendentes e todas as pendências por referência, tipo, categoria, próximo passo e responsável. O valor bruto de uma pendência não representa comissão nem valor a cobrar.
 
-O terminal exibe resumo, decisões, pendências e status de cada CSV; `proximo_passo` fica no manifesto e no CSV de pendências. O manifesto usa **versão 6**, etapa `ALVO_A4`, e registra os parâmetros de notas com fonte/aprovação. `situacao`, `escopo_situacao=CHECKOUT`, `rastro_validado` e `total_parcial_brl` conservam o significado legado, exclusivamente do checkout. O código de saída segue `situacao_comando`: agrega CHECKOUT e PENDENCIAS_CHECKOUT no escopo padrão, ou todas as partes no escopo alvo. Nos casos normais do mínimo os códigos e os seis CSVs permanecem iguais.
+O terminal exibe resumo, decisões, pendências e status de cada CSV; `proximo_passo` fica no manifesto e no CSV de pendências. O manifesto usa **versão 8**, etapa `ALVO_A6`, e registra os parâmetros de notas e classificação com fonte/aprovação. `situacao`, `escopo_situacao=CHECKOUT`, `rastro_validado` e `total_parcial_brl` conservam o significado legado, exclusivamente do checkout. O código de saída segue `situacao_comando`: agrega CHECKOUT e PENDENCIAS_CHECKOUT no escopo padrão, ou todas as partes no escopo alvo. Nos casos normais do mínimo os códigos e os seis CSVs permanecem iguais.
 
 `partes` declara situação, motivos, dependências de fontes/resultados, validação e cobertura de cada parte. `fechamento` sempre resume **todo o alvo**, inclusive etapas não implementadas: completo somente com todas as partes completas; provisório com ao menos uma parte disponível e alguma incompleta; bloqueado quando todas estão bloqueadas. Pendência de negócio não impõe provisório ao módulo, conforme D-13.
 
-`resultados` identifica por CSV os produtores, as partes bloqueadas, a situação no escopo escolhido e `situacao_alvo`. Comissões, divergências e notas estão disponíveis para checkout e remessa; extratos continuam bloqueados no alvo. A cobertura das partes NOTAS conta saldos de comissão de origem, não transações físicas nem quantidade de notas; vários saldos de remessa compõem uma única nota. Não confunda total do checkout com total das outras linhas de negócio. IDs e ordenação são estáveis; mesma entrada e regras geram os mesmos arquivos.
+`resultados` identifica por CSV os produtores, as partes bloqueadas, a situação no escopo escolhido e `situacao_alvo`. Comissões, divergências e notas estão disponíveis para checkout e remessa; Aurora e Meridiano estão disponíveis, sujeitos às próprias fontes e regras. A cobertura das partes NOTAS conta saldos de comissão de origem, não transações físicas nem quantidade de notas; vários saldos de remessa compõem uma única nota. Não confunda total do checkout com total das outras linhas de negócio. IDs e ordenação são estáveis; mesma entrada e regras geram os mesmos arquivos.
 
 | Situação | Significado | Código de saída |
 | --- | --- | --- |
@@ -121,7 +121,7 @@ Coloque os e-mails `.eml` na pasta de entrada. O leitor encontra anexos XLSX e c
 - Diferença de spread usa o percentual, PTAX e valor ME pelo valor cheio. Tolerância inclusiva D-02 no TOML; não recalcular a participação pela diferença contratual. Spread contratual em branco/padrão usa 1,5% conforme RN-32; CNPJ novo preserva comissão realizada e exige cadastro comercial. A vigência de spread da Mundo Aberto fica restrita ao início confirmado de julho.
 - Negativo irregular fica fora da comissão/divergências normais. D-11: `valor_brl` e `valor_solicitado_brl` contêm realizado − spread contratado × PTAX × valor ME; `valor_reportado_brl` conserva o negativo original. O rastro fecha com o principal, sem inverter o sinal. Pedido desconhecido permanece vazio e provisório.
 - AJUSTE REF é reconhecido antes do negativo irregular e da duplicidade. A linha tem número próprio e contribuição negativa pela participação, uma única vez. A competência declarada no novo relatório (ou seleção explícita, se não declarada) determina o mês do ajuste; sem ambos, usa-se a contratação da nova linha, registrada como premissa. `ref_original` e o rastro preservam a operação anterior; arquivo histórico ausente permanece vazio.
-- D-10 continua pendente: aplicar 50% é decisão documentada do time, não confirmação financeira. Cada ajuste gera pendência para revisão do Financeiro. A4 fará as notas; nesta etapa nenhuma nota é calculada.
+- D-10 continua pendente: aplicar 50% é decisão documentada do time, não confirmação financeira. Cada ajuste gera pendência para revisão do Financeiro. A4 deriva a proposta do saldo validado, com ressalva do ajuste, sem aplicar novamente o percentual.
 - Acompanhamento do TED usa a participação calculada para conferência futura; não cria recebimento nem supõe desconto da Ponte.
 
 Os extras de D-11 e `ref_original`/linha física no rastro são publicados somente no escopo alvo, mantendo as colunas e os seis CSVs do mínimo. Fonte Orbe ausente não bloqueia Ponte. Sem planilha, a comissão realizada permanece disponível; comparação contratual fica bloqueada. Se houver negativo sem contrato, seu pedido fica desconhecido e REMESSAS provisório, conservando as comissões conhecidas.
@@ -173,7 +173,7 @@ O auditor conserva `--esperar` como expectativa do checkout e aceita `--esperar-
 
 Para determinismo, rode o mesmo comando em duas pastas de saída novas (por exemplo, `saida-a` e `saida-b`) e compare os bytes dos seis CSVs e `manifesto.json`. O teste `test_execucao_instalada_fora_da_raiz_sem_chaves_e_repeticao` também verifica repetição sem depender do diretório do código. Os demais testes de aceite exercitam outro mês sintético, modalidade desconhecida, 13x, EC sem cadastro, fonte ausente, layout inválido, soma/referência adulterada e publicação interrompida.
 
-Os testes de subprocesso exigem o pacote instalado pelo comando de instalação. Nenhum dado do `Context/`, do `.env` ou de serviços externos é necessário. O verificador retorna `0` quando o artefato tem a situação esperada e é coerente; `1` quando detecta inconsistência. Aceite técnico não confirma o contrato da Atlas, não responde à pergunta financeira de D-10 e não valida funcionalidades futuras do alvo. D-02 está aplicada: 0,01 p.p. = fração 0,0001, com diferenças no limite inclusive tratadas como arredondamento. D-04 (Aurora L9 físico) permanece futura; não há leitor ou motor de extratos nesta entrega.
+Os testes de subprocesso exigem o pacote instalado pelo comando de instalação. Nenhum dado do `Context/`, do `.env` ou de serviços externos é necessário. O verificador retorna `0` quando o artefato tem a situação esperada e é coerente; `1` quando detecta inconsistência. Aceite técnico não confirma o contrato da Atlas, não responde à pergunta financeira de D-10 e não valida funcionalidades futuras do alvo. D-02 está aplicada: 0,01 p.p. = fração 0,0001, com diferenças no limite inclusive tratadas como arredondamento. D-04 está implementada: a referência é a linha física inicial do registro; L9 é o primeiro movimento do exemplo, sem constante no leitor. Meridiano e o aceite integrado A7 foram validados no ambiente Windows documentado.
 
 ## Estrutura
 
@@ -181,4 +181,52 @@ Os testes de subprocesso exigem o pacote instalado pelo comando de instalação.
 
 A4 acrescenta `notas.py` para a projeção das comissões validadas; a publicação revalida sua correspondência exata com valores e origens, bloqueando somente o dependente se houver adulteração. O auditor independente `tests/auditoria_a4.py` reconstrói saldos a partir dos CSVs auditados e confere tomadores, competência, ausência de transporte, sinais e metadados de cada origem.
 
-A proposta de expansão está em [docs/EVOLUCAO_ALVO.md](docs/EVOLUCAO_ALVO.md), com A1–A4 implementadas e A5–A7 exclusivamente como planejamento. Nenhuma etapa futura é iniciada por executar o comando atual.
+A proposta de expansão está em [docs/EVOLUCAO_ALVO.md](docs/EVOLUCAO_ALVO.md), com A1–A6 implementadas e A7 validada tecnicamente no ambiente documentado; extras não iniciados. Nenhuma etapa futura é iniciada por executar o comando atual.
+
+## Plano Fênix e Aurora (A5)
+
+O plano é identificado pelo cabeçalho `COD_CONTA` e o extrato pelo cabeçalho bancário, sem nomes fixos. Aceitam UTF-8 e o encoding legado do pack. Mais de um candidato bloqueia a dependência, sem escolher pelo nome. Códigos repetidos ou estrutura inválida bloqueiam o plano; somente contas ANALITICA com ACEITA_LANCTO=S podem ser usadas. A contrapartida vem de `classificacao_aurora` no TOML, com fonte, critério, aprovador/papel e data; mapeamentos técnicos não recebem aprovação financeira fictícia.
+
+O histórico é normalizado apenas para correspondência (minúsculas, sem acento, espaços normalizados); a saída preserva a descrição original. Uma única regra deve corresponder ao histórico e ao sinal. Os aliases de repasse confirmados ficam na configuração; não há identificação de lojista por nome semelhante nem associação obrigatória ao checkout. Novo destinatário/histórico sem regra vira pendência financeira, sem criar conta ou receita. A devolução da RN-53 usa a contraparte confirmada na regra; outra devolução exige revisão. Transferência própria exige o destino configurado; não confirma recebimento no outro banco.
+
+Folha, INSS, FGTS, ISS e DARFs conhecidos baixam passivos; não são geradas provisões. Créditos Orbe baixam recebíveis, sem conciliação parcela a parcela. Saldo anterior/final e rodapé conhecidos não são movimentos; linhas desconhecidas posteriores ao cabeçalho recebem diagnóstico, sem descarte silencioso. Cada movimento do recorte tem um destino principal (classificado ou pendente); uma pendência adicional de revisão não duplica a cobertura. Cada saída monetária tem rastro próprio com valor assinado e linha física; a classificação também aponta para a regra e a linha da conta no plano.
+
+A competência do Aurora é independente do checkout e vem das datas dos movimentos. Se houver vários meses, informe `--competencia AAAA-MM`; outros meses são contados em `fontes.aurora.fora_competencia`. Datas inválidas não podem ser descartadas pelo recorte. Não são exigidos dados Orbe, Ponte ou taxas para classificar o Aurora. Sem plano/extrato ou com layout inválido, somente Aurora fica bloqueado; o mínimo e A1–A4 continuam disponíveis conforme suas próprias fontes.
+
+A publicação reconfere origens, contas, valores, regras e cobertura. `tests/auditoria_a5.py` relê o plano e o extrato com biblioteca padrão, sem importar o motor. O manifesto detalha EXTRATO_AURORA e EXTRATO_MERIDIANO; ausência/falha de um banco não impede o outro. A6 reutiliza os mesmos critérios de conta permitida, cobertura e validação de domínio.
+
+## Meridiano (A6)
+
+O leitor aceita o contrato OFX SGML com encoding declarado cp1252 ou UTF-8, preservando acentos, FITID e o dia local de DTPOSTED, sem conversão UTC. Campos-folha podem ter fechamento omitido; agregados precisam estar completos. Mais de um OFX, várias contas no mesmo arquivo, moeda diferente de BRL, status bancário de erro ou estrutura truncada bloqueiam somente Meridiano. Não há conversão cambial, reparo de encoding por adivinhação ou preenchimento de valor desconhecido por zero.
+
+FITID repetido deixa todas as ocorrências pendentes, mesmo com valores iguais: não existe regra oficial autorizando escolher uma delas no banco. A verificação ocorre antes do recorte mensal; um conflito em outro mês não desaparece pelo filtro. FITID ausente usa referência física somente no diagnóstico, sem inventar FITID ou classificar o movimento. Pendências Meridiano incluem a linha física no ID para distinguir ocorrências, preservando o FITID original em ref_origem quando disponível.
+
+`classificacao_meridiano` contém critérios documentados por histórico e sinal. Recursos recebidos de lojistas e sua liquidação à Ponte movimentam o passivo de remessas; não são receita. A Ponte Aérea é lojista, independente da Ponte Câmbio. Comissão recebida baixa o recebível; aplicações/resgates movimentam a conta de aplicação, sem inferir rendimento pela diferença; rendimento explicitamente informado, tarifas, seguro e IOF seguem suas contas. Novos históricos ou correspondências ambíguas exigem revisão. Não há conciliação entre bancos nem confirmação automática de transferências em trânsito.
+
+`tests/auditoria_a6.py` relê OFX com HTMLParser da biblioteca padrão e reutiliza a conferência independente das contas/origens; não importa o motor. Os resultados computacionais do pacote completo podem ficar COMPLETO mesmo com pendências de negócio, conforme D-13. A7 acrescentou a auditoria global dos seis arquivos e a reprodução documentada; extras continuam fora do escopo.
+
+## Aceite integrado e reprodução (A7)
+
+Aceite técnico executado em Windows/Python 3.12.10, inclusive em uma cópia limpa com ambiente virtual novo e dependências instaladas conforme o projeto. A instalação inicial usa acesso ao índice de pacotes (inclusive backend de build); a execução não requer rede, chave de API, Context ou saídas prévias. macOS/Linux têm instruções, mas não foram executados/certificados nesta sessão.
+
+Em ambientes Windows restritos, se a criação do ambiente falhar por acesso à pasta temporária do usuário, antes de `python -m venv .venv` use uma pasta gravável no projeto:
+
+```powershell
+New-Item -ItemType Directory -Force .tmp | Out-Null
+$env:TEMP = (Join-Path $PWD '.tmp')
+$env:TMP = $env:TEMP
+```
+
+Para repetir o aceite de um conjunto completo de fontes, depois da instalação, escolha duas pastas novas:
+
+```powershell
+.\.venv\Scripts\python.exe tests/aceite_integrado.py --dados Tarvo_Data_Pack_set2026 --regras regras.toml --saida saida/validacao-nova --evidencias .tmp/aceite-novo
+```
+
+O comando executa os seis resultados e o mínimo fora da raiz, audita fontes/formatos/valores/rastros, compara uma repetição em bytes, testa perda/layout inválido de cada fonte em cópias isoladas, bloqueio sem configuração, remoção de saídas antigas e outubro/2032 sintético com ajuste tardio e D-10. Falha de execução ou conferência reprova o aceite; configuração ausente permite apenas conferir o bloqueio estrutural, sem declarar cálculo financeiro validado. `resultado.json` só recebe aprovado=true após todas as verificações. Os originais são somente lidos.
+
+Para comparar especificamente o mesmo pacote original com as evidências preservadas, acrescente `--referencia saida/alvo-a6 --minimo saida/alvo-a1`. Não use essas referências para julgar outro dataset: números conhecidos são regressão, não regra. Para fontes parciais, use o comando normal e confira os estados/motivos no manifesto; o aceite completo exige todas as dependências.
+
+A auditoria integrada acrescenta IDs únicos entre relatórios, produtor validado, domínios, datas, precisão, destinos conhecidos e reconciliação global, além das auditorias específicas de cada fonte. O terminal informa contagem por método em cada banco. Publicação mantém o manifesto como marcador final; bloqueios transitórios de acesso do Windows têm até quatro tentativas de substituição atômica (pausas totais de até 350 ms). Falha persistente continua sendo erro; não é transformada em fechamento válido.
+
+O manifesto mantém versão 8/etapa ALVO_A6 porque A7 valida a entrega existente, sem novo módulo financeiro ou alteração de layout. O registro de aceite e as evidências finais de A7 ficam separados. D-10, contrato da Atlas e datas de aprovação não comprovadas continuam explícitos; aceite técnico não equivale à aprovação dessas decisões. Nenhum extra, pagamento, emissão fiscal ou integração externa foi acrescentado.

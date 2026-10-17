@@ -1,4 +1,4 @@
-"""Coordena checkout, remessas e notas; fontes futuras não bloqueiam essas partes."""
+"""Coordena checkout, remessas, notas e bancos com dependências independentes."""
 
 from hashlib import sha256
 from decimal import Decimal, DecimalException
@@ -7,8 +7,8 @@ import re
 from zipfile import BadZipFile
 from xml.etree.ElementTree import ParseError
 
-from . import checkout, divergencias, notas, remessas, regras, validacao
-from .leitores import orbe, ponte, taxas
+from . import checkout, classificacao, divergencias, notas, remessas, regras, validacao
+from .leitores import aurora, meridiano, orbe, plano_contas, ponte, taxas
 from .modelos import Cadastro, ErroEntrada, Resultado, ResultadoParte
 from .partes import preparar_partes
 
@@ -18,8 +18,57 @@ def executar(pasta: Path, configuracao: Path, competencia: str | None = None) ->
     _executar_remessas(resultado, pasta, configuracao, competencia)
     preparar_partes(resultado)
     notas.preparar(resultado, configuracao)
+    _executar_banco(resultado, pasta, configuracao, competencia, "AURORA", aurora)
+    _executar_banco(resultado, pasta, configuracao, competencia, "MERIDIANO", meridiano)
     preparar_partes(resultado)
     return resultado
+
+
+def _executar_banco(resultado, pasta, configuracao, competencia, banco, leitor_banco):
+    parte = ResultadoParte(fontes=(banco.lower(), "plano_contas", "regras"), implementado=True,
+        relatorios=("lancamentos_classificados.csv", "pendencias.csv"))
+    resultado.partes[f"EXTRATO_{banco}"] = parte
+    contas, movimentos = None, None
+    for nome, leitor in (("plano_contas", plano_contas), (banco.lower(), leitor_banco)):
+        try:
+            caminho = leitor.descobrir(pasta)
+            detalhe = dict(arquivo=caminho.name, sha256=sha256(caminho.read_bytes()).hexdigest())
+            resultado.fontes[nome] = dict(detalhe, situacao="BLOQUEADO")
+            if nome == "plano_contas":
+                contas = leitor.ler(caminho)
+                detalhe["contas_lidas"] = len(contas)
+            else:
+                movimentos, ingestao = leitor.ler(caminho)
+                meses = sorted({m.data.strftime("%Y-%m") for m in movimentos if m.data})
+                if competencia is not None and not re.fullmatch(r"[0-9]{4}-(?:0[1-9]|1[0-2])", competencia):
+                    raise ErroEntrada("Competência deve ter formato AAAA-MM")
+                if competencia is None and len(meses) > 1:
+                    raise ErroEntrada(f"{banco}: vários meses; informe --competencia AAAA-MM")
+                mes = competencia or (meses[0] if meses else None)
+                selecionados = [m for m in movimentos if not m.data or m.data.strftime("%Y-%m") == mes]
+                detalhe.update(ingestao=ingestao, competencia=mes, fora_competencia=len(movimentos)-len(selecionados))
+                movimentos = selecionados
+            resultado.fontes[nome] = dict(detalhe, situacao="DISPONIVEL")
+        except (ErroEntrada, OSError, ValueError) as exc:
+            resultado.fontes.setdefault(nome, {})
+            resultado.fontes[nome].update(situacao="BLOQUEADO", motivo=str(exc))
+            if nome == banco.lower():
+                movimentos = None
+    try:
+        config = regras.carregar(configuracao)
+        parametros = classificacao.parametros(config, banco)
+        fonte = resultado.fontes["regras"]
+        fonte["parametros_classificacao_" + banco.lower()] = parametros
+        for r in parametros:
+            if r["aprovado_em"] == "NAO_INFORMADO":
+                fonte.setdefault("metadados_incompletos", []).append(dict(id=r["id"], campo="aprovado_em", valor="NAO_INFORMADO"))
+        if contas is None or movimentos is None:
+            raise ErroEntrada(f"{banco}: depende de extrato e plano de contas válidos")
+        contexto = dict(movimentos=movimentos, contas=contas, regras=parametros, banco=banco)
+        setattr(resultado, "contexto_" + banco.lower(), contexto)
+        resultado.partes[f"EXTRATO_{banco}"] = classificacao.calcular(**contexto)
+    except (ErroEntrada, OSError, ValueError, KeyError, TypeError, DecimalException) as exc:
+        parte.motivos = [f"{banco}: {exc}"]
 
 
 def _executar_checkout(pasta: Path, configuracao: Path, competencia: str | None = None) -> Resultado:

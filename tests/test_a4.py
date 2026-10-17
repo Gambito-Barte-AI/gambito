@@ -63,7 +63,8 @@ natureza="INTERPRETACAO_TECNICA"
         self.assertEqual(b[0]["tomador"], "Contraparte sintética")
         self.assertIn("2032-04", b[0]["discriminacao"])
         self.assertEqual(m["resultados"]["notas_a_emitir.csv"]["situacao"], "COMPLETO")
-        self.assertFalse(m["partes"]["EXTRATO_AURORA"]["implementado"])
+        self.assertTrue(m["partes"]["EXTRATO_AURORA"]["implementado"])
+        self.assertEqual(m["partes"]["EXTRATO_AURORA"]["situacao"], "BLOQUEADO")
 
     def test_checkout_nao_agrupa_por_nome_do_estabelecimento(self):
         livro = load_workbook(self.dados / "taxas.xlsx")

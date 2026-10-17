@@ -39,6 +39,10 @@ class A1Test(unittest.TestCase):
             cobertura=dict(linhas_lidas=1, calculadas=1, pendentes=0, bloqueadas=0))
 
     def registrar_bancos(self, resultado):
+        # Estes testes isolam a coordenação com saídas fictícias, sem regras contábeis.
+        dominio = patch("tarvo.classificacao.validar")
+        dominio.start()
+        self.addCleanup(dominio.stop)
         for nome in ("aurora", "meridiano", "plano_contas"):
             resultado.fontes[nome] = {"situacao": "DISPONIVEL"}
         resultado.partes["EXTRATO_AURORA"] = self.banco("AURORA", "L9")

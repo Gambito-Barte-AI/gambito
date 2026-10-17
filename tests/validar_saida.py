@@ -72,6 +72,12 @@ def verificar_partes(manifesto):
     if manifesto.get("versao", 0) >= 6:
         futuras -= {"NOTAS_CHECKOUT", "NOTAS_REMESSA"}
         implementadas |= {"NOTAS_CHECKOUT", "NOTAS_REMESSA"}
+    if manifesto.get("versao", 0) >= 7:
+        futuras.remove("EXTRATO_AURORA")
+        implementadas.add("EXTRATO_AURORA")
+    if manifesto.get("versao", 0) >= 8:
+        futuras.remove("EXTRATO_MERIDIANO")
+        implementadas.add("EXTRATO_MERIDIANO")
     exigir(set(partes) == implementadas | futuras, "Partes ausentes ou desconhecidas")
     for nome, parte in partes.items():
         estado = parte.get("situacao")
@@ -146,9 +152,14 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
         exigir(resultados[nome].get("linhas") == len(linhas), f"Contagem incorreta: {nome}")
         exigir(resultados[nome].get("situacao") in {"COMPLETO", "PROVISORIO", "BLOQUEADO"}, f"Status inválido: {nome}")
     partes = verificar_partes(manifesto) if manifesto.get("versao", 0) >= 3 else {}
+    if manifesto.get("versao", 0) >= 8:
+        from auditoria_integrada import verificar as verificar_integrada
+        verificar_integrada(manifesto, arquivos)
     if esperar_fechamento:
         exigir(manifesto.get("fechamento", {}).get("situacao") == esperar_fechamento, "Fechamento diferente do esperado")
-    vazios = ("lancamentos_classificados.csv",)
+    vazios = ()
+    if manifesto.get("versao", 0) < 7 or manifesto.get("escopo_comando") == "checkout":
+        vazios += ("lancamentos_classificados.csv",)
     if manifesto.get("versao", 0) < 6 or manifesto.get("escopo_comando") == "checkout":
         vazios += ("notas_a_emitir.csv",)
     if manifesto.get("versao", 0) < 4 or manifesto.get("escopo_comando") == "checkout":
@@ -163,6 +174,12 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     if manifesto.get("versao", 0) >= 6:
         from auditoria_a4 import verificar as verificar_a4
         verificar_a4(manifesto, arquivos, configuracao)
+    if manifesto.get("versao", 0) >= 7:
+        from auditoria_a5 import verificar as verificar_a5
+        verificar_a5(manifesto, arquivos, configuracao, dados, regras)
+    if manifesto.get("versao", 0) >= 8:
+        from auditoria_a6 import verificar as verificar_a6
+        verificar_a6(manifesto, arquivos, configuracao, dados, regras)
     rastros = arquivos["rastro.csv"]
     if situacao == "BLOQUEADO" and not any(arquivos.values()):
         exigir(not any(arquivos.values()) and (partes or all(r["situacao"] == "BLOQUEADO" for r in resultados.values()))
@@ -317,8 +334,9 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     somas = defaultdict(lambda: Decimal(0))
     por_rastro = {l["ref_origem"]: l for l in rastros}
     competencia = manifesto.get("competencia")
-    exigir(isinstance(competencia, str) and re.fullmatch(r"[0-9]{4}-[0-9]{2}", competencia),
-           "Competência inválida")
+    if situacao != "BLOQUEADO":
+        exigir(isinstance(competencia, str) and re.fullmatch(r"[0-9]{4}-[0-9]{2}", competencia),
+               "Competência inválida")
     for linha in comissoes:
         exigir(re.fullmatch(r"[0-9]{14}", linha["cnpj"]) and linha["lojista"].strip()
                and linha["linha_negocio"] == "CHECKOUT", "Domínio da comissão inválido")

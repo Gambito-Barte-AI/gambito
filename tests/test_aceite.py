@@ -226,7 +226,7 @@ natureza = "FINANCEIRA"
         caminho = self.saida / "pendencias.csv"
         caminho.write_bytes(caminho.read_bytes().replace(b";1.00;", b";9.99;"))
         self.regravar_hash(caminho.name)
-        with self.assertRaisesRegex(ErroAceite, "Valor da pendência CSV"):
+        with self.assertRaisesRegex(ErroAceite, "Valor da pendência CSV|Soma do rastro"):
             self.auditar("PROVISORIO")
 
     def test_auditor_detecta_rastro_de_pendencia_adulterado(self):
@@ -235,7 +235,7 @@ natureza = "FINANCEIRA"
         caminho = self.saida / "rastro.csv"
         caminho.write_bytes(caminho.read_bytes().replace(b";1.00;", b";9.99;"))
         self.regravar_hash(caminho.name)
-        with self.assertRaisesRegex(ErroAceite, "Rastro da pendência"):
+        with self.assertRaisesRegex(ErroAceite, "Rastro da pendência|Soma do rastro"):
             self.auditar("PROVISORIO")
 
     def test_referencias_documentais_e_decisoes_resolvidas(self):

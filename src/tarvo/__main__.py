@@ -1,6 +1,7 @@
 """Uso: python -m tarvo --dados <pasta> --saida <pasta> --regras regras.toml."""
 
 import argparse
+from collections import Counter
 from decimal import Decimal
 from pathlib import Path
 import sys
@@ -17,7 +18,7 @@ def main(argv=None) -> int:
     parser.add_argument("--regras", default=Path("regras.toml"), type=Path)
     parser.add_argument("--competencia", help="AAAA-MM; obrigatório quando as entradas têm vários meses")
     parser.add_argument("--escopo", choices=["checkout", "alvo"], default="checkout",
-                        help="Critério de conclusão; alvo inclui etapas ainda não implementadas")
+                        help="Critério de conclusão; alvo agrega todos os resultados")
     argumentos = parser.parse_args(argv)
     try:
         if argumentos.saida.resolve() == argumentos.dados.resolve():
@@ -47,7 +48,7 @@ def main(argv=None) -> int:
     for nome, detalhe in manifesto["resultados"].items():
         print(f"RESULTADO {nome}: {detalhe['situacao']} ({detalhe['linhas']} linhas)")
     if argumentos.escopo == "alvo":
-        for nome in ("REMESSAS", "DIVERGENCIAS_REMESSA", "NOTAS_CHECKOUT", "NOTAS_REMESSA"):
+        for nome in ("REMESSAS", "DIVERGENCIAS_REMESSA", "NOTAS_CHECKOUT", "NOTAS_REMESSA", "EXTRATO_AURORA", "EXTRATO_MERIDIANO"):
             parte = manifesto["partes"][nome]
             print(f"PARTE {nome}: {parte['situacao']}")
             for motivo in parte["motivos"]:
@@ -58,6 +59,15 @@ def main(argv=None) -> int:
         print(f"Ponte: competência {resultado.fontes.get('ponte', {}).get('competencia') or 'não determinada'}; participação {total} BRL")
         for aviso in resultado.fontes.get("ponte", {}).get("avisos", []):
             print(f"AVISO PONTE: {aviso}")
+        for banco in ("AURORA", "MERIDIANO"):
+            parte = resultado.partes["EXTRATO_" + banco]
+            if not parte.validado:
+                print(f"CLASSIFICAÇÃO {banco}: indisponível; resultado bloqueado")
+                continue
+            lancamentos = parte.linhas.get("lancamentos_classificados.csv", [])
+            metodos = Counter(l["metodo"] for l in lancamentos)
+            detalhe = ", ".join(f"{k}={v}" for k,v in sorted(metodos.items())) or "sem movimentos classificados"
+            print(f"CLASSIFICAÇÃO {banco}: {len(lancamentos)} movimentos; {detalhe}")
     print(f"Manifesto: {argumentos.saida / 'manifesto.json'}")
     return {"COMPLETO": 0, "PROVISORIO": 2, "BLOQUEADO": 1}[manifesto["situacao_comando"]]
 

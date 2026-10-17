@@ -6,6 +6,7 @@ from hashlib import sha256
 from io import StringIO
 import json
 import os
+import time
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -15,6 +16,18 @@ from .contratos import ARQUIVOS, COLUNAS_MINIMO
 from .partes import preparar_partes, selecionar, agregar_situacoes
 
 MANIFESTO = "manifesto.json"
+
+
+def _substituir(origem, destino):
+    """Tolera bloqueio breve de arquivo no Windows; falha persistente continua explícita."""
+    for tentativa in range(4):
+        try:
+            os.replace(origem, destino)
+            return
+        except PermissionError as exc:
+            if os.name != "nt" or getattr(exc, "winerror", None) not in {5, 32, 33} or tentativa == 3:
+                raise
+            time.sleep(0.05 * 2 ** tentativa)
 
 
 def csv_bytes(linhas: list[dict], colunas: list[str]) -> bytes:
@@ -29,7 +42,7 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
     processados = len(resultado.contribuicoes) if resultado.partes["CHECKOUT"].validado else 0
     pendentes = len(resultado.pendencias) if resultado.partes["PENDENCIAS_CHECKOUT"].validado else 0
     dados = {
-        "versao": 6, "escopo": "CHECKOUT_MINIMO", "etapa": "ALVO_A4", "situacao": resultado.situacao,
+        "versao": 8, "escopo": "CHECKOUT_MINIMO", "etapa": "ALVO_A6", "situacao": resultado.situacao,
         "escopo_situacao": "CHECKOUT",
         "competencia": resultado.competencia, "motivos": resultado.motivos,
         "fontes": resultado.fontes, "rastro_validado": resultado.validado and resultado.situacao != "BLOQUEADO",
@@ -56,7 +69,7 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
         } for p in resultado.pendencias],
         "decisoes_financeiras_pendentes": resultado.decisoes_pendentes,
         "decisoes_documentadas": resultado.decisoes_documentadas,
-        "fora_do_escopo": ["extratos"],
+        "fora_do_escopo": ["extras"],
     }
 
     escolhidas = selecionar(resultado, escopo)
@@ -149,11 +162,11 @@ def publicar(resultado: Resultado, pasta: Path, escopo: str = "checkout") -> dic
         }
         marcador = staging / "interrompido.json"
         marcador.write_text(json.dumps(interrompido, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        os.replace(marcador, caminho_manifesto)
+        _substituir(marcador, caminho_manifesto)
         for nome in ARQUIVOS:
             if nome in conteudos:
-                os.replace(staging / nome, pasta / nome)
+                _substituir(staging / nome, pasta / nome)
             elif (pasta / nome).exists():
                 (pasta / nome).unlink()  # somente arquivos próprios, com hash verificado acima
-        os.replace(staging / MANIFESTO, caminho_manifesto)
+        _substituir(staging / MANIFESTO, caminho_manifesto)
     return dados
