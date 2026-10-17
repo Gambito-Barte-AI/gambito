@@ -1,3 +1,16 @@
+# A4 — notas a emitir
+
+A4 autorizada pelo usuário e implementada em 17/10/2026, preservando o mínimo, A1–A3 e a RN-64 corrigida. A5 e etapas seguintes não iniciadas. Evidências em `docs/ACEITE_A4.md` e `saida/alvo-a4/`; os registros anteriores permanecem históricos.
+
+- **RN-42 a RN-45:** propostas derivadas exclusivamente das comissões validadas, com valores já arredondados. Checkout por CNPJ/competência; remessa em uma única proposta por competência à Ponte configurada, incluindo contribuições negativas regulares de ajuste na soma. Sem notas por lojista da remessa nem nota complementar.
+- **RN-43:** saldo zero/negativo não gera nota; gera pendência financeira com valor assinado e origens completas. Não existe transporte automático, compensação entre competências ou recuperação de comissões de meses anteriores. Estabelecimento sem comissão calculável, como Atlas sem contrato, não recebe proposta estimada nem pendência fictícia de saldo zero.
+- **D-10:** permanece pendente de confirmação financeira. A4 utiliza a contribuição já calculada por A3, sem reaplicar o percentual. Ajuste aparece no rastro, na pendência existente e na discriminação/motivos da proposta; proposta não representa liberação fiscal/financeira.
+- **Isolamento:** NOTAS_CHECKOUT depende de CHECKOUT validado + regras; NOTAS_REMESSA depende de REMESSAS validado + regras. Falha de divergência/devolução não bloqueia proposta de comissão válida. Comissão provisória gera proposta provisória do subconjunto conhecido, com status no manifesto; dados desconhecidos não viram zero. Configuração de notas ausente/inválida bloqueia somente a parte correspondente.
+- **Contratos internos:** competência e CNPJ vêm do ID estável da comissão, confrontado com sua linha de negócio/identidade; não vêm da data da venda original. Cobertura de notas conta saldos de origem; o rastro replica todas as contribuições, preservando sinais, valores, regras e vínculos, com ID/natureza próprios.
+- **RN-61:** descrições de serviço, tomador da remessa e fonte/aprovação ficam em `regras.toml` e no manifesto versão 6. Papéis documentados não são apresentados como nomes pessoais de aprovadores. Não houve alteração de regra financeira, nova dependência, integração fiscal ou commit.
+
+---
+
 # A3 — Ponte de ponta a ponta
 
 A3 autorizada e implementada, preservando mínimo, A1 e RN-64 corrigida. A4/notas e etapas seguintes não iniciadas. Evidência atual: `docs/ACEITE_A3.md`, `saida/alvo-a3/` e `.tmp/aceite-a3/`. Os registros abaixo passam a ser históricos das entregas anteriores.

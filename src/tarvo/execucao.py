@@ -1,4 +1,4 @@
-"""Coordena somente checkout; fontes futuras não são dependências desta entrega."""
+"""Coordena checkout, remessas e notas; fontes futuras não bloqueiam essas partes."""
 
 from hashlib import sha256
 from decimal import Decimal, DecimalException
@@ -7,7 +7,7 @@ import re
 from zipfile import BadZipFile
 from xml.etree.ElementTree import ParseError
 
-from . import checkout, divergencias, remessas, regras, validacao
+from . import checkout, divergencias, notas, remessas, regras, validacao
 from .leitores import orbe, ponte, taxas
 from .modelos import Cadastro, ErroEntrada, Resultado, ResultadoParte
 from .partes import preparar_partes
@@ -16,6 +16,8 @@ from .partes import preparar_partes
 def executar(pasta: Path, configuracao: Path, competencia: str | None = None) -> Resultado:
     resultado = _executar_checkout(pasta, configuracao, competencia)
     _executar_remessas(resultado, pasta, configuracao, competencia)
+    preparar_partes(resultado)
+    notas.preparar(resultado, configuracao)
     preparar_partes(resultado)
     return resultado
 

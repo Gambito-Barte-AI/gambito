@@ -3,7 +3,7 @@
 from collections import defaultdict
 from decimal import Decimal, DecimalException
 
-from . import validacao
+from . import notas, validacao
 from .modelos import ErroEntrada, Resultado, ResultadoParte
 
 # (fontes, resultados anteriores, relatórios). Leitores futuros não são presumidos válidos.
@@ -14,8 +14,8 @@ PLANO = {
     "DIVERGENCIAS_CHECKOUT": (("orbe", "taxas", "regras"), (), ("divergencias_taxa.csv", "pendencias.csv")),
     "DEVOLUCAO_CASA": (("orbe", "taxas", "regras"), (), ("pendencias.csv",)),
     "DIVERGENCIAS_REMESSA": (("ponte", "contratos_remessa", "regras"), (), ("divergencias_taxa.csv", "pendencias.csv")),
-    "NOTAS_CHECKOUT": ((), ("CHECKOUT",), ("notas_a_emitir.csv", "pendencias.csv")),
-    "NOTAS_REMESSA": ((), ("REMESSAS",), ("notas_a_emitir.csv", "pendencias.csv")),
+    "NOTAS_CHECKOUT": (("regras",), ("CHECKOUT",), ("notas_a_emitir.csv", "pendencias.csv")),
+    "NOTAS_REMESSA": (("regras",), ("REMESSAS",), ("notas_a_emitir.csv", "pendencias.csv")),
     "EXTRATO_AURORA": (("aurora", "plano_contas", "regras"), (), ("lancamentos_classificados.csv", "pendencias.csv")),
     "EXTRATO_MERIDIANO": (("meridiano", "plano_contas", "regras"), (), ("lancamentos_classificados.csv", "pendencias.csv")),
 }
@@ -90,7 +90,7 @@ def preparar_partes(resultado: Resultado) -> None:
             pendencias.motivos = [f"Falha ao preparar pendências: {exc}"]
     resultado.partes["PENDENCIAS_CHECKOUT"] = pendencias
     for nome, (fontes, anteriores, relatorios) in PLANO.items():
-        a2 = nome in {"DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CASA", "REMESSAS", "DIVERGENCIAS_REMESSA"}
+        a2 = nome in {"DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CASA", "REMESSAS", "DIVERGENCIAS_REMESSA", "NOTAS_CHECKOUT", "NOTAS_REMESSA"}
         resultado.partes.setdefault(nome, ResultadoParte(
             fontes=fontes, depende_de=anteriores, relatorios=relatorios,
             implementado=a2,
@@ -141,6 +141,8 @@ def validar_partes(resultado: Resultado) -> None:
             try:
                 if nome == "CHECKOUT":
                     validacao.validar(resultado)
+                if nome in notas.DEPENDENCIAS:
+                    notas.validar(nome, parte, resultado.partes[notas.DEPENDENCIAS[nome]], resultado.parametros_notas.get(nome))
                 validacao.validar_parte(parte)
                 if provisorio:
                     parte.situacao = "PROVISORIO"

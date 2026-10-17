@@ -160,3 +160,4 @@ class Resultado:
     avisos: list[str] = field(default_factory=list)
     partes: dict[str, ResultadoParte] = field(default_factory=dict)
     calculo_executado: bool = False
+    parametros_notas: dict[str, dict] = field(default_factory=dict)

@@ -29,7 +29,7 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
     processados = len(resultado.contribuicoes) if resultado.partes["CHECKOUT"].validado else 0
     pendentes = len(resultado.pendencias) if resultado.partes["PENDENCIAS_CHECKOUT"].validado else 0
     dados = {
-        "versao": 5, "escopo": "CHECKOUT_MINIMO", "etapa": "ALVO_A3", "situacao": resultado.situacao,
+        "versao": 6, "escopo": "CHECKOUT_MINIMO", "etapa": "ALVO_A4", "situacao": resultado.situacao,
         "escopo_situacao": "CHECKOUT",
         "competencia": resultado.competencia, "motivos": resultado.motivos,
         "fontes": resultado.fontes, "rastro_validado": resultado.validado and resultado.situacao != "BLOQUEADO",
@@ -56,7 +56,7 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
         } for p in resultado.pendencias],
         "decisoes_financeiras_pendentes": resultado.decisoes_pendentes,
         "decisoes_documentadas": resultado.decisoes_documentadas,
-        "fora_do_escopo": ["notas", "extratos"],
+        "fora_do_escopo": ["extratos"],
     }
 
     escolhidas = selecionar(resultado, escopo)

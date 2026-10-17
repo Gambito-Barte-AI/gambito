@@ -82,7 +82,7 @@ natureza="DECISAO_TIME"
         self.assertEqual(p.linhas["comissoes_por_lojista.csv"][0]["comissao_brl"], "131.01")
         self.assertEqual(p.rastro[0]["id_saida"], "REMESSA:2032-04:01234567800012")
         self.assertIn("chegou_agora.eml::nome_livre.xlsx::Operações", p.rastro[0]["arquivo_origem"])
-        self.assertFalse(m["partes"]["NOTAS_REMESSA"]["implementado"])
+        self.assertTrue(m["partes"]["NOTAS_REMESSA"]["implementado"])
         self.assertEqual(m["resultados"]["notas_a_emitir.csv"]["linhas"], 0)
 
     def test_tolerancia_abaixo_igual_acima_em_pontos_percentuais(self):

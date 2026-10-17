@@ -69,6 +69,9 @@ def verificar_partes(manifesto):
     if manifesto.get("versao", 0) >= 5:
         futuras -= {"REMESSAS", "DIVERGENCIAS_REMESSA"}
         implementadas |= {"REMESSAS", "DIVERGENCIAS_REMESSA"}
+    if manifesto.get("versao", 0) >= 6:
+        futuras -= {"NOTAS_CHECKOUT", "NOTAS_REMESSA"}
+        implementadas |= {"NOTAS_CHECKOUT", "NOTAS_REMESSA"}
     exigir(set(partes) == implementadas | futuras, "Partes ausentes ou desconhecidas")
     for nome, parte in partes.items():
         estado = parte.get("situacao")
@@ -145,7 +148,9 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     partes = verificar_partes(manifesto) if manifesto.get("versao", 0) >= 3 else {}
     if esperar_fechamento:
         exigir(manifesto.get("fechamento", {}).get("situacao") == esperar_fechamento, "Fechamento diferente do esperado")
-    vazios = ("notas_a_emitir.csv", "lancamentos_classificados.csv")
+    vazios = ("lancamentos_classificados.csv",)
+    if manifesto.get("versao", 0) < 6 or manifesto.get("escopo_comando") == "checkout":
+        vazios += ("notas_a_emitir.csv",)
     if manifesto.get("versao", 0) < 4 or manifesto.get("escopo_comando") == "checkout":
         vazios += ("divergencias_taxa.csv",)
     for nome in vazios:
@@ -155,6 +160,9 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     if manifesto.get("versao", 0) >= 5:
         from auditoria_a3 import verificar as verificar_a3
         verificar_a3(manifesto, arquivos, configuracao, dados)
+    if manifesto.get("versao", 0) >= 6:
+        from auditoria_a4 import verificar as verificar_a4
+        verificar_a4(manifesto, arquivos, configuracao)
     rastros = arquivos["rastro.csv"]
     if situacao == "BLOQUEADO" and not any(arquivos.values()):
         exigir(not any(arquivos.values()) and (partes or all(r["situacao"] == "BLOQUEADO" for r in resultados.values()))
