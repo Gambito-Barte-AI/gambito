@@ -1,0 +1,23 @@
+# Segredos
+.env
+.env.*
+!.env.example
+
+# Data pack original
+data/raw/*
+!data/raw/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Node
+node_modules/
+
+# SO / editores
+.DS_Store
+.vscode/
+.idea/
