@@ -12,7 +12,7 @@ from .modelos import ErroEntrada
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(description="Mínimo: comissões de checkout com rastro e pendências explícitas")
+    parser = argparse.ArgumentParser(description="Fechamento Tarvo: checkout ou alvo, com rastro e pendências explícitas")
     parser.add_argument("--dados", required=True, type=Path)
     parser.add_argument("--saida", default=Path("saida"), type=Path)
     parser.add_argument("--regras", default=Path("regras.toml"), type=Path)
