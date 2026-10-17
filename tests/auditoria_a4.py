@@ -69,7 +69,7 @@ def verificar(m, arquivos, config):
                 exigir(d["tomador"] == (grupo[0]["lojista"] if negocio == "CHECKOUT" else p["tomador"]),
                        "Nome do tomador divergente da comissão/configuração")
                 exigir(p["servico"] in d["discriminacao"] and mes in d["discriminacao"], "Discriminação sem serviço/competência")
-                if any(r.get("regra") == "D-10_PENDENTE_FINANCEIRO" for r in origens):
+                if any(r.get("regra") == "D-10_AJUSTE_PONTE" for r in origens):
                     exigir("D-10" in d["discriminacao"], "Nota com ajuste omitiu D-10")
                 exigir(all(r["natureza_valor"] == "PROPOSTA_NOTA_COMISSAO" for r in obtidos), "Natureza do rastro da nota incorreta")
             else:

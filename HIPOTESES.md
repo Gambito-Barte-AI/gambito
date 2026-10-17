@@ -1,3 +1,34 @@
+# Respostas do Financeiro e da organização (15h47 às 16h52) e D-10
+
+Registro de 17/10/2026. As respostas abaixo foram dadas no canal a outros times, mas valem para todos. O Financeiro disse às 16h08 que não confere conta por conta: vale o critério registrado aqui. Conferido com uma execução do alvo sobre o pacote completo (7 arquivos): os seis resultados saem COMPLETO.
+
+- **D-10 respondida.** A resposta das 11h33 (ajuste é linha nova, com Spread R$ negativo, que abate a nossa participação do mês na nota única, com rastro para a operação original e sem nota complementar) foi confirmada pela organização no retorno do checkpoint 2 (16h01). Critério: o Spread R$ do ajuste é spread; a participação é 50% dele, aplicada uma vez (no exemplo da PC-0926-0434, a nota cai R$ 117,87). Em setembro não há linha de ajuste. A D-10 saiu de `decisoes_pendentes` e foi para `decisoes_documentadas` no `regras.toml`.
+- **Nota da Ponte (16h40).** Sai pela nossa regra, com spread negativo fora e operação repetida contada uma vez: **R$ 39.543,45**, e não o número líquido da Ponte. Se o crédito de 06/10 vier diferente, a diferença vira pendência do Financeiro, junto com a contestação. A Ponte não retém imposto; o ISS da nota vai no DAMSP do mês seguinte, fora deste fechamento.
+- **Prazo de contestação.** Ainda está valendo, porque o fechamento é esta semana. As pendências de contestação (Orbe, Mundo Aberto, spreads negativos e duplicata) seguem abertas para o Financeiro.
+- **Mundo Aberto (D-05).** O Financeiro disse que a diferença é de centavos e pediu para escolher e registrar. Mantemos **R$ 1.418,85**, pelo Spread %.
+- **Estorno de venda com divergência.** As duas linhas ficam em `divergencias_taxa.csv`, com o estorno negativo; na cobrança da Orbe elas se anulam.
+- **Orbe cobrou menos que o contrato.** É divergência, decidida caso a caso pelo Financeiro. Não aconteceu em setembro.
+- **Fluente, Pix a 0,79%.** É condição negociada. Não gera divergência nem pendência.
+- **Casa do Estudante.** Isenção de 01/09/2026 a 31/12/2026. Renovar em 2027 é decisão do comercial, ainda sem previsão. A devolução segue pelo que a Orbe tirou (RN-64, R$ 15.396,77).
+- **Atlas.** Quem decide a taxa é o Diego, do comercial, sem previsão. Quando a taxa for confirmada, setembro é faturado junto com outubro, desde 10/09. Até lá, segue fora das comissões (D-07), com pendência.
+- **CNPJ e razão social.** CNPJ tem sempre 14 dígitos; completar o zero à esquerda é correto. O tomador da nota usa o nome da planilha com o CNPJ; a razão social do contrato de adesão é conferida na emissão.
+- **`ref_origem` do Aurora (organização, 16h52).** Linha física do arquivo como veio, contada a partir de 1, incluindo cabeçalho do banco e linha de colunas. Confirma a D-04: o primeiro lançamento é **L9**, o Pix sem pagador é a L50 e a transferência para o Meridiano é a L92.
+- **Extratos e plano de contas.** Despesa do mês vai direto na despesa; recurso de lojista fica no passivo; aplicação não tem efeito no resultado. Critérios aplicados:
+  - IOF das remessas é do cliente: o TED para a Ponte baixa inteiro `2.1.02.001`, sem despesa da Tarvo;
+  - IOF de R$ 48,21 (MRD2026090586) é de operação de crédito do Meridiano: `4.3.01`;
+  - juros da conta garantida vêm no extrato do mês seguinte: nada a lançar em setembro;
+  - rendimento do CDB (R$ 3.912,66) é receita do mês: `3.2.01`; aplicação e resgate: `1.1.02.001`;
+  - seguro (R$ 1.830,44) vai direto na despesa: `4.2.05`;
+  - o único Pix enviado que não é repasse é o da contabilidade (R$ 6.800, L53): `4.2.06`; Pix para quem não é lojista vira pendência;
+  - Pix de R$ 7.350 sem pagador (L50): `1.1.09.002` com pendência; quem vai atrás do pagador é o Caio, com o banco, até o fechamento de outubro;
+  - devolução de R$ 12.400 da Mundo Aberto (L65): `2.1.01.001` (D-06; o Financeiro aceita as duas contas);
+  - transferência de R$ 300 mil para o Meridiano (L92): `1.1.09.001`, em trânsito; se a entrada não aparecer em outubro, vira pendência da tesouraria;
+  - Pix de R$ 18.240 da Ponte Aérea: `2.1.02.001`; a baixa sai quando a remessa liquidar, pelo relatório de outubro da Ponte;
+  - folha de agosto baixada em setembro: a provisão foi feita pelo valor pago, então a baixa é pelo valor cheio do lançamento. A solução não gera a provisão do mês.
+- **Colunas extras.** Podem ficar, desde que as colunas pedidas estejam presentes e com os nomes certos.
+
+---
+
 # A7 — aceite integrado e reprodução final
 
 A7 autorizada pelo usuário e validada tecnicamente em 17/10/2026 no ambiente Windows/Python 3.12.10. Preservados mínimo, A1–A6, RN-64 corrigida e D-10 pendente. Extras não iniciados. Evidências finais em `docs/ACEITE_A7.md` e `saida/alvo-a7-final/`; registros anteriores permanecem históricos.

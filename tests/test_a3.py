@@ -136,7 +136,7 @@ natureza="DECISAO_TIME"
         self.assertTrue(ajuste["arquivo_evento_original"])
         detalhes = [l for l in p.rastro if l["ref_origem"] == "PC-TESTE-2"]
         self.assertTrue(all(l["tipo_lancamento"] == "AJUSTE" and l["ref_original"] == "PC-TESTE-1" for l in detalhes))
-        self.assertTrue(any(l["tipo"] == "AJUSTE_PONTE_D10_PENDENTE" for l in p.linhas["pendencias.csv"]))
+        self.assertTrue(any(l["tipo"] == "AJUSTE_PONTE_D10" for l in p.linhas["pendencias.csv"]))
         self.assertFalse(r.partes["DIVERGENCIAS_REMESSA"].linhas["divergencias_taxa.csv"])
 
     def test_ajuste_de_outro_mes_sem_arquivo_original_nao_inventa_origem(self):

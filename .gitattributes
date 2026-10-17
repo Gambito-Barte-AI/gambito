@@ -1,0 +1,3 @@
+# Os arquivos da saida/ são conferidos pelo hash do manifesto.
+# Sem conversão de fim de linha, o clone no Windows fica idêntico ao gerado.
+/saida/** -text
