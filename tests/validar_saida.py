@@ -320,6 +320,15 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     exigir(Counter(p["id_saida"] for p in orfaos) == Counter(r["id_saida"] for r in rastros_orfaos),
            "Ajuste órfão sem rastro ou pendência derivada")
     rastro_comissoes = {(r["arquivo_origem"], r["ref_origem"]): r for r in rastros if r["id_saida"].startswith("CHECKOUT:")}
+    exigir(set(rastro_comissoes) <= set(por_origem), "checkout com destino sem origem de entrada")
+    esperados_orfaos = {
+        chave for chave, c in rastro_comissoes.items()
+        if (por_origem[chave]["tipo_lancamento"] in {"ESTORNO", "REVERSAO ANTECIPACAO"}
+            and por_origem[chave]["id_referencia"] not in por_ref
+            and por_origem[chave]["data_venda_original"][3:] == por_origem[chave]["data_movimento"][3:])
+    }
+    exigir({(p["arquivo_origem"], p["ref_origem"]) for p in orfaos} == esperados_orfaos,
+           "Contribuição órfã sem pendência de revisão")
     for p in orfaos:
         chave = p["arquivo_origem"], p["ref_origem"]
         e = por_origem.get(chave)
