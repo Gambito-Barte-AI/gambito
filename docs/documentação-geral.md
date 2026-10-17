@@ -1,6 +1,6 @@
 # Documentação · Gambito · fechamento mensal da Tarvo
 
-**Desafio Barte AI · 17/10/2026 · versão das 13h15 (Slack lido até 12h50)**
+**Desafio Barte AI · 17/10/2026 · versão das 13h40 (Slack lido até 12h50)**
 
 ## Como este documento está organizado
 
@@ -9,7 +9,8 @@
 | **I. Entendimento do negócio** | O case e a nossa leitura dele, bloco a bloco do **Data Product Canvas** | Dar contexto: por que a solução é do jeito que é |
 | **II. Regras de negócio** | As regras que derivamos do canvas e das respostas do financeiro, as decisões do time e as premissas | Garantir que o código faz o que o negócio pede |
 | **III. Requisitos** | Requisitos funcionais e não funcionais, cada um com "como verificar" | Guiar e conferir o desenvolvimento |
-| **IV. Escopo e aceite** | O que fica de fora, perguntas em aberto e checklist de aceite | Fechar a entrega sem surpresa |
+| **IV. Arquitetura** | O desenho técnico: módulos, fechamento parcial, estrutura de pastas e entregas | Construir do jeito combinado |
+| **V. Escopo e aceite** | O que fica de fora, perguntas em aberto e checklist de aceite | Fechar a entrega sem surpresa |
 
 **Etiquetas usadas:** `FATO` = está nos arquivos · `CONFIRMADO` = respondido pelo financeiro no Slack · `HIPÓTESE` = aposta nossa, vai para o HIPOTESES.md · `CORRIGIDO` = achávamos outra coisa e mudamos.
 
@@ -333,7 +334,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RN-24 | **Rota Global:** contrato não mudou; os +0,50 p.p. desde 12/09 são divergência. | SLACK 16 20:49 | 87 linhas da Rota |
 | [ ] | RN-25 | **Bridge:** cobrou 2,59% em 5 vendas de 15 a 18/09 com aditivo de 2,19% assinado. É **divergência**, contestada com a Orbe. | SLACK 17 11:37 | 5 linhas da Bridge em divergências e na cobrança da Orbe |
 | [ ] | RN-26 | **Casa do Estudante não é divergência de contrato.** Vira **devolução ao lojista**, paga pela Tarvo: pendência com o total e o detalhe por transação, **separada das divergências de contrato** e **fora da cobrança da Orbe**. Pôr as 118 linhas também em divergências, marcadas como isenção, é opcional. | SLACK 17 09:44, 10:58 e 11:49 | Total cobrável da Orbe sem a Casa |
-| [ ] | RN-64 | **Valor da devolução ao lojista = o que saiu do bolso dele:** o que a Orbe **descontou de fato** (`valor_taxa`) menos a comissão contratada. Na Casa, a contratada é zero, então devolve-se o `valor_taxa` inteiro: **R$ 15.396,77**. Já o `divergencias_taxa.csv` mantém a fórmula da RN-20 (bruto × diferença de taxa); a diferença entre os dois é o centavo de truncamento da Orbe. | SLACK 17 12:50 | Pendência da Casa = R$ 15.396,77 (soma do `valor_taxa` das 118 linhas) |
+| [ ] | RN-64 | **Valor da devolução ao lojista = o que saiu do bolso dele:** o que a Orbe **descontou de fato** (`valor_taxa`) menos a comissão contratada. **Linhas elegíveis da Casa:** vendas e antecipações com **data da venda de 01/09 a 31/12**; o estorno da venda de agosto fica de fora (ele abate a comissão pela taxa de agosto, RN-16). Como a contratada é zero, devolve-se o `valor_taxa` inteiro. O `divergencias_taxa.csv` mantém a fórmula da RN-20; a diferença é o centavo de truncamento da Orbe. **R$ 15.396,77 é referência de conferência, nunca constante no código.** | SLACK 17 12:50 | Pendência da Casa = soma do `valor_taxa` das linhas elegíveis (setembro: R$ 15.396,77) |
 | [ ] | RN-27 | Lojista sem contrato (Atlas) **não é divergência**; é pendência. | CASE / TIME | Nenhuma linha da Atlas em divergências |
 | [ ] | RN-28 | Divergência de **remessa** = spread % aplicado − contratado, pelo **valor cheio**: Δ% × PTAX × valor em moeda estrangeira. **Mundo Aberto** (1,20% registrado desde julho) é divergência, contestada com a Ponte. | SLACK 16 20:48 e 20:58 / 17 11:37 | 23 linhas da Mundo Aberto pelo valor cheio |
 | [ ] | RN-29 | **Spread negativo não é divergência** (o lojista não pagou a mais). Se aparecer na lista, marcado como outra natureza. | SLACK 17 09:44 | As 4 operações negativas fora de divergências (ou com natureza própria) |
@@ -347,7 +348,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RN-32 | Spread em branco ou "padrão" = **1,5%** sobre a PTAX. | SLACK 16 20:48 | Lojista sem spread compara com 1,5% |
 | [ ] | RN-33 | Vale a **data de contratação**. | SLACK 16 20:48 | PC-0926-0002 (liquidada em 01/10) entra em setembro |
 | [ ] | RN-34 | **Operação repetida conta uma vez** (o número é único) e entra na lista para a Ponte corrigir o relatório. | SLACK 16 20:48 / 22:34 | PC-0926-0162 uma vez; pendência criada |
-| [ ] | RN-35 | **Spread negativo** (trava D-1 vencida): fora da comissão e da nota. Pendência de contestação com **os dois valores, identificados**: (a) o spread negativo do relatório (o que aconteceu) e (b) a diferença até o spread do contrato (o que se pede à Ponte). | SLACK 16 20:48 / 17 11:37 | Ex.: PC-0926-0210 com −R$ 687,52 (relatório) e −R$ 1.351,87 (até o contrato) |
+| [ ] | RN-35 | **Spread negativo** (trava D-1 vencida): fora da comissão e da nota. Pendência de contestação com **os dois valores, identificados**: (a) o spread negativo do relatório (o que aconteceu) e (b) a diferença até o spread do contrato (o que se pede à Ponte). | SLACK 16 20:48 / 17 11:37 · formato em D-11 | Ex.: PC-0926-0210 com −R$ 687,52 (relatório) e −R$ 1.351,87 (até o contrato) |
 | [ ] | RN-36 | **Mundo Aberto:** nota pelo **realizado** (nossa metade do excesso entra); a diferença fica como pendência de contestação. | SLACK 16 21:45 | Comissão pelo realizado + pendência |
 | [ ] | RN-37 | **Ajuste da Ponte** (outubro em diante): chega como **linha nova**, com Nº de operação próprio, **Spread R$ negativo** e observação **"AJUSTE REF PC-…"**. Entra **no mês em que aparece**, **abate a nossa participação** dentro da nota única da Ponte, e o rastro aponta para a **operação original**. Sem nota complementar. **Não confundir** com spread negativo de trava (RN-35) nem com duplicata (RN-34). | SLACK 17 11:33 | Teste com linha "AJUSTE REF" → abate a comissão do mês |
 | [ ] | RN-38 | "Aprovado c/ ressalva" **não muda nada**. | SLACK 16 20:48 | Operações com ressalva entram |
@@ -385,7 +386,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 
 | ✓ | ID | Regra | Fonte | Como verificar |
 |---|---|---|---|---|
-| [ ] | RN-58 | Toda pendência tem **tipo, ref_origem, valor, motivo, próximo passo e quem decide**. Pendência de **acompanhamento** (ex.: "conferir o TED quando cair") **não é alarme falso**, desde que tenha motivo e próximo passo. | ORG 17 11:27 | Nenhuma célula vazia em `pendencias.csv` |
+| [ ] | RN-58 | Toda pendência tem **tipo, ref_origem, valor, motivo, próximo passo e quem decide** (o próximo passo vai numa coluna extra `proximo_passo`; o formato oficial permite colunas extras). Pendência de **acompanhamento** (ex.: "conferir o TED quando cair") **não é alarme falso**, desde que tenha motivo e próximo passo. | ORG 17 11:27 | Nenhuma célula vazia em `pendencias.csv` |
 | [ ] | RN-59 | Pendência **por contraparte e por lojista**, com o detalhe das transações. `ref_origem` pode ter várias origens separadas por `\|` ou uma linha por origem. | SLACK 17 11:01 / ORG 17 11:27 | Dá para achar cada origem a partir da pendência |
 | [ ] | RN-60 | **Quem decide** (texto livre, coerente): taxa, condição comercial, cadastro e contrato → **comercial decide antes**; regra de fechamento, divergência, contestação, caixa e liberação → **financeiro**. | SLACK 17 09:49, 11:01 e 12:31 / ORG 17 11:27 | Atlas e cadastro com "Comercial"; o resto com "Financeiro" |
 | [ ] | RN-61 | Toda regra registra **quem aprovou e quando**. | SLACK 17 09:49 | Campo de fonte/aprovação em cada regra |
@@ -405,9 +406,13 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | D-04 | Referência do Aurora = **linha física** (1º lançamento = L9) | O enunciado mostra L10, L11 só como exemplo | Mudar uma linha no leitor |
 | [ ] | D-05 | Divergência da Mundo Aberto pelo **Spread %** (R$ 1.418,85), não pelo Spread R$ (R$ 1.418,88) | O % é o que se compara com o contrato; o financeiro pediu um critério escrito | Trocar o critério no motor |
 | [ ] | D-06 | Devolução de R$ 12.400 em **2.1.01.001** | O repasse volta a ser devido ao lojista; o financeiro aceitou 2.1.01.001 ou 2.1.01.002 com motivo | Mudar a conta no arquivo de regras |
-| [ ] | D-07 | Atlas **fora** do `comissoes_por_lojista.csv`, com pendência para o comercial (valor que a Orbe cobrou e as 57 linhas no rastro) | O financeiro aceita zerada ou fora; fora evita uma linha de comissão que parece faturável | Incluir com valor zero |
+| [ ] | D-07 | Atlas **fora** do `comissoes_por_lojista.csv`, com pendência para o comercial (valor que a Orbe cobrou e as 57 linhas no rastro) e **identidade preservada** (CNPJ da aba antiga) | O financeiro aceita zerada ou fora; uma linha com zero parece cálculo concluído | Incluir com valor zero |
 | [ ] | D-09 | Casa **só na pendência** (total + detalhe), sem as 118 linhas em divergências | O financeiro disse que não precisa; evita confundir com divergência de contrato | Incluir as linhas marcadas como isenção |
-| [ ] | D-10 | Ajuste da Ponte (RN-37): o Spread R$ negativo da linha é o **spread inteiro**; a nossa participação cai **50%** dele | Mesma lógica da comissão (50% do Spread R$). Pergunta de outro time (12:04) ainda sem resposta | Abater 100% se o financeiro disser o contrário |
+| [ ] | D-10 | **Ajuste da Ponte** (RN-37) é tratado como **mais uma operação**: contribuição = 50% do Spread R$ (negativo), com a **mesma fórmula** da RN-31. Assim não há como aplicar 50% duas vezes. A linha precisa ser reconhecida **antes** das regras de spread negativo irregular (RN-35) e de duplicata (RN-34). `ref_origem` = Nº da linha do ajuste; coluna extra `ref_original` com o PC original, mesmo de outro mês | Mesma lógica da comissão (50% do Spread R$). Pergunta de outro time (12:04) ainda sem resposta | Abater 100% se o financeiro disser que a linha já vem como a nossa parte |
+| [ ] | D-11 | **Pendência de spread negativo** (RN-35): `valor_brl` = **diferença até o spread contratado** (o que se pede à Ponte); colunas extras `valor_reportado_brl` (spread negativo do relatório) e `valor_solicitado_brl`. O rastro corresponde ao `valor_brl` | O financeiro pediu os dois valores, "deixando claro qual é qual"; o formato oficial permite colunas extras | Inverter qual valor ocupa `valor_brl` |
+| [ ] | D-12 | **Resultado bloqueado:** o CSV obrigatório é gerado **só com o cabeçalho** (zero linhas), e o **manifesto** marca BLOQUEADO com o motivo. Bloqueio nunca vira zero | Se o arquivo faltar, o corretor automático da banca pode quebrar; cabeçalho vazio + manifesto não engana ninguém | Não gerar o arquivo |
+| [ ] | D-13 | **Situação de cada resultado:** **Completo** = todas as fontes da dependência ok e rastro fecha. **Provisório** = fonte presente, mas com aviso de layout ou linhas não reconhecidas (que viram pendência). **Bloqueado** = fonte ausente ou inválida, ou rastro quebrado. Pendência de negócio (ex.: Atlas) **não** torna o resultado provisório. **Provisório nunca estima taxa nem inventa valor** | Atende ao pedido do financeiro (12:31): fechar o que não depende, marcar o provisório e o bloqueado | Ajustar os critérios no módulo de execução |
+| [ ] | D-14 | **Competência** = mês da `data_movimento` da Orbe e da data dos extratos. A `data_venda_original` serve só para achar a taxa (estorno de venda de agosto **não** é outra competência). Se os dados tiverem mais de um mês, a execução exige escolher a competência | Evita somar meses diferentes sem perceber | Aceitar parâmetro de competência explícito |
 
 > Viraram regra confirmada: a antiga **D-01** (Bridge na cobrança da Orbe → RN-25) e a antiga **D-08** (valor da devolução da Casa → RN-64).
 
@@ -428,7 +433,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | ✓ | ID | Requisito | Nível | Como verificar |
 |---|---|---|---|---|
 | [ ] | RF-01 | Receber a **pasta do mês** (ou upload) com os 6 arquivos. A banca pode rodar com arquivos que chegarem durante o dia | Mínimo | Rodar apontando para outra pasta funciona |
-| [ ] | RF-02 | Ler cada arquivo **como vem**: CSV `;` com vírgula decimal, XLSX com cabeçalho deslocado, .eml com XLSX anexo, CSV latin-1, CSV de banco com cabeçalho, OFX cp1252 | Mínimo | Nenhum arquivo editado à mão |
+| [ ] | RF-02 | Ler cada arquivo **como vem**: CSV `;` com vírgula decimal, XLSX com cabeçalho deslocado, .eml com XLSX anexo, CSV latin-1, CSV de banco com cabeçalho, OFX cp1252. **Mínimo:** Orbe, planilha de taxas e `regras.toml`. **Alvo:** e-mail da Ponte, plano de contas, Aurora e Meridiano | Mínimo / Alvo | Nenhum arquivo editado à mão; a falta de um arquivo do alvo não impede o checkout |
 | [ ] | RF-03 | **Validar o layout na entrada** (colunas, abas, encoding). Se mudou ou faltou, **avisar com mensagem clara** (arquivo + o que mudou), sem quebrar calado | Alvo | Teste com uma coluna renomeada → aviso claro |
 | [ ] | RF-04 | Montar o **cadastro de lojista** (EC ↔ CNPJ ↔ nomes) a partir da planilha + arquivo de regras | Mínimo | RN-03 a RN-07 passam |
 | [ ] | RF-05 | Calcular a **comissão de checkout** | Mínimo | RN-08 a RN-19 passam |
@@ -470,13 +475,177 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RNF-13 | Segurança | **Chave da API** só por variável de ambiente, **nunca no repositório**. Se enviarmos uma para a banca testar (opcional), usar chave **exclusiva do hackathon, com limite de gasto**. Sem chave, a solução roda igual (sem IA) | Buscar "sk-" no repositório = 0; rodar sem a variável |
 | [ ] | RNF-14 | Usabilidade | README diz como instalar, rodar e onde pôr a chave; pendências em **português claro**, com próximo passo e quem decide | Uma pessoa de fora roda só pelo README |
 | [ ] | RNF-15 | Usabilidade (auditabilidade) | Cada lançamento mostra o **método** e a **confiança**; cada saída mostra o **status** (completo, provisório, bloqueado) | Colunas e resumo preenchidos |
-| [ ] | RNF-16 | Compatibilidade | Saídas em **CSV com `;`**, UTF-8, no layout de colunas do enunciado, só de setembro, em `saida/` na raiz do repositório | Abrir no Excel e conferir |
+| [ ] | RNF-16 | Compatibilidade | Saídas no formato de `docs/FORMATO_SAIDA.md`: **CSV com `;`**, **ponto decimal** (nunca `1.234,56`), **datas `AAAA-MM-DD`**, CNPJ com 14 dígitos, UTF-8, colunas obrigatórias na ordem do formato (**colunas extras permitidas**), só setembro, em `saida/` na raiz. Resultado bloqueado gera CSV só com cabeçalho (D-12) | Abrir no Excel e conferir; teste automático de formato de cada coluna |
 
 ---
 
-# Parte IV · Escopo e aceite
+# Parte IV · Arquitetura
 
-## IV.1 Fora do escopo (não implementar)
+## IV.1 Decisão
+
+**Monólito modular em Python, executado por um comando, com processamento em memória e fechamento parcial por dependência.**
+
+O objetivo é calcular valores financeiros reproduzíveis a partir dos arquivos originais, preservar a origem de cada contribuição e encaminhar as incertezas para decisão humana.
+
+Por que assim:
+- A banca roda a solução com um comando e compara com a `saida/`. Sem banco, servidor, fila ou API, há menos coisa para dar errado na máquina dela.
+- São cerca de 2 mil transações por mês: cabe em memória com folga.
+- O que precisa durar de um mês para o outro (condições, vínculos, exceções) fica em **arquivos versionados** (`regras.toml`), o que também ajuda a auditoria.
+- **Não** é um motor genérico de regras: as fórmulas ficam em funções testáveis; as condições comerciais, os vínculos e as exceções ficam na configuração.
+
+## IV.2 Fluxo
+
+```text
+Pasta do mês + regras.toml
+             │
+             ▼
+ Inspeção das fontes e dos layouts
+             │
+             ▼
+ Coordenador verifica dependências
+             │
+     ┌───────┼──────────┐
+     ▼       ▼          ▼
+ Checkout  Remessas   Extratos
+     │       │          │
+     └───────┼──────────┘
+             ▼
+ Resultados + origens + pendências
+ + situação e cobertura por resultado
+             │
+             ▼
+ Validação independente dos resultados
+             │
+             ▼
+ CSVs válidos + manifesto da execução
+ + resumo das limitações
+```
+
+## IV.3 Módulos
+
+| Módulo | Responsabilidade |
+|---|---|
+| Comando | Interpretar os argumentos e apresentar o resultado |
+| Execução | Coordenar dependências, isolar falhas e consolidar as situações |
+| Leitores | Interpretar formatos, normalizar tipos e preservar a origem (`arquivo_origem` + `ref_origem`) |
+| Cadastro e contratos | Resolver identidade, vigência, faixa e exceções aprovadas |
+| Cálculos | Produzir contribuições e pendências **sem acessar arquivos** |
+| Validação | Verificar cobertura, referências e igualdade entre valores e rastro |
+| Exportação | Gerar os layouts obrigatórios (`docs/FORMATO_SAIDA.md`) e o manifesto da execução |
+
+**Stack:** Python 3.11+, biblioteca padrão e `openpyxl` (XLSX). `pytest` só para desenvolvimento. TOML para condições e parâmetros. Dinheiro e taxas em `Decimal`, com arredondamento ao centavo e empate afastando de zero (`ROUND_HALF_UP`, RN-09).
+
+## IV.4 O que fica no `regras.toml`
+
+- Vínculos que faltam na planilha (ECs da Novo Horizonte, Horizonte Viagens e Kiwi; identidade da Atlas).
+- Lojistas sem contrato e quem decide.
+- Condições fora da planilha (isenção da Casa do Estudante, com início e fim).
+- Parâmetros: participação da Tarvo no spread (50%), spread padrão (1,5%), tolerância de spread (0,01 p.p.), limite de parcelas (12).
+- Padrões de histórico bancário → conta contábil.
+- Para cada item: **fonte** (resposta do Slack ou decisão do time), **quem aprovou e quando** (RN-61).
+
+Nada disso aparece no código (RNF-07).
+
+## IV.5 Contrato de retorno dos módulos
+
+Cada módulo devolve:
+- resultados e as contribuições de origem de cada um;
+- pendências com motivo, próximo passo, responsável e referências;
+- fontes utilizadas;
+- cobertura dos registros (quantas linhas entraram e para onde foram);
+- situação e limitações de cada resultado.
+
+| Situação | Significado |
+|---|---|
+| **Completo** | Dependências disponíveis, cobertura explicada e validações aprovadas |
+| **Provisório** | Resultado sustentado pelos dados disponíveis, com limitação explicitada |
+| **Bloqueado** | Faltam condições para um valor confiável, ou a validação falhou |
+
+Critérios em D-13. Uma pendência de negócio não torna o módulo provisório: excluir a Atlas pela regra explícita é um tratamento completo do arquivo, mesmo com o faturamento dela pendente. **Provisório nunca significa estimar uma taxa ou inventar um valor.**
+
+## IV.6 Fechamento parcial e publicação
+
+| Fonte indisponível | Consequência |
+|---|---|
+| Orbe | Checkout bloqueado; módulos independentes continuam |
+| Relatório da Ponte | Remessas bloqueadas; checkout continua |
+| Planilha de taxas | Checkout bloqueado; a comissão de remessa pelo spread realizado pode continuar, com a comparação contratual bloqueada |
+| Um extrato | O outro continua, conforme as suas dependências |
+| Plano de contas | Classificação contábil bloqueada; a leitura dos extratos pode continuar |
+
+- Cada resultado só é publicado depois da **sua própria validação**. Um rastro incorreto bloqueia o resultado afetado.
+- Resultado bloqueado gera o CSV **só com o cabeçalho**; o manifesto diz por quê (D-12). Bloqueio nunca é representado como zero.
+- O **manifesto** identifica o que foi produzido **nesta execução**, para que arquivos antigos não pareçam resultados novos.
+
+## IV.7 Estrutura do repositório
+
+```text
+gambito/
+├── README.md
+├── HIPOTESES.md
+├── PROMPTS/
+├── docs/
+│   ├── documentação-geral.md
+│   ├── FORMATO_SAIDA.md
+│   └── img/
+├── data/
+│   └── raw/
+├── saida/
+├── pyproject.toml
+├── regras.toml
+├── src/
+│   └── tarvo/
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── execucao.py        # coordena dependências e o fechamento parcial
+│       ├── modelos.py         # contribuições, pendências, situação dos resultados
+│       ├── regras.py
+│       ├── cadastro.py
+│       ├── leitores/
+│       │   ├── __init__.py
+│       │   ├── orbe.py
+│       │   └── taxas.py
+│       ├── checkout.py
+│       ├── validacao.py
+│       └── exportacao.py
+└── tests/
+    ├── fixtures/
+    ├── test_leitores.py
+    ├── test_checkout.py
+    └── test_fluxo.py
+```
+
+Os leitores e cálculos de remessas, bancos e plano de contas entram no alvo.
+
+## IV.8 Entregas incrementais
+
+| Entrega | Objetivo | Aceite |
+|---|---|---|
+| **1 · Primeiro fluxo de ponta a ponta** | Ler Orbe e taxas, calcular vendas com contrato inequívoco e gerar comissão e rastro | Pasta configurável; taxa contratada; rastro exato; eventos ainda não suportados viram pendência; cobertura parcial explícita; a falta de arquivos do alvo não impede o checkout |
+| **2 · Identidade, faixas e vigências** | Completar a resolução contratual do checkout | CNPJ normalizado; faixas e vigências corretas; Casa isenta pela data da venda; Atlas identificada sem importar taxa antiga; contrato ambíguo e 13x viram pendência |
+| **3 · Estornos, antecipações e reversões** | Completar os tipos de evento do mínimo | Estorno no mês certo, com faixa da própria linha e vigência original; reversão ligada à antecipação; sinais e arredondamento corretos; cobertura total da Orbe explicada |
+| **4 · Aceite do mínimo** | Demonstrar correção e operação confiável | Roda só pelo README; rastro exato; resultado determinístico; nenhum evento descartado em silêncio; falhas com situação explícita; testes com mês sintético, soma corrompida, fonte inválida e modalidade desconhecida |
+| Remessas | Leitor do e-mail, comissão, duplicata, negativos e ajustes | Ajuste reduz a participação (D-10); negativo irregular gera pendência (D-11); amostra sintética de ajuste |
+| Divergências, notas e pendências | Comparações contratuais, concessão da Casa e elegibilidade de notas | Bridge e Mundo Aberto como divergências; estornos negativos; Casa fora da cobrança da Orbe |
+| Extratos | Leitores bancários, plano de contas e classificação | Bancos processáveis separadamente; só contas permitidas; nenhuma provisão gerada |
+| Aceite do alvo | Integrar os 6 CSVs e o fechamento parcial | Falha numa fonte preserva os resultados independentes; manifesto e rastros coerentes |
+| Extra | IA, rascunhos de contestação, alertas e recuperação da Atlas | Opcionais: não alteram cálculos e não bloqueiam a execução sem API |
+
+Os totais conhecidos do case (Parte I) são **conferências auxiliares**: não substituem a validação por evento. Não haverá pacote oficial de outubro; outros meses, ajustes e falhas são testados com amostras sintéticas.
+
+## IV.9 Riscos técnicos
+
+- Seleção errada de vigência; confusão entre identidades; interpretação dos percentuais da planilha (fração ou texto).
+- Tratar todo spread negativo como irregular (a linha "AJUSTE REF" precisa ser reconhecida antes, D-10).
+- Publicar um agregado incompleto como definitivo, ou reaproveitar resultados antigos sem identificação. Situação por resultado, manifesto e validação independente resolvem isso sem distribuir o sistema.
+- Exportar com vírgula decimal ou data no formato brasileiro (RNF-16).
+- A chave de API pertence só ao extra (IA), por variável de ambiente. O mínimo funciona sem chave e sem rede.
+
+---
+
+# Parte V · Escopo e aceite
+
+## V.1 Fora do escopo (não implementar)
 
 - IA calculando valores ou aprovando regra.
 - Integração com Fênix, Orbe, Ponte e bancos.
@@ -490,7 +659,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 
 ---
 
-## IV.2 Perguntas em aberto no Slack (acompanhar)
+## V.2 Perguntas em aberto no Slack (acompanhar)
 
 | Desde | Pergunta | O que fazemos enquanto isso |
 |---|---|---|
@@ -498,7 +667,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 
 ---
 
-## IV.3 Checklist rápido de aceite (rodar antes de cada marco)
+## V.3 Checklist rápido de aceite (rodar antes de cada marco)
 
 - [ ] Rodou numa pasta limpa, só com o README
 - [ ] Os 6 arquivos com as colunas certas, em `saida/` na raiz
@@ -516,7 +685,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 
 ---
 
-## IV.4 O que mudou nas últimas versões
+## V.4 O que mudou nas últimas versões
 
 - **Bridge virou regra confirmada:** o contrato decide, não o aviso (antiga D-01 → RN-01 e RN-25).
 - **Spread negativo:** a pendência leva **dois valores** (relatório e diferença até o contrato) (RN-35).
@@ -530,5 +699,6 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 - **Alerta de antecipação:** a preocupação é lojista novo, pelo pico, citando reversões (RN-63, D-03).
 - **Chave de API:** pode ser enviada à banca, exclusiva e com limite de gasto (RNF-13).
 - **Saída:** só setembro, em `saida/` na raiz; não haverá pacote de outubro (RNF-16).
+- **13h40:** entrou a Parte IV (arquitetura); RF-02 separa mínimo (Orbe + taxas) de alvo; RNF-16 segue o FORMATO_SAIDA.md (ponto decimal, datas ISO, colunas extras); RN-64 define as linhas elegíveis da Casa; D-07 e D-10 revistas; novas D-11 (valores da pendência de spread negativo), D-12 (CSV de resultado bloqueado), D-13 (situação dos resultados) e D-14 (competência).
 - **13h15:** a devolução pelo valor descontado de fato virou regra confirmada (RN-64, antiga D-08); o alerta pelo pico foi considerado razoável pelo financeiro (D-03).
 - **13h:** documento reorganizado em quatro partes; entrou a Parte I (entendimento do negócio pelo Data Product Canvas).
