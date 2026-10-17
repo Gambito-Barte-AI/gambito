@@ -12,6 +12,7 @@ from tarvo.checkout import calcular
 from tarvo.exportacao import publicar
 from tarvo.execucao import executar
 from tarvo.modelos import Cadastro, Contrato, ErroEntrada, Evento, Identidade, Origem, Resultado
+from tarvo.partes import projetar_pendencias
 from tarvo.validacao import consolidar, validar
 
 
@@ -98,12 +99,24 @@ class Entrega3Test(unittest.TestCase):
                 self.assertEqual(len(ps), 1)
 
     def test_estorno_referencia_local_ausente_ou_inconsistente(self):
-        for e, outros in ((self.estorno(data_original=date(2031, 3, 1)), []),
-                          (self.estorno(), [self.evento()]),
+        for e, outros in ((self.estorno(), [self.evento()]),
                           (self.estorno(), [self.evento(tipo="ANTECIPACAO")]),
                           (self.estorno(), [self.evento(ec="99", data=date(2031, 2, 15))])):
             cs, ps = self.calcular([e, *outros])
             self.assertTrue(any(p.origem.ref == "E" for p in ps))
+
+    def test_estorno_orfao_do_mes_entra_com_pendencia_derivada(self):
+        e = self.estorno(data_original=date(2031, 3, 1), bruto=Decimal("-137.00"))
+        r = self.resultado([e])
+        self.assertFalse(r.pendencias)
+        self.assertEqual(r.comissoes[0]["comissao_brl"], "-2.74")
+        self.assertTrue(r.contribuicoes[0].original_ausente)
+        linhas, rastros = projetar_pendencias(r)
+        self.assertEqual(len(linhas), 1)
+        self.assertEqual(linhas[0]["categoria"], "DADOS")
+        self.assertEqual(linhas[0]["valor_brl"], "-2.74")
+        self.assertEqual(linhas[0]["quem_decide"], "Financeiro")
+        self.assertEqual(rastros[0]["ref_evento_original"], "V")
 
     def test_estornos_que_excedem_venda_nao_sao_escolhidos_por_ordem(self):
         venda = self.evento()
@@ -154,13 +167,24 @@ class Entrega3Test(unittest.TestCase):
         self.assertEqual(cs[1].regra, "ZERO")
 
     def test_reversao_inconsistente_nao_e_recalculada(self):
-        for campos in ({"referencia": ""}, {"referencia": "OUTRA"}, {"data_original": None},
+        for campos in ({"referencia": ""}, {"data_original": None},
                        {"data_original": date(2031, 3, 1)}, {"data": date(2031, 3, 19)},
                        {"bruto": Decimal(-50)}, {"bruto": Decimal(100)}):
             with self.subTest(campos=campos):
                 cs, ps = self.calcular([self.antecipacao(), self.reversao(**campos)])
                 self.assertEqual(len(cs), 1)
                 self.assertEqual(len(ps), 1)
+
+    def test_reversao_orfa_do_mes_usa_taxa_original_e_fica_para_revisao(self):
+        self.cadastro.contratos = [replace(self.contrato, fim=date(2031, 3, 20)),
+                                   replace(self.contrato, inicio=date(2031, 3, 21),
+                                           taxas={"antecipacao": Decimal("0.99")})]
+        r = self.resultado([self.reversao(referencia="ORIGEM_AUSENTE", bruto=Decimal("-137"))])
+        self.assertFalse(r.pendencias)
+        self.assertEqual(r.comissoes[0]["comissao_brl"], "-2.88")
+        self.assertTrue(r.contribuicoes[0].original_ausente)
+        self.assertEqual(r.rastro[0]["ref_evento_original"], "ORIGEM_AUSENTE")
+        self.assertEqual(projetar_pendencias(r)[0][0]["valor_brl"], "-2.88")
 
     def test_reversao_nao_aceita_venda_como_antecipacao(self):
         cs, ps = self.calcular([self.evento("A"), self.reversao()])
@@ -249,6 +273,20 @@ aba_taxas = "Vigente"
             self.assertEqual(valores, {"A": Decimal("2.50"), "R": Decimal("-2.50"), "E": Decimal("-2.00")})
             manifesto = publicar(resultado, raiz / "saida")
             self.assertEqual(manifesto["cobertura"]["calculadas"], 3)
+            with (dados / "orbe.csv").open("a", encoding="utf-8", newline="") as arquivo:
+                escritor = csv.writer(arquivo, delimiter=";")
+                escritor.writerow(["R2", "20/03/2031", "42", "REVERSAO ANTECIPACAO", "", "", "-40,00", "SEM_ANTECIPACAO", "19/03/2031"])
+                escritor.writerow(["E2", "20/03/2031", "42", "ESTORNO", "CREDITO A VISTA", "1", "-30,00", "SEM_VENDA", "19/03/2031"])
+            orfaos = executar(dados, config)
+            self.assertEqual(orfaos.situacao, "PROVISORIO")
+            self.assertEqual(orfaos.comissoes[0]["comissao_brl"], "-3.60")
+            self.assertEqual({c.origem.ref for c in orfaos.contribuicoes if c.original_ausente}, {"R2", "E2"})
+            manifesto = publicar(orfaos, raiz / "saida")
+            self.assertEqual(manifesto["cobertura"]["calculadas"], 5)
+            with (raiz / "saida" / "pendencias.csv").open(encoding="utf-8", newline="") as arquivo:
+                pendencias = list(csv.DictReader(arquivo, delimiter=";"))
+            self.assertEqual({p["ref_origem"] for p in pendencias if p["tipo"] == "ORIGEM_ORBE_A_CONFIRMAR"},
+                             {"R2", "E2"})
 
 
 if __name__ == "__main__":

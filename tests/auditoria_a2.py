@@ -86,10 +86,7 @@ def verificar(manifesto, arquivos, config, origens):
                                and original["cod_estabelecimento"] == e["cod_estabelecimento"]
                                and original["data_movimento"] == e["data_venda_original"],
                                "Estorno da devolução sem vínculo compatível com a venda original")
-                    else:
-                        exigir(e["data_venda_original"][3:] != e["data_movimento"][3:]
-                               and not r.get("arquivo_evento_original"),
-                               "Estorno do mês sem venda original verificável na devolução")
+                    # RN-65 admite original do próprio mês ausente, sob pendência derivada.
                 exigir(dinheiro(r["valor"]) == numero_br(e["valor_taxa"]), "Devolução não usa cobrança efetiva isenta")
         else:
             exigir(s["tipo"] == "CONTESTACAO_TAXA_ORBE" and s.get("natureza_valor") == "DIFERENCA_CONTRATUAL_LIQUIDA", "Natureza da contestação incorreta")

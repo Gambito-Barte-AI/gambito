@@ -1,7 +1,7 @@
 {
-  "versao": 8,
+  "versao": 9,
   "escopo": "CHECKOUT_MINIMO",
-  "etapa": "ALVO_A6",
+  "etapa": "EXTRA_E3",
   "situacao": "COMPLETO",
   "escopo_situacao": "CHECKOUT",
   "competencia": "2026-09",
@@ -10,7 +10,7 @@
     "regras": {
       "arquivo": "regras.toml",
       "situacao": "DISPONIVEL",
-      "sha256": "3e672771c10fe4c97b064deddfcfa200e029c6a7795baf33716761a34971efeb",
+      "sha256": "6aaa3c16864fc6a033c2c370e84a1032db7e98b703eabb4a8ae4f398524f30c0",
       "metadados_incompletos": [],
       "parametros_remessa": {
         "id": "PONTE_RN31_RN32_D02_D10",
@@ -235,7 +235,7 @@
           "natureza": "INTERPRETACAO_TECNICA",
           "pendencia_tipo": "CREDITO_NAO_IDENTIFICADO",
           "motivo": "Crédito sem identificação do pagador; não representa receita (RN-52).",
-          "proximo_passo": "Identificar pagador e finalidade com o Financeiro antes de reclassificar; não reconhecer receita.",
+          "proximo_passo": "Caio deve identificar pagador e finalidade com o banco até o fechamento de outubro; Financeiro revisa antes de reclassificar. Não reconhecer receita.",
           "quem_decide": "Financeiro"
         },
         {
@@ -1449,7 +1449,7 @@
     },
     {
       "id": "D-03",
-      "descricao": "Alerta de antecipação (RN-63): não entra nesta entrega (último item da ordem de corte). Critério do time para quando entrar: só lojista com contrato bloqueado em contratos_bloqueados (hoje a Atlas); sem corte em reais; pico = maior saldo ao fim de cada dia (antecipações menos reversões vinculadas, nos eventos fornecidos); uma pendência ALERTA_ANTECIPACAO por lojista, valor = pico, citando data do pico e reversões, para Financeiro e Comercial. Não altera nenhum outro valor.",
+      "descricao": "Alerta de antecipação (RN-63): o corte original da entrega foi superado pela ativação posterior de E3 aprovada pelo usuário, registrada em extras.alertas. Critério: só lojista com contrato bloqueado em contratos_bloqueados; sem corte em reais; pico = maior saldo ao fim de cada dia (antecipações menos reversões vinculadas, nos eventos fornecidos); uma pendência ALERTA_ANTECIPACAO por lojista, valor = pico, citando data do pico e reversões, para Financeiro e Comercial. Não altera comissões, divergências, notas ou classificações.",
       "fonte": "docs/documentação-geral.md RN-63 e D-03; Slack 2026-10-17 11:37, 11:49 e 12:50 (o critério do alerta é do time; o pico é razoável)",
       "aprovacao": "Decisão do time registrada por Alice Carvalho às 17h36, para não deixar decisão pendente na entrega; proposta preparada com apoio de IA.",
       "aprovador": "Time (Alice Carvalho)",
@@ -1467,8 +1467,22 @@
     }
   ],
   "fora_do_escopo": [
-    "extras"
+    "E4"
   ],
+  "criterio_alertas": {
+    "habilitado": true,
+    "id": "D03_PICO_FIM_DIA",
+    "metodo": "SALDO_FIM_DIA",
+    "sem_valor_minimo": true,
+    "elegibilidade": "CONTRATOS_BLOQUEADOS",
+    "reversao_fora_periodo": "LISTAR_SEM_ABATER",
+    "exposicao_anterior": "DESCONHECIDA",
+    "fonte": "docs/documentação-geral.md RN-63/D-03; Slack 2026-10-17 12:50; critérios operacionais aprovados pelo usuário nesta conversa em 2026-10-17",
+    "aprovacao": "Pico do saldo ao fim de cada dia, sem limiar; somente contrato explicitamente bloqueado; listar reversão sem original disponível sem abater; exposição anterior desconhecida; uma pendência por lojista.",
+    "aprovador": "Usuário nesta conversa (decisão do time); Financeiro aceitou uso do pico no Slack",
+    "aprovado_em": "2026-10-17",
+    "natureza": "DECISAO_TIME"
+  },
   "escopo_comando": "alvo",
   "situacao_comando": "COMPLETO",
   "fechamento": {
@@ -1484,7 +1498,8 @@
       "NOTAS_CHECKOUT",
       "NOTAS_REMESSA",
       "EXTRATO_AURORA",
-      "EXTRATO_MERIDIANO"
+      "EXTRATO_MERIDIANO",
+      "ALERTAS_ANTECIPACAO"
     ],
     "bloqueadas": [],
     "provisorias": []
@@ -1770,6 +1785,34 @@
         "pendentes": 0,
         "bloqueadas": 0
       }
+    },
+    "ALERTAS_ANTECIPACAO": {
+      "situacao": "COMPLETO",
+      "motivos": [],
+      "implementado": true,
+      "rastro_validado": true,
+      "dependencias": {
+        "fontes": [
+          "orbe",
+          "taxas",
+          "regras"
+        ],
+        "partes": []
+      },
+      "fontes": {
+        "orbe": "DISPONIVEL",
+        "taxas": "DISPONIVEL",
+        "regras": "DISPONIVEL"
+      },
+      "relatorios": [
+        "pendencias.csv"
+      ],
+      "cobertura": {
+        "linhas_lidas": 1,
+        "calculadas": 1,
+        "pendentes": 0,
+        "bloqueadas": 0
+      }
     }
   },
   "resultados": {
@@ -1834,11 +1877,12 @@
         "NOTAS_CHECKOUT",
         "NOTAS_REMESSA",
         "EXTRATO_AURORA",
-        "EXTRATO_MERIDIANO"
+        "EXTRATO_MERIDIANO",
+        "ALERTAS_ANTECIPACAO"
       ],
       "partes_bloqueadas": [],
       "motivos": [],
-      "linhas": 83
+      "linhas": 84
     },
     "rastro.csv": {
       "situacao": "COMPLETO",
@@ -1854,11 +1898,12 @@
         "NOTAS_CHECKOUT",
         "NOTAS_REMESSA",
         "EXTRATO_AURORA",
-        "EXTRATO_MERIDIANO"
+        "EXTRATO_MERIDIANO",
+        "ALERTAS_ANTECIPACAO"
       ],
       "partes_bloqueadas": [],
       "motivos": [],
-      "linhas": 5080
+      "linhas": 5086
     }
   },
   "publicacao_concluida": true,
@@ -1867,7 +1912,7 @@
     "divergencias_taxa.csv": "a570355cfc449062f82bca1897a3c44405cb55765eaa6d987c5378e6b0c613c9",
     "notas_a_emitir.csv": "6cf567c3d233152a64f37f00e21f3b2efdad14262243700e49a3eeaafc3ecc57",
     "lancamentos_classificados.csv": "e55b99e52476fe4b0f7274f1d67cbdeca5dcd5ba04c40c7ec25645f361e153bd",
-    "pendencias.csv": "159a80fd39eb4ac838c414d2028f3c14b083e4f6bb10a532d7e33196d6a5e7ea",
-    "rastro.csv": "e3df1175eecf49232c7abc15103659001937876b4cd619f04095f59ba22daf78"
+    "pendencias.csv": "8dd59af4cf77f4e71a0a0fd68723d5f76f919c6e30c4bc40be96d0bd41ff65f0",
+    "rastro.csv": "3c79276d30b793c2dc37b2787b74c9cf8abe9ef0b41ac287e7e6a70e7ae62d15"
   }
 }

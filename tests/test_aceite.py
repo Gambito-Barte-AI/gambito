@@ -157,11 +157,16 @@ tratamento_atual = "Amostra de verificação da preservação das decisões"
         self.executar(2)
         self.assertEqual(self.auditar("PROVISORIO")["total_brl"], "0.01")
 
-    def test_referencia_do_mes_ausente_vira_pendencia(self):
+    def test_referencia_do_mes_ausente_entra_com_pendencia_derivada(self):
         self.arquivo_orbe("ajuste.csv", [dict(id_transacao="E", tipo_lancamento="ESTORNO",
             valor_bruto="-1,00", id_referencia="NAO_EXISTE", data_venda_original="02/04/2032")])
         self.executar(2)
-        self.assertEqual(self.auditar("PROVISORIO")["cobertura"]["pendentes"], 1)
+        aceite = self.auditar("PROVISORIO")
+        self.assertEqual(aceite["cobertura"]["calculadas"], 2)
+        self.assertEqual(aceite["cobertura"]["pendentes"], 0)
+        with (self.saida / "pendencias.csv").open(encoding="utf-8", newline="") as arquivo:
+            linhas = list(csv.DictReader(arquivo, delimiter=";"))
+        self.assertEqual(len([l for l in linhas if l["id_saida"].startswith("AJUSTE_ORFAO_ORBE:")]), 1)
 
     def test_escolha_explicita_de_competencia_e_mes_invalido(self):
         from tarvo.execucao import executar
@@ -278,10 +283,13 @@ natureza = "FINANCEIRA"
         original = Path(__file__).resolve().parents[1] / "regras.toml"
         texto = original.read_text(encoding="utf-8")
         config = carregar(original)
-        from datetime import datetime
-        for r in config["observacoes_esclarecidas"]:
-            self.assertTrue(r["aprovado_em"] == "NAO_INFORMADO" or datetime.fromisoformat(r["aprovado_em"]))
-        self.regras.write_text(texto.replace('aprovador = ', 'aprovador_omitido = ', 1), encoding="utf-8")
+        self.assertTrue(all(r["aprovado_em"] != "NAO_INFORMADO" for r in config["observacoes_esclarecidas"]))
+        # A fonte atual documenta as datas; uma fonte futura sem evidência deve
+        # poder declarar a ausência, sem inventar aprovação financeira.
+        self.regras.write_text(texto.replace('2026-10-16T20:24:00-03:00', 'NAO_INFORMADO', 1), encoding="utf-8")
+        self.assertEqual(carregar(self.regras)["vinculos"][0]["aprovado_em"], "NAO_INFORMADO")
+        cabecalho, vinculos = texto.split('[[vinculos]]', 1)
+        self.regras.write_text(cabecalho + '[[vinculos]]' + vinculos.replace('aprovador = ', 'aprovador_omitido = ', 1), encoding="utf-8")
         with self.assertRaisesRegex(ErroEntrada, "RN-61"):
             carregar(self.regras)
         self.regras.write_text(texto.replace('2026-10-16T20:24:00-03:00', 'ontem', 1), encoding="utf-8")

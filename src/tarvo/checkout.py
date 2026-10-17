@@ -28,9 +28,6 @@ def conferir_estorno(evento: Evento, por_ref: dict, totais_estornados: dict) -> 
         return "Data da venda original posterior ao estorno"
     original = por_ref.get(evento.referencia)
     if original is None:
-        # O case inclui vendas do mês anterior que não estão no arquivo atual.
-        if evento.data_original.strftime("%Y-%m") == evento.data.strftime("%Y-%m"):
-            return "Venda referenciada do mês ausente; não foi possível conferir a relação"
         return ""
     if original.tipo != "VENDA" or original.ec != evento.ec or original.bruto <= 0:
         return "Estorno referencia evento de tipo, lojista ou sinal incompatível"
@@ -87,10 +84,16 @@ def calcular(eventos: list[Evento], cadastro: Cadastro, regras: dict):
         if evento.tipo == "REVERSAO ANTECIPACAO":
             original = por_ref.get(evento.referencia)
             calculada = antecipacoes_calculadas.get(evento.referencia)
-            if not evento.referencia or original is None:
-                pendente("Antecipação referenciada ausente; reversão não reconstruída por estimativa")
-            elif quantidades_reversao[evento.referencia] != 1:
+            if not evento.referencia or evento.data_original is None or evento.data_original > evento.data:
+                pendente("Reversão sem referência ou data original válida")
+                continue
+            if quantidades_reversao[evento.referencia] != 1:
                 pendente("Múltiplas reversões da mesma antecipação; requer decisão humana")
+            elif original is None and evento.data_original.strftime("%Y-%m") != evento.data.strftime("%Y-%m"):
+                pendente("Antecipação histórica referenciada ausente; requer decisão humana")
+            elif original is None:
+                # RN-65: o ajuste órfão usa a própria linha, sob revisão financeira.
+                pass
             elif original.tipo != "ANTECIPACAO" or original.ec != evento.ec:
                 pendente("Reversão referencia tipo ou lojista incompatível")
             elif evento.data_original != original.data or original.data > evento.data:
@@ -105,13 +108,18 @@ def calcular(eventos: list[Evento], cadastro: Cadastro, regras: dict):
                     valor=-calculada.valor, tipo=evento.tipo, ref_original=original.origem.ref,
                     arquivo_original=original.origem.arquivo,
                 ))
-            continue
+            if (original is not None or quantidades_reversao[evento.referencia] != 1
+                    or evento.data_original.strftime("%Y-%m") != evento.data.strftime("%Y-%m")):
+                continue
         faixa = selecionar_faixa(evento, regras["modalidades"])
         if faixa is None:
             pendente("Modalidade ou faixa não suportada (acima de 12x ou parcelas inconsistentes)")
             continue
         if evento.tipo == "ESTORNO":
             problema = conferir_estorno(evento, por_ref, totais_estornados)
+            data_base = evento.data_original
+        elif evento.tipo == "REVERSAO ANTECIPACAO":
+            problema = ""
             data_base = evento.data_original
         else:
             problema = ""
@@ -143,6 +151,8 @@ def calcular(eventos: list[Evento], cadastro: Cadastro, regras: dict):
             evento.origem, contrato.origem, identidade.cnpj, identidade.nome,
             evento.data.strftime("%Y-%m"), contratada, valor, faixa, regra, identidade.vinculo,
             evento.tipo, data_base, evento.referencia, original.origem.arquivo if original else "",
+            bool(original is None and evento.tipo in {"ESTORNO", "REVERSAO ANTECIPACAO"}
+                 and data_base.strftime("%Y-%m") == evento.data.strftime("%Y-%m")),
         )
         contribuicoes.append(contribuicao)
         if evento.tipo == "ANTECIPACAO":

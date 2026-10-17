@@ -11,6 +11,7 @@ from . import checkout, classificacao, divergencias, notas, remessas, regras, va
 from .leitores import aurora, meridiano, orbe, plano_contas, ponte, taxas
 from .modelos import Cadastro, ErroEntrada, Resultado, ResultadoParte
 from .partes import preparar_partes
+from .extras import alertas
 
 
 def executar(pasta: Path, configuracao: Path, competencia: str | None = None) -> Resultado:
@@ -20,6 +21,7 @@ def executar(pasta: Path, configuracao: Path, competencia: str | None = None) ->
     notas.preparar(resultado, configuracao)
     _executar_banco(resultado, pasta, configuracao, competencia, "AURORA", aurora)
     _executar_banco(resultado, pasta, configuracao, competencia, "MERIDIANO", meridiano)
+    alertas.preparar(resultado)
     preparar_partes(resultado)
     return resultado
 
@@ -77,6 +79,10 @@ def _executar_checkout(pasta: Path, configuracao: Path, competencia: str | None 
     config = None
     try:
         config = regras.carregar(configuracao)
+        extras = config.get("extras", {})
+        criterio_alertas = extras.get("alertas") if isinstance(extras, dict) else extras
+        if criterio_alertas is not None and (not isinstance(criterio_alertas, dict) or criterio_alertas.get("habilitado") is not False):
+            resultado.contexto_alertas = dict(eventos=[], elegiveis={}, config=criterio_alertas)
         resultado.decisoes_pendentes = config.get("decisoes_pendentes", [])
         resultado.decisoes_documentadas = config.get("decisoes_documentadas", [])
         resultado.fontes["regras"] = {
@@ -120,6 +126,10 @@ def _executar_checkout(pasta: Path, configuracao: Path, competencia: str | None 
         except (ErroEntrada, OSError) as exc:
             bloqueios.append(str(exc))
             resultado.fontes[nome] = {"situacao": "BLOQUEADO", "motivo": str(exc)}
+    if resultado.contexto_alertas is not None:
+        resultado.contexto_alertas["eventos"] = resultado.eventos
+        if resultado.fontes.get("taxas", {}).get("situacao") == "DISPONIVEL":
+            resultado.contexto_alertas["elegiveis"] = alertas.elegibilidade(resultado.eventos, cadastro, config)
     competencias = resultado.ingestao.get("competencias", [])
     if len(competencias) == 1:
         resultado.competencia = competencias[0]
@@ -145,10 +155,13 @@ def _executar_checkout(pasta: Path, configuracao: Path, competencia: str | None 
         resultado.motivos = [str(exc)]
         return resultado
     dados_pendentes = any(p.categoria == "DADOS" for p in resultado.pendencias)
-    resultado.situacao = "PROVISORIO" if dados_pendentes or resultado.avisos else "COMPLETO"
+    orfaos = any(c.original_ausente for c in resultado.contribuicoes)
+    resultado.situacao = "PROVISORIO" if dados_pendentes or orfaos or resultado.avisos else "COMPLETO"
     resultado.motivos.extend(resultado.avisos)
     if dados_pendentes:
         resultado.motivos.append("Há linhas não calculadas; os CSVs representam somente os eventos de checkout validados")
+    if orfaos:
+        resultado.motivos.append("Ajustes órfãos do próprio mês foram calculados pela linha recebida; solicitar originais à Orbe e conferir antes de aprovar")
     return resultado
 
 

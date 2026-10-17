@@ -115,6 +115,15 @@ def validar(resultado: Resultado) -> None:
             continue
         ref = (contribuicao.arquivo_original, contribuicao.ref_original)
         original = originais.get(ref)
+        if contribuicao.original_ausente:
+            if (original is not None or contribuicao.arquivo_original
+                    or not contribuicao.ref_original or contribuicao.data_base_taxa is None
+                    or contribuicao.data_base_taxa.strftime("%Y-%m") != contribuicao.competencia):
+                raise ErroEntrada("Reversão órfã sem referência e base temporal coerentes")
+            if contribuicao.ref_original in reversoes:
+                raise ErroEntrada("Reversão órfã repetida")
+            reversoes.add(contribuicao.ref_original)
+            continue
         if (original is None or original.tipo != "ANTECIPACAO" or ref in reversoes
                 or original.cnpj != contribuicao.cnpj or contribuicao.valor != -original.valor
                 or contribuicao.taxa != original.taxa or contribuicao.contrato != original.contrato

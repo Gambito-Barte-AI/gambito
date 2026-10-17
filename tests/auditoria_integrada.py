@@ -10,7 +10,9 @@ from validar_saida import exigir, dinheiro
 VALORES = {"comissoes_por_lojista.csv": "comissao_brl", "divergencias_taxa.csv": "diferenca_brl",
            "notas_a_emitir.csv": "valor_brl", "lancamentos_classificados.csv": "valor", "pendencias.csv": "valor_brl"}
 PRODUTORES = {
+    "ALERTA_ANTECIPACAO:": "ALERTAS_ANTECIPACAO",
     "CHECKOUT:": "CHECKOUT", "REMESSA:": "REMESSAS", "PENDENCIA:": "PENDENCIAS_CHECKOUT",
+    "AJUSTE_ORFAO_ORBE:": "PENDENCIAS_CHECKOUT",
     "DIVERGENCIA:CHECKOUT:": "DIVERGENCIAS_CHECKOUT", "CONTESTACAO_ORBE:": "DIVERGENCIAS_CHECKOUT",
     "REVISAO_DIVERGENCIA:": "DIVERGENCIAS_CHECKOUT", "DEVOLUCAO_CHECKOUT:": "DEVOLUCAO_CASA",
     "REVISAO_DEVOLUCAO:": "DEVOLUCAO_CASA", "DIVERGENCIA:REMESSA:": "DIVERGENCIAS_REMESSA",

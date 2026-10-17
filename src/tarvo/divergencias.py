@@ -84,7 +84,7 @@ def calcular_divergencias(eventos, contribuicoes, pendencias_base, regras, linha
         divergencias.rastro.extend(origem_rastro(c, id_saida, v, "CONTESTACAO_ORBE") for c, v in itens)
     divergencias.cobertura = dict(linhas_lidas=linhas_lidas, calculadas=len(ordenadas) - desconhecidas,
                                   pendentes=linhas_lidas - len(ordenadas) + desconhecidas, bloqueadas=0)
-    if avisos or any(p.categoria == "DADOS" for p in pendencias_base):
+    if avisos or any(p.categoria == "DADOS" for p in pendencias_base) or any(c.original_ausente for c in contribuicoes):
         divergencias.situacao = "PROVISORIO"
         divergencias.motivos.append("Há fontes rejeitadas ou eventos não resolvidos; análise restrita ao subconjunto contratual disponível")
 
@@ -131,7 +131,7 @@ def calcular_devolucao(eventos, contribuicoes, pendencias_base, regras, linhas_l
             devolucao.rastro.extend(origem_rastro(c, id_saida, v, "DEVOLUCAO_LOJISTA") for c, v in itens)
     devolucao.cobertura = dict(linhas_lidas=elegiveis_total, calculadas=elegiveis_total - valores_desconhecidos,
                               pendentes=valores_desconhecidos, bloqueadas=0)
-    if avisos or any(p.categoria == "DADOS" for p in pendencias_base):
+    if avisos or any(p.categoria == "DADOS" for p in pendencias_base) or any(c.original_ausente for c in contribuicoes):
         if devolucao.situacao != "BLOQUEADO":
             devolucao.situacao = "PROVISORIO"
         devolucao.motivos.append("Cobertura da fonte incompleta; não liberar devolução sem revisão")
