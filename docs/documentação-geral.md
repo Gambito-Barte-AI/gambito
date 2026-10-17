@@ -1,6 +1,6 @@
 # Documentação · Gambito · fechamento mensal da Tarvo
 
-**Desafio Barte AI · 17/10/2026 · versão das 13h40 (Slack lido até 12h50)**
+**Desafio Barte AI · 17/10/2026 · versão das 14h (Slack lido até 13h10, com o arquivo 06)**
 
 ## Como este documento está organizado
 
@@ -41,7 +41,7 @@ flowchart LR
   T -.-> G
 ```
 
-**A tarefa:** fazer o fechamento de **setembro/2026** a partir de 6 arquivos, do jeito que cada sistema exporta, e gerar 6 saídas: comissões por lojista, divergências de taxa, notas a emitir, lançamentos classificados no plano de contas, pendências e rastro. A solução precisa rodar de novo no mês seguinte, com arquivos novos, sem ninguém mexer no código.
+**A tarefa:** fazer o fechamento de **setembro/2026** a partir de 6 arquivos (mais os **ajustes tardios da Orbe**, que chegaram no meio do dia como arquivo 06), do jeito que cada sistema exporta, e gerar 6 saídas: comissões por lojista, divergências de taxa, notas a emitir, lançamentos classificados no plano de contas, pendências e rastro. A solução precisa rodar de novo no mês seguinte, com arquivos novos, sem ninguém mexer no código.
 
 **O detalhe que define o case:** "regras de negócio que não estão escritas em nenhum arquivo existem. Quem sabe é o time financeiro" (data pack). Boa parte do trabalho foi descobrir essas regras.
 
@@ -144,8 +144,9 @@ A **IA entra só em pontos estreitos**: sugerir a conta de um histórico bancár
 | **04 Plano de contas Fênix** | CSV latin-1 (exportado do ERP) | Conta contábil | Código da conta | Só contas analíticas aceitam lançamento `FATO` |
 | **05a Aurora** | CSV de banco com cabeçalho | Movimento da conta principal | **Linha física** (L9…) | Nome do lojista cortado; saldo negativo é a conta garantida `FATO` / `CONFIRMADO` |
 | **05b Meridiano** | OFX em cp1252 | Movimento da conta de remessas | **FITID** | Acentos quebrados; transferências entre contas próprias `FATO` |
+| **06 Ajustes tardios da Orbe** | CSV no **mesmo formato do 01**; chegou às 13h10 do dia do fechamento | Lançamentos que ficaram fora do relatório (em setembro: 10 estornos, 3 reversões de antecipação e 1 venda) | `id_transacao`; o `id_referencia` aponta para linhas do 01 | Pode chegar depois do relatório; precisa entrar no fechamento `FATO` / `CONFIRMADO` |
 
-- **Acesso e disponibilidade:** os 6 arquivos vêm no data pack. Todo mês a estrutura é a mesma, mas, na prática, arquivo chega atrasado, a Orbe manda ajuste depois e já houve parceiro mudando o layout sem avisar. A solução precisa **avisar, não quebrar calada**. `CONFIRMADO`
+- **Acesso e disponibilidade:** os 6 arquivos vêm no data pack. Todo mês a estrutura é a mesma, mas, na prática, arquivo chega atrasado, a Orbe manda ajuste depois e já houve parceiro mudando o layout sem avisar. A solução precisa **avisar, não quebrar calada**. `CONFIRMADO` Isso aconteceu no próprio dia: às 13h10 a Orbe mandou 14 ajustes de setembro (arquivo 06), e o fechamento entregue precisa considerá-los. `CONFIRMADO`
 - **Transformação:** leitura "como vem", normalização e ligação pelo cadastro de lojista (camadas 1 a 3 da solução).
 - **Saídas:** 6 CSVs com `;` em `saida/`.
 - **Teste e validação:** sem treino de modelo. A validação é o **rastro** (cada número soma as linhas de origem), os **números de referência** da análise exploratória (só para conferir, nunca como critério) e um **mês simulado** para provar que nada está fixo em setembro.
@@ -241,7 +242,7 @@ As hipóteses viraram as **perguntas que fizemos ao financeiro**. As respostas v
 |---|---|
 | Qual o tamanho do problema? | **R$ 2.995,08** de divergência de contrato (Rota Global R$ 1.546,28; Bridge R$ 29,95; Mundo Aberto R$ 1.418,85) e **R$ 15.396,77** a devolver à Casa do Estudante. Cerca de **7% da comissão do mês** |
 | Qual o baseline? | 8 dias úteis × 3 pessoas por mês; erro de taxa descoberto por reclamação |
-| O que mais está em jogo? | Comissão de checkout (~R$ 207 mil) e de remessa (~R$ 39,5 mil, paga só com nota); Atlas transacionando sem contrato (R$ 262 mil brutos) |
+| O que mais está em jogo? | Comissão de checkout (~R$ 204 mil, já com os ajustes tardios) e de remessa (~R$ 39,5 mil, paga só com nota); Atlas transacionando sem contrato (R$ 262 mil brutos) |
 | Qual o ganho esperado? | Divergência achada no fechamento, nota da Ponte certa e menos dias de trabalho manual. O número de dias só depois de medir |
 
 ### Bloco 9 · Riscos
@@ -322,6 +323,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RN-17 | **Lojista sem contrato** (Atlas, EC 1076801732): **não fatura**, vira pendência para o comercial. Aparecer com zero ou ficar fora do arquivo de comissões é escolha nossa (ver D-07); **faturar é proibido**. | SLACK 16 20:24 / 17 11:38 e 11:41 | Atlas sem nota; pendência com as 57 linhas |
 | [ ] | RN-18 | Atlas: quando o comercial confirmar, a taxa vale **desde 10/09** e o mês seguinte fatura as linhas de setembro junto. | SLACK 17 09:47 | (Extra) linhas guardadas num formato que o próximo fechamento lê |
 | [ ] | RN-19 | **O repasse ao lojista não para** sem contrato; só o faturamento da taxa fica suspenso. | SLACK 17 11:03 | Pix enviado à Atlas classificado como repasse normal |
+| [ ] | RN-65 | **Ajustes tardios da Orbe:** arquivos no **mesmo formato do 01** que chegam depois do relatório (ex.: `06_orbe_ajustes_tardios_set2026.csv`) **entram no fechamento** da competência do `data_movimento`, com as mesmas regras (RN-08 a RN-19, RN-64). O `id_referencia` pode apontar para linhas do relatório principal (estorno → venda; reversão → antecipação). O mesmo `id_transacao` em dois arquivos conta uma vez e vira pendência; referência não encontrada vira pendência. É o caso real descrito pelo financeiro ("a Orbe manda ajuste depois do relatório"), não um erro. | ORG 17 13:10 / SLACK 17 12:31 | Rodar com 01 + 06: as 14 linhas entram, o rastro delas aponta para o arquivo 06 e a comissão de checkout muda em 7 lojistas |
 
 ### II.1.4 Divergências de taxa
 
@@ -420,7 +422,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 
 | ✓ | ID | Premissa | Se estiver errada |
 |---|---|---|---|
-| [ ] | P-01 | Todo mês chegam os mesmos 6 arquivos, nos mesmos formatos (confirmado às 12:31, mas **com exceções na prática**: atraso, ajuste tardio, layout mudado sem aviso) | A leitura precisa aceitar layouts novos; a integração direta sobe de prioridade. Por isso existe o RF-03 |
+| [ ] | P-01 | Todo mês chegam os mesmos 6 arquivos, nos mesmos formatos (confirmado às 12:31, mas **com exceções na prática**: atraso, ajuste tardio, layout mudado sem aviso; o ajuste tardio aconteceu no próprio dia, com o arquivo 06) | A leitura precisa aceitar layouts novos; a integração direta sobe de prioridade. Por isso existe o RF-03 |
 | [ ] | P-02 | A planilha de taxas é a fonte do contrato; o resto fica no arquivo de regras com quem aprovou | Precisamos de um cadastro próprio de contratos |
 | [ ] | P-03 | EC, CNPJ e nome do banco se ligam por regra; as exceções viram pendência | A IA sugere vínculos e o cadastro vira uma tela de revisão |
 
@@ -432,8 +434,9 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 
 | ✓ | ID | Requisito | Nível | Como verificar |
 |---|---|---|---|---|
-| [ ] | RF-01 | Receber a **pasta do mês** (ou upload) com os 6 arquivos. A banca pode rodar com arquivos que chegarem durante o dia | Mínimo | Rodar apontando para outra pasta funciona |
+| [ ] | RF-01 | Receber a **pasta do mês** (ou upload) com os arquivos do mês (as 6 fontes **mais os ajustes que chegarem depois**, como o arquivo 06). A banca pode rodar com arquivos que chegarem durante o dia | Mínimo | Rodar apontando para outra pasta funciona |
 | [ ] | RF-02 | Ler cada arquivo **como vem**: CSV `;` com vírgula decimal, XLSX com cabeçalho deslocado, .eml com XLSX anexo, CSV latin-1, CSV de banco com cabeçalho, OFX cp1252. **Mínimo:** Orbe, planilha de taxas e `regras.toml`. **Alvo:** e-mail da Ponte, plano de contas, Aurora e Meridiano | Mínimo / Alvo | Nenhum arquivo editado à mão; a falta de um arquivo do alvo não impede o checkout |
+| [ ] | RF-22 | Ler **todos os arquivos da Orbe** da pasta (relatório + ajustes tardios), **reconhecidos pelo cabeçalho, não por um nome fixo**; juntar sem duplicar `id_transacao` e marcar no rastro de qual arquivo veio cada linha (RN-65) | Mínimo | Pasta com 01 + 06 → 1.957 linhas da Orbe cobertas; `arquivo_origem` = arquivo 06 nas 14 linhas novas; pasta só com o 01 também roda |
 | [ ] | RF-03 | **Validar o layout na entrada** (colunas, abas, encoding). Se mudou ou faltou, **avisar com mensagem clara** (arquivo + o que mudou), sem quebrar calado | Alvo | Teste com uma coluna renomeada → aviso claro |
 | [ ] | RF-04 | Montar o **cadastro de lojista** (EC ↔ CNPJ ↔ nomes) a partir da planilha + arquivo de regras | Mínimo | RN-03 a RN-07 passam |
 | [ ] | RF-05 | Calcular a **comissão de checkout** | Mínimo | RN-08 a RN-19 passam |
@@ -568,6 +571,7 @@ Critérios em D-13. Uma pendência de negócio não torna o módulo provisório:
 | Fonte indisponível | Consequência |
 |---|---|
 | Orbe | Checkout bloqueado; módulos independentes continuam |
+| Ajustes tardios da Orbe (ainda não chegaram) | Nada fica bloqueado: o checkout fecha com o relatório. Quando o ajuste chega, roda-se de novo e o manifesto lista os arquivos usados |
 | Relatório da Ponte | Remessas bloqueadas; checkout continua |
 | Planilha de taxas | Checkout bloqueado; a comissão de remessa pelo spread realizado pode continuar, com a comparação contratual bloqueada |
 | Um extrato | O outro continua, conforme as suas dependências |
@@ -621,7 +625,7 @@ Os leitores e cálculos de remessas, bancos e plano de contas entram no alvo.
 
 | Entrega | Objetivo | Aceite |
 |---|---|---|
-| **1 · Primeiro fluxo de ponta a ponta** | Ler Orbe e taxas, calcular vendas com contrato inequívoco e gerar comissão e rastro | Pasta configurável; taxa contratada; rastro exato; eventos ainda não suportados viram pendência; cobertura parcial explícita; a falta de arquivos do alvo não impede o checkout |
+| **1 · Primeiro fluxo de ponta a ponta** | Ler Orbe (relatório + ajustes tardios) e taxas, calcular vendas com contrato inequívoco e gerar comissão e rastro | Pasta configurável; taxa contratada; rastro exato; eventos ainda não suportados viram pendência; cobertura parcial explícita; a falta de arquivos do alvo não impede o checkout |
 | **2 · Identidade, faixas e vigências** | Completar a resolução contratual do checkout | CNPJ normalizado; faixas e vigências corretas; Casa isenta pela data da venda; Atlas identificada sem importar taxa antiga; contrato ambíguo e 13x viram pendência |
 | **3 · Estornos, antecipações e reversões** | Completar os tipos de evento do mínimo | Estorno no mês certo, com faixa da própria linha e vigência original; reversão ligada à antecipação; sinais e arredondamento corretos; cobertura total da Orbe explicada |
 | **4 · Aceite do mínimo** | Demonstrar correção e operação confiável | Roda só pelo README; rastro exato; resultado determinístico; nenhum evento descartado em silêncio; falhas com situação explícita; testes com mês sintético, soma corrompida, fonte inválida e modalidade desconhecida |
@@ -681,6 +685,7 @@ Os totais conhecidos do case (Parte I) são **conferências auxiliares**: não s
 - [ ] Nota da remessa única, para a Ponte Câmbio
 - [ ] Toda pendência com motivo, próximo passo e quem decide
 - [ ] Rodou sem um dos arquivos e avisou, fechando o resto (fechamento parcial)
+- [ ] Rodou com o arquivo 06 (ajustes tardios) na pasta, e o rastro aponta para ele
 - [ ] Rodou também com um mês simulado
 
 ---
@@ -699,6 +704,7 @@ Os totais conhecidos do case (Parte I) são **conferências auxiliares**: não s
 - **Alerta de antecipação:** a preocupação é lojista novo, pelo pico, citando reversões (RN-63, D-03).
 - **Chave de API:** pode ser enviada à banca, exclusiva e com limite de gasto (RNF-13).
 - **Saída:** só setembro, em `saida/` na raiz; não haverá pacote de outubro (RNF-16).
+- **14h:** a Orbe mandou ajustes tardios (arquivo 06, 13h10). Entraram a RN-65 e o RF-22 (ler todos os arquivos da Orbe pelo cabeçalho, sem nome fixo), a linha 06 na tabela de dados, o caso no fechamento parcial e no checklist. Com o 06, a comissão de checkout de referência passa de R$ 207.039,73 para **R$ 203.735,34** (7 lojistas mudam); divergências, Casa e Atlas não mudam.
 - **13h40:** entrou a Parte IV (arquitetura); RF-02 separa mínimo (Orbe + taxas) de alvo; RNF-16 segue o FORMATO_SAIDA.md (ponto decimal, datas ISO, colunas extras); RN-64 define as linhas elegíveis da Casa; D-07 e D-10 revistas; novas D-11 (valores da pendência de spread negativo), D-12 (CSV de resultado bloqueado), D-13 (situação dos resultados) e D-14 (competência).
 - **13h15:** a devolução pelo valor descontado de fato virou regra confirmada (RN-64, antiga D-08); o alerta pelo pico foi considerado razoável pelo financeiro (D-03).
 - **13h:** documento reorganizado em quatro partes; entrou a Parte I (entendimento do negócio pelo Data Product Canvas).
