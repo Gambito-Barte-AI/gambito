@@ -27,6 +27,15 @@ Registro de 17/10/2026. As respostas abaixo foram dadas no canal a outros times,
   - folha de agosto baixada em setembro: a provisão foi feita pelo valor pago, então a baixa é pelo valor cheio do lançamento. A solução não gera a provisão do mês.
 - **Colunas extras.** Podem ficar, desde que as colunas pedidas estejam presentes e com os nomes certos.
 
+Revisão completa do canal às 17h30 (63 respostas do Financeiro e da organização, de 16/10 19h59 a 17/10 16h52). Além do que já estava registrado, entram estes critérios das respostas da tarde:
+
+- **Isenção da Casa na antecipação (13h34).** Vale pela data da antecipação: é um serviço prestado no dia. Antecipação feita entre 01/09 e 31/12 é isenta, sem procurar as vendas de origem. O motor já usa a data do movimento da antecipação.
+- **Ajuste tardio da Orbe depois da aprovação (13h34).** Se chegar antes da aprovação do fechamento, entra no mês do movimento (como o arquivo 06). Se chegar depois, entra no mês seguinte. A aprovação é do Financeiro e não é registrada nos arquivos; quem roda o fechamento escolhe a competência com `--competencia`.
+- **Correção de linha com o mesmo `id_transacao` (13h34).** Nunca aconteceu; o critério é nosso. A linha idêntica em dois arquivos conta uma vez. Se os valores forem diferentes, não escolhemos nenhum: as linhas viram pendência para o Financeiro.
+- **Ajuste órfão (14h10).** Regra do Financeiro: ajuste cuja original não está em nenhum arquivo entra pelo valor que veio e vira pendência para o Financeiro pedir a original à Orbe. **Diferença conhecida:** hoje o motor só abre a pendência para estorno de venda do mesmo mês sem original, sem lançar o valor na comissão. Em setembro não há esse caso (todas as referências do arquivo 06 estão no relatório), então nenhum resultado muda; o ajuste no código fica para o time.
+- **Bandeira no estorno (14h08).** A bandeira não muda a taxa. Estorno com bandeira diferente da venda segue vinculado pela referência, sem contestação e sem pendência (7 casos no arquivo 06).
+- **Alerta de antecipação (D-03).** O Financeiro disse que o alerta é para ele e para o comercial, que não muda nenhum número e que o critério é nosso (11h37, 11h49, 12h50). O critério operacional (pico, corte, elegibilidade e saída) **ainda não foi decidido pelo time**.
+
 ---
 
 # A7 — aceite integrado e reprodução final
