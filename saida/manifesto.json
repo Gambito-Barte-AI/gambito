@@ -10,7 +10,7 @@
     "regras": {
       "arquivo": "regras.toml",
       "situacao": "DISPONIVEL",
-      "sha256": "13eb26507c9f8c7a26528f1aa4bebd85b5d7722c66779c0c32fcbaec131c7900",
+      "sha256": "bad5a32c83028b96b9926145a904ea74432abab4c961ca3f1e7abcd410e187cd",
       "metadados_incompletos": [
         {
           "id": "OBS_BRIDGE_ANTERIOR",
@@ -1625,6 +1625,15 @@
       "aprovacao": "Financeiro aceitou 2.1.01.001 ou 2.1.01.002 com motivo; time escolheu a primeira pela obrigação de repasse.",
       "aprovador": "Financeiro (critério); time (escolha D-06)",
       "aprovado_em": "NAO_INFORMADO",
+      "natureza": "DECISAO_TIME"
+    },
+    {
+      "id": "D-03",
+      "descricao": "Alerta de antecipação (extra E3, RN-63): só para lojista com contrato explicitamente bloqueado em contratos_bloqueados; sem corte monetário. Pico = maior saldo acumulado ao fim de cada dia (antecipações menos reversões vinculadas, nos eventos fornecidos). Uma pendência ALERTA_ANTECIPACAO por lojista, valor = pico, citando data do pico e reversões; quem decide: Financeiro e Comercial. Não altera nenhum outro valor.",
+      "fonte": "docs/documentação-geral.md RN-63 e D-03; Financeiro, Slack 2026-10-17 12:50 (pico razoável; critério é do time)",
+      "aprovacao": "Time definiu o critério operacional: elegibilidade só por evidência explícita na configuração; pico de fim de dia, sem ordem intradiária inventada; exposição anterior ao período fica declarada como desconhecida.",
+      "aprovador": "Time (critério operacional); Financeiro (critério do pico, 12:50)",
+      "aprovado_em": "2026-10-17",
       "natureza": "DECISAO_TIME"
     }
   ],
