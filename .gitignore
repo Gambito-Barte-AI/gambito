@@ -25,3 +25,6 @@ node_modules/
 # Material do hackathon (não versionar)
 01_instrucoes_participantes.docx
 Tarvo_Data_Pack_set2026/
+
+# Local project context
+/Context/
