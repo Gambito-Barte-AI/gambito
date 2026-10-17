@@ -10,179 +10,8 @@
     "regras": {
       "arquivo": "regras.toml",
       "situacao": "DISPONIVEL",
-      "sha256": "13eb26507c9f8c7a26528f1aa4bebd85b5d7722c66779c0c32fcbaec131c7900",
-      "metadados_incompletos": [
-        {
-          "id": "OBS_BRIDGE_ANTERIOR",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "OBS_BRIDGE_NOVA",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "OBS_MUNDO_ABERTO",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "D-07",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "D-04",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "D-06",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "PONTE_RN31_RN32_D02_D10",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_ORBE_RECEBIVEIS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_TRANSFERENCIA_PROPRIA",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_TARIFAS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_FOLHA",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_INSS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_FGTS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_ISS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_IRRF",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_PIS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_COFINS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_CONDOMINIO",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_CLOUD",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_SOFTWARE",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_CONTABILIDADE",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_REPASSE_LOJISTAS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_CREDITO_NAO_IDENTIFICADO",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "AURORA_REPASSE_DEVOLVIDO",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_RECURSOS_LOJISTAS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_LIQUIDACAO_REMESSAS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_COMISSAO_A_RECEBER",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_TRANSFERENCIA_PROPRIA",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_APLICACAO",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_RESGATE",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_RENDIMENTO",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_TARIFAS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_SEGUROS",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        },
-        {
-          "id": "MERIDIANO_IOF",
-          "campo": "aprovado_em",
-          "valor": "NAO_INFORMADO"
-        }
-      ],
+      "sha256": "3e672771c10fe4c97b064deddfcfa200e029c6a7795baf33716761a34971efeb",
+      "metadados_incompletos": [],
       "parametros_remessa": {
         "id": "PONTE_RN31_RN32_D02_D10",
         "participacao_fracao": "0.5",
@@ -191,7 +20,7 @@
         "fonte": "docs/documentação-geral.md RN-28 a RN-41, D-02, D-05, D-10 e D-11; Slack 2026-10-16 20:48, 20:58 e 21:13; Slack 2026-10-17 11:33",
         "aprovacao": "Financeiro confirmou participação, spread padrão e o tratamento do ajuste (D-10, 11:33); time definiu tolerância D-02 e critério percentual D-05.",
         "aprovador": "Financeiro (RN-31/RN-32/D-10); time (D-02/D-05)",
-        "aprovado_em": "NAO_INFORMADO",
+        "aprovado_em": "2026-10-17T11:33:00-03:00",
         "natureza": "DECISAO_TIME"
       },
       "vigencias_spread": [
@@ -234,10 +63,10 @@
           "padrao": "^ted recebida (?:[0-9./-]+ )?orbe adquirencia\\b",
           "sinal": "CREDITO",
           "conta_codigo": "1.1.03.001",
-          "fonte": "docs/documentação-geral.md RN-46 e RN-56, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-56, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 22:34 (créditos da Orbe só classificados)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T22:34:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -245,10 +74,10 @@
           "padrao": "^transf entre contas p/ bco meridiano ag 0091 cc 90233-5$",
           "sinal": "DEBITO",
           "conta_codigo": "1.1.09.001",
-          "fonte": "docs/documentação-geral.md RN-46 e RN-54, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-54, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 e 2026-10-17 16:08",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -256,10 +85,10 @@
           "padrao": "^tar (?:pacote servicos pj|ted/pix avulsas)\\b",
           "sinal": "DEBITO",
           "conta_codigo": "4.2.01",
-          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 21:14 (despesa do mês)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T21:14:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -267,10 +96,10 @@
           "padrao": "^pagto salarios\\b",
           "sinal": "DEBITO",
           "conta_codigo": "2.1.04.001",
-          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 e 2026-10-17 15:55 (provisionado; baixa pelo valor cheio)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -278,10 +107,10 @@
           "padrao": "^gps inss\\b",
           "sinal": "DEBITO",
           "conta_codigo": "2.1.04.002",
-          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 (tributos de agosto provisionados)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -289,10 +118,10 @@
           "padrao": "^grf fgts\\b",
           "sinal": "DEBITO",
           "conta_codigo": "2.1.04.003",
-          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 (tributos de agosto provisionados)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -300,10 +129,10 @@
           "padrao": "^pagto iss\\b",
           "sinal": "DEBITO",
           "conta_codigo": "2.1.03.003",
-          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 (tributos de agosto provisionados)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -311,10 +140,10 @@
           "padrao": "^debito darf 0561 irrf\\b",
           "sinal": "DEBITO",
           "conta_codigo": "2.1.03.004",
-          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 (tributos de agosto provisionados)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -322,10 +151,10 @@
           "padrao": "^debito darf 8109 pis\\b",
           "sinal": "DEBITO",
           "conta_codigo": "2.1.03.001",
-          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 (tributos de agosto provisionados)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -333,10 +162,10 @@
           "padrao": "^debito darf 2172 cofins\\b",
           "sinal": "DEBITO",
           "conta_codigo": "2.1.03.002",
-          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-47 e RN-48, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 (tributos de agosto provisionados)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -344,10 +173,10 @@
           "padrao": "^boleto (?:condominio|aluguel)\\b",
           "sinal": "DEBITO",
           "conta_codigo": "4.2.02",
-          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 21:14 (aluguel é despesa do mês)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T21:14:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -355,10 +184,10 @@
           "padrao": "^deb aut amazon web services\\b",
           "sinal": "DEBITO",
           "conta_codigo": "4.2.03",
-          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 21:14 (cloud é despesa do mês)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T21:14:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -366,10 +195,10 @@
           "padrao": "^cartao pj - google workspace\\b",
           "sinal": "DEBITO",
           "conta_codigo": "4.2.04",
-          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 21:14 (assinaturas são despesa do mês)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T21:14:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -377,10 +206,10 @@
           "padrao": "^pix enviado contabilidade\\b",
           "sinal": "DEBITO",
           "conta_codigo": "4.2.06",
-          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 21:14 e 2026-10-17 15:47 (único Pix que não é repasse)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T15:47:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -388,10 +217,10 @@
           "padrao": "^pix enviado (?:rota global|novo horizonte|kiwi experience|andes expedicoes|dublin hub|sol nascente|vela turismo|mundo aberto|casa do estudante|edu abroad|oxford prep|bem-vindo exchange|escola bridge|horizonte viagens|atlas idiomas|maple study|lisboa cursos|trilha jovem|canguru intercambios|fluente idiomas|bagagem livre|campus global)(?: |$)",
           "sinal": "DEBITO",
           "conta_codigo": "2.1.01.001",
-          "fonte": "docs/documentação-geral.md RN-19 e RN-46, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-19 e RN-46, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-17 11:03 e 15:47 (repasse não para; Pix enviado é repasse)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T11:03:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -399,10 +228,10 @@
           "padrao": "^pix recebido .*\\bsem identificacao\\b",
           "sinal": "CREDITO",
           "conta_codigo": "1.1.09.002",
-          "fonte": "docs/documentação-geral.md RN-52, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-52, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 e 2026-10-17 16:08 (não é receita; Caio identifica)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; seleção técnica da conta analítica e padrão de histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA",
           "pendencia_tipo": "CREDITO_NAO_IDENTIFICADO",
           "motivo": "Crédito sem identificação do pagador; não representa receita (RN-52).",
@@ -414,10 +243,10 @@
           "padrao": "^devolucao pix - mundo aberto\\b",
           "sinal": "CREDITO",
           "conta_codigo": "2.1.01.001",
-          "fonte": "docs/documentação-geral.md RN-53 e D-06, RN-51 e RN-61; plano Fênix (código/descrição analítica)",
+          "fonte": "docs/documentação-geral.md RN-53 e D-06, RN-51 e RN-61; plano Fênix (código/descrição analítica); Slack 2026-10-16 20:49 e 2026-10-17 09:48 (repasse que voltou; D-06)",
           "aprovacao": "D-06: repasse devolvido volta a ser devido ao lojista em 2.1.01.001; motivo da devolução requer revisão.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T09:48:00-03:00",
           "natureza": "DECISAO_TIME",
           "pendencia_tipo": "REPASSE_DEVOLVIDO",
           "motivo": "Repasse devolvido continua devido ao lojista; motivo do retorno desconhecido (RN-53/D-06).",
@@ -431,10 +260,10 @@
           "padrao": "^pix receb (?:lisboa cursos|mundo aberto|nordica educacao|dublin hub|casa do estudante|edu abroad|rota global|kiwi experience|canguru intercambios|novo horizonte|maple study|ponte aerea estudantil|bagagem livre|bem-vindo exchange)(?: |$)",
           "sinal": "CREDITO",
           "conta_codigo": "2.1.02.001",
-          "fonte": "docs/documentação-geral.md RN-46 e RN-55, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-55, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-17 09:44 e 13:34 (recursos para remessas no passivo)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T09:44:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -442,10 +271,10 @@
           "padrao": "^ted enviada ponte cambio sa liq operacoes$",
           "sinal": "DEBITO",
           "conta_codigo": "2.1.02.001",
-          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-17 15:47 (IOF das remessas é do cliente)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T15:47:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -453,10 +282,10 @@
           "padrao": "^ted receb ponte cambio sa repasse comissao\\b",
           "sinal": "CREDITO",
           "conta_codigo": "1.1.03.002",
-          "fonte": "docs/documentação-geral.md RN-46 e RN-49, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-49, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-16 20:49 (repasse de 04/09 já era comissão a receber)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -464,10 +293,10 @@
           "padrao": "^ted recebida tarvo pagamentos ltda - mesma titularidade$",
           "sinal": "CREDITO",
           "conta_codigo": "1.1.09.001",
-          "fonte": "docs/documentação-geral.md RN-46 e RN-54, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-54, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-16 20:49 e 2026-10-17 16:08",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T20:49:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -475,10 +304,10 @@
           "padrao": "^aplicacao automatica cdb di$",
           "sinal": "DEBITO",
           "conta_codigo": "1.1.02.001",
-          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-17 15:47 e 16:08 (aplicação sem efeito no resultado)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T16:08:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -486,10 +315,10 @@
           "padrao": "^resgate automatico cdb di$",
           "sinal": "CREDITO",
           "conta_codigo": "1.1.02.001",
-          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-17 15:47 e 16:08 (aplicação sem efeito no resultado)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T16:08:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -497,10 +326,10 @@
           "padrao": "^rendimento aplic automatica$",
           "sinal": "CREDITO",
           "conta_codigo": "3.2.01",
-          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-17 15:47 (rendimento é receita do mês)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T15:47:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -508,10 +337,10 @@
           "padrao": "^tarifa (?:manutencao conta pj|pacote cambio)$",
           "sinal": "DEBITO",
           "conta_codigo": "4.2.01",
-          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-50, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-16 21:14 (despesa do mês)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-16T21:14:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -519,10 +348,10 @@
           "padrao": "^seguro empresarial parc\\b",
           "sinal": "DEBITO",
           "conta_codigo": "4.2.05",
-          "fonte": "docs/documentação-geral.md RN-46 e RN-50, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-46 e RN-50, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-17 15:47 (seguro direto na despesa)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T15:47:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         },
         {
@@ -530,10 +359,10 @@
           "padrao": "^iof s/ operacao credito$",
           "sinal": "DEBITO",
           "conta_codigo": "4.3.01",
-          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido",
+          "fonte": "docs/documentação-geral.md RN-46, RN-51 e RN-61; plano Fênix e histórico OFX fornecido; Slack 2026-10-17 15:47 (IOF de operação de crédito do Meridiano)",
           "aprovacao": "Critério de contrapartida confirmado pelo Financeiro; mapeamento técnico de conta analítica/histórico, sem aprovação individual fictícia.",
           "aprovador": "Financeiro (critério); time (mapeamento técnico)",
-          "aprovado_em": "NAO_INFORMADO",
+          "aprovado_em": "2026-10-17T15:47:00-03:00",
           "natureza": "INTERPRETACAO_TECNICA"
         }
       ]
@@ -1582,9 +1411,9 @@
     {
       "id": "D-07",
       "descricao": "Atlas fora das comissões; identidade e cobrança efetiva da Orbe preservadas nas pendências comerciais.",
-      "fonte": "docs/documentação-geral.md D-07 / RN-17",
+      "fonte": "docs/documentação-geral.md D-07 / RN-17; Slack 2026-10-17 11:41 (zerada ou fora do arquivo: escolham e registrem)",
       "aprovador": "Time (apresentação); Financeiro (não faturar)",
-      "aprovado_em": "NAO_INFORMADO"
+      "aprovado_em": "2026-10-17T11:41:00-03:00"
     },
     {
       "id": "RN-64 (antiga D-08)",
@@ -1612,19 +1441,28 @@
     {
       "id": "D-04",
       "descricao": "Aurora usa a linha física inicial do registro; L9 é a primeira transação do exemplo, não uma constante do leitor.",
-      "fonte": "docs/documentação-geral.md RN-57 e D-04; Context/context.md decisões do time",
+      "fonte": "docs/documentação-geral.md RN-57 e D-04; Context/context.md decisões do time; Organização, Slack 2026-10-17 16:52 (linha física a partir de 1, com cabeçalho)",
       "aprovacao": "Decisão documentada do time: referência física, inclusive com preâmbulo.",
       "aprovador": "Time (decisão técnica documentada)",
-      "aprovado_em": "NAO_INFORMADO",
+      "aprovado_em": "2026-10-17T16:52:00-03:00",
+      "natureza": "DECISAO_TIME"
+    },
+    {
+      "id": "D-03",
+      "descricao": "Alerta de antecipação (RN-63): não entra nesta entrega (último item da ordem de corte). Critério do time para quando entrar: só lojista com contrato bloqueado em contratos_bloqueados (hoje a Atlas); sem corte em reais; pico = maior saldo ao fim de cada dia (antecipações menos reversões vinculadas, nos eventos fornecidos); uma pendência ALERTA_ANTECIPACAO por lojista, valor = pico, citando data do pico e reversões, para Financeiro e Comercial. Não altera nenhum outro valor.",
+      "fonte": "docs/documentação-geral.md RN-63 e D-03; Slack 2026-10-17 11:37, 11:49 e 12:50 (o critério do alerta é do time; o pico é razoável)",
+      "aprovacao": "Decisão do time registrada por Alice Carvalho às 17h36, para não deixar decisão pendente na entrega; proposta preparada com apoio de IA.",
+      "aprovador": "Time (Alice Carvalho)",
+      "aprovado_em": "2026-10-17T17:36:00-03:00",
       "natureza": "DECISAO_TIME"
     },
     {
       "id": "D-06",
       "descricao": "Repasse devolvido da RN-53 em 2.1.01.001: volta a ser devido ao lojista; motivo do retorno permanece pendente.",
-      "fonte": "docs/documentação-geral.md RN-53 e D-06; Slack 16/10 20:49 e 17/10 09:48 (critério); decisão do time (conta)",
+      "fonte": "docs/documentação-geral.md RN-53 e D-06; Slack 16/10 20:49 e 17/10 09:48 (critério); decisão do time (conta); Slack 2026-10-17 09:48 e 16:08 (as duas contas servem; critério do time)",
       "aprovacao": "Financeiro aceitou 2.1.01.001 ou 2.1.01.002 com motivo; time escolheu a primeira pela obrigação de repasse.",
       "aprovador": "Financeiro (critério); time (escolha D-06)",
-      "aprovado_em": "NAO_INFORMADO",
+      "aprovado_em": "2026-10-17T09:48:00-03:00",
       "natureza": "DECISAO_TIME"
     }
   ],
