@@ -5,6 +5,7 @@ from decimal import Decimal, DecimalException
 
 from . import classificacao, notas, validacao
 from .modelos import ErroEntrada, Resultado, ResultadoParte
+from .extras import alertas
 
 # (fontes, resultados anteriores, relatórios). Leitores futuros não são presumidos válidos.
 PLANO = {
@@ -36,7 +37,7 @@ def selecionar(resultado: Resultado, escopo: str):
 
 
 def projetar_pendencias(resultado: Resultado) -> tuple[list[dict], list[dict]]:
-    """Publica somente pendências existentes; valores de referência não são comissões."""
+    """Publica pendências principais e a revisão dos ajustes órfãos calculados."""
     linhas, rastros = [], []
     for p in sorted(resultado.pendencias, key=lambda p: (p.origem.arquivo, p.origem.linha, p.origem.ref)):
         identificador = f"PENDENCIA:{p.origem.arquivo}:L{p.origem.linha}:{p.origem.ref}"
@@ -55,6 +56,23 @@ def projetar_pendencias(resultado: Resultado) -> tuple[list[dict], list[dict]]:
             rastros.append({"id_saida": identificador, "arquivo_origem": p.origem.arquivo,
                             "ref_origem": p.origem.ref, "valor": format(valor, ".2f"),
                             "natureza_valor": natureza})
+    for c in sorted((c for c in resultado.contribuicoes if c.original_ausente),
+                    key=lambda c: (c.origem.arquivo, c.origem.linha, c.origem.ref)):
+        identificador = f"AJUSTE_ORFAO_ORBE:{c.origem.arquivo}:{c.origem.ref}"
+        natureza = "COMISSAO_AJUSTE_ORFAO_A_CONFERIR"
+        linhas.append({
+            "id_saida": identificador, "tipo": "ORIGEM_ORBE_A_CONFIRMAR",
+            "ref_origem": c.origem.ref, "valor_brl": format(c.valor, ".2f"),
+            "motivo": (f"{c.tipo} com original {c.ref_original} do mesmo mês ausente em todos os arquivos; "
+                       "contribuição calculada pela linha recebida e sujeita à conferência."),
+            "quem_decide": "Financeiro",
+            "proximo_passo": "Solicitar a operação original à Orbe; conferir dados, contrato e valor antes de aprovar o fechamento.",
+            "arquivo_origem": c.origem.arquivo, "linha_origem": c.origem.linha,
+            "cnpj": c.cnpj, "categoria": "DADOS", "natureza_valor": natureza,
+        })
+        rastros.append({"id_saida": identificador, "arquivo_origem": c.origem.arquivo,
+                        "ref_origem": c.origem.ref, "valor": format(c.valor, ".2f"),
+                        "natureza_valor": natureza, "ref_evento_original": c.ref_original})
     return linhas, rastros
 
 
@@ -82,7 +100,7 @@ def preparar_partes(resultado: Resultado) -> None:
             pendencias.rastro = rastro
             pendencias.cobertura = {"linhas_lidas": len(linhas), "calculadas": 0,
                                    "pendentes": len(linhas), "bloqueadas": 0}
-            if resultado.avisos or any(p.categoria == "DADOS" for p in resultado.pendencias):
+            if resultado.avisos or any(p.categoria == "DADOS" for p in resultado.pendencias) or any(c.original_ausente for c in resultado.contribuicoes):
                 pendencias.situacao = "PROVISORIO"
                 pendencias.motivos = ["Há linhas de dados pendentes ou avisos nas fontes"]
         except (ErroEntrada, ValueError, DecimalException) as exc:
@@ -145,6 +163,8 @@ def validar_partes(resultado: Resultado) -> None:
                     notas.validar(nome, parte, resultado.partes[notas.DEPENDENCIAS[nome]], resultado.parametros_notas.get(nome))
                 if nome in {"EXTRATO_AURORA", "EXTRATO_MERIDIANO"}:
                     classificacao.validar(parte, getattr(resultado, "contexto_" + nome.removeprefix("EXTRATO_").lower()))
+                if nome == alertas.NOME:
+                    alertas.validar(parte, resultado.contexto_alertas)
                 validacao.validar_parte(parte)
                 if provisorio:
                     parte.situacao = "PROVISORIO"

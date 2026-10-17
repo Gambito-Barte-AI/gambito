@@ -42,7 +42,8 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
     processados = len(resultado.contribuicoes) if resultado.partes["CHECKOUT"].validado else 0
     pendentes = len(resultado.pendencias) if resultado.partes["PENDENCIAS_CHECKOUT"].validado else 0
     dados = {
-        "versao": 8, "escopo": "CHECKOUT_MINIMO", "etapa": "ALVO_A6", "situacao": resultado.situacao,
+        "versao": 9 if resultado.contexto_alertas is not None else 8,
+        "escopo": "CHECKOUT_MINIMO", "etapa": "EXTRA_E3" if resultado.contexto_alertas is not None else "ALVO_A6", "situacao": resultado.situacao,
         "escopo_situacao": "CHECKOUT",
         "competencia": resultado.competencia, "motivos": resultado.motivos,
         "fontes": resultado.fontes, "rastro_validado": resultado.validado and resultado.situacao != "BLOQUEADO",
@@ -69,10 +70,12 @@ def resumo(resultado: Resultado, escopo: str = "checkout") -> dict:
         } for p in resultado.pendencias],
         "decisoes_financeiras_pendentes": resultado.decisoes_pendentes,
         "decisoes_documentadas": resultado.decisoes_documentadas,
-        "fora_do_escopo": ["extras"],
+        "fora_do_escopo": ["extras"] if resultado.contexto_alertas is None else ["E4"],
     }
 
     escolhidas = selecionar(resultado, escopo)
+    if resultado.contexto_alertas is not None:
+        dados["criterio_alertas"] = resultado.contexto_alertas["config"]
     dados["escopo_comando"] = escopo
     dados["situacao_comando"] = agregar_situacoes(resultado.partes[n].situacao for n in escolhidas)
     dados["fechamento"] = {

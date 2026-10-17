@@ -145,7 +145,7 @@ class A2Test(unittest.TestCase):
         self.assertEqual(estorno["arquivo_evento_original"], "orbe.csv")
         self.assertEqual(estorno["data_base_taxa"], "2032-04-02")
 
-    def test_estorno_sem_original_do_mes_nao_e_abate_estimado(self):
+    def test_estorno_sem_original_do_mes_abate_com_revisao_provisoria(self):
         self.concessao()
         self.orbe([dict(), dict(id_transacao="E", tipo_lancamento="ESTORNO", valor_bruto="-100,00",
                                valor_taxa="-0,50", id_referencia="AUSENTE", data_venda_original="02/04/2032")])
@@ -153,9 +153,10 @@ class A2Test(unittest.TestCase):
         m = publicar(r, self.saida, "alvo")
         p = r.partes["DEVOLUCAO_CASA"]
         self.assertEqual(p.situacao, "PROVISORIO")
-        self.assertEqual(p.linhas["pendencias.csv"][0]["valor_brl"], "0.50")
-        self.assertEqual([l["ref_origem"] for l in p.rastro], ["A"])
-        self.assertTrue(any(p.origem.ref == "E" for p in r.pendencias))
+        self.assertEqual(p.linhas["pendencias.csv"][0]["valor_brl"], "0.00")
+        self.assertEqual([l["ref_origem"] for l in p.rastro], ["A", "E"])
+        self.assertTrue(any(c.origem.ref == "E" and c.original_ausente for c in r.contribuicoes))
+        self.assertFalse(any(p.origem.ref == "E" for p in r.pendencias))
         verificar(self.dados, self.saida, self.regras, "PROVISORIO")
 
     def test_estorno_isento_sem_cobrado_fica_pendente_sem_inventar_abate(self):

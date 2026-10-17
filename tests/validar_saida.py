@@ -78,6 +78,8 @@ def verificar_partes(manifesto):
     if manifesto.get("versao", 0) >= 8:
         futuras.remove("EXTRATO_MERIDIANO")
         implementadas.add("EXTRATO_MERIDIANO")
+    if manifesto.get("versao", 0) >= 9:
+        implementadas.add("ALERTAS_ANTECIPACAO")
     exigir(set(partes) == implementadas | futuras, "Partes ausentes ou desconhecidas")
     for nome, parte in partes.items():
         estado = parte.get("situacao")
@@ -180,6 +182,9 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     if manifesto.get("versao", 0) >= 8:
         from auditoria_a6 import verificar as verificar_a6
         verificar_a6(manifesto, arquivos, configuracao, dados, regras)
+    if manifesto.get("versao", 0) >= 9:
+        from auditoria_e3 import verificar as verificar_e3
+        verificar_e3(manifesto, arquivos, configuracao, dados)
     rastros = arquivos["rastro.csv"]
     if situacao == "BLOQUEADO" and not any(arquivos.values()):
         exigir(not any(arquivos.values()) and (partes or all(r["situacao"] == "BLOQUEADO" for r in resultados.values()))
@@ -310,6 +315,33 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
                and dinheiro(r["valor"]) == dinheiro(p["valor_brl"])
                and r.get("natureza_valor") == p["natureza_valor"], "Rastro da pendência não reconcilia")
     rastros = [r for r in rastros if not r["id_saida"].startswith("PENDENCIA:")]
+    orfaos = [p for p in arquivos["pendencias.csv"] if p["id_saida"].startswith("AJUSTE_ORFAO_ORBE:")]
+    rastros_orfaos = [r for r in arquivos["rastro.csv"] if r["id_saida"].startswith("AJUSTE_ORFAO_ORBE:")]
+    exigir(Counter(p["id_saida"] for p in orfaos) == Counter(r["id_saida"] for r in rastros_orfaos),
+           "Ajuste órfão sem rastro ou pendência derivada")
+    rastro_comissoes = {(r["arquivo_origem"], r["ref_origem"]): r for r in rastros if r["id_saida"].startswith("CHECKOUT:")}
+    exigir(set(rastro_comissoes) <= set(por_origem), "checkout com destino sem origem de entrada")
+    esperados_orfaos = {
+        chave for chave, c in rastro_comissoes.items()
+        if (por_origem[chave]["tipo_lancamento"] in {"ESTORNO", "REVERSAO ANTECIPACAO"}
+            and por_origem[chave]["id_referencia"] not in por_ref
+            and por_origem[chave]["data_venda_original"][3:] == por_origem[chave]["data_movimento"][3:])
+    }
+    exigir({(p["arquivo_origem"], p["ref_origem"]) for p in orfaos} == esperados_orfaos,
+           "Contribuição órfã sem pendência de revisão")
+    for p in orfaos:
+        chave = p["arquivo_origem"], p["ref_origem"]
+        e = por_origem.get(chave)
+        c = rastro_comissoes.get(chave)
+        r = next(r for r in rastros_orfaos if r["id_saida"] == p["id_saida"])
+        exigir(e and c and e["tipo_lancamento"] in {"ESTORNO", "REVERSAO ANTECIPACAO"}
+               and e["id_referencia"] and e["id_referencia"] not in por_ref
+               and e["data_venda_original"][3:] == e["data_movimento"][3:]
+               and p["categoria"] == "DADOS" and p["quem_decide"] == "Financeiro"
+               and p["natureza_valor"] == "COMISSAO_AJUSTE_ORFAO_A_CONFERIR"
+               and dinheiro(p["valor_brl"]) == dinheiro(r["valor"]) == dinheiro(c["valor"])
+               and r["ref_evento_original"] == e["id_referencia"],
+               "Ajuste órfão não corresponde à origem ou à contribuição provisória")
     if not partes:
         exigir(resultados["comissoes_por_lojista.csv"]["situacao"] == situacao, "Status da comissão diverge do checkout")
         esperado_pendencias = "PROVISORIO" if any(not p["valor_brl"] for p in pendencias_csv) else situacao
@@ -322,7 +354,7 @@ def verificar(dados: Path, saida: Path, regras: Path, esperar=None, esperar_fech
     cobertura = manifesto.get("cobertura", {})
     exigir(cobertura == {"linhas_lidas": len(origem), "calculadas": len(rastros),
                          "pendentes": len(pendencias_publicadas), "bloqueadas": len(origem) - len(destinos)}, "Cobertura declarada não corresponde aos arquivos")
-    provisorio = bool(manifesto.get("avisos")) or any(p["categoria"] == "DADOS" for p in pendencias)
+    provisorio = bool(manifesto.get("avisos")) or bool(orfaos) or any(p["categoria"] == "DADOS" for p in pendencias)
     if situacao != "BLOQUEADO":
         exigir((situacao == "PROVISORIO") == provisorio, "Situação incompatível com D-13")
     if situacao != "BLOQUEADO" and (not partes or partes["PENDENCIAS_CHECKOUT"]["rastro_validado"]):

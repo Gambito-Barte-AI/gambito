@@ -1,3 +1,15 @@
+# Estado atual: nenhuma decisão financeira sem tratamento registrado
+
+Todas as decisões estão respondidas pelo Financeiro ou registradas como decisão do time. As seções abaixo são o histórico, do mais recente para o mais antigo: onde um registro antigo diz "D-10 pendente", "decisões pendentes" ou "NAO_INFORMADO", vale este estado atual.
+
+- **D-10:** respondida pelo Financeiro (11h33) e confirmada no retorno do checkpoint 2.
+- **D-03:** o corte original foi decidido pelo time (Alice, 17h36). A ativação posterior de E3 foi aprovada pelo usuário e está em `[extras.alertas]` do `regras.toml`; gera apenas pendência revisável, sem alterar os números financeiros.
+- **Datas de aprovação:** as 34 regras que estavam com `NAO_INFORMADO` receberam o horário da resposta do Slack que as sustenta (critério do Financeiro) ou da decisão do time. O manifesto não lista mais metadados incompletos.
+- **O que segue aberto é operacional, não decisão:** contrato da Atlas (o Diego, do comercial, decide), pagador do Pix de R$ 7.350 (o Caio identifica), contestações com a Orbe e a Ponte e conferência do crédito da Ponte em 06/10. Cada um é uma pendência no `pendencias.csv`, com motivo, próximo passo e dono.
+- **Premissas operacionais RN-65 confirmadas pelo usuário:** o layout não distingue relatório principal de ajuste. Estorno ou reversão com original do próprio mês ausente em todos os arquivos é tratado pela linha recebida: calcula-se a contribuição com os dados dessa linha e a taxa contratada da data original declarada, com pendência derivada para o Financeiro pedir e conferir a original à Orbe. O fechamento permanece provisório até a revisão. Estorno de mês anterior sem arquivo histórico segue a RN-13. Todos os arquivos presentes na pasta são considerados recebidos antes da aprovação do fechamento; ajuste novo após a aprovação pertence ao mês seguinte por controle operacional do Financeiro. Não há nos arquivos registro de chegada ou da aprovação, logo o motor não consegue detectar uma colocação equivocada na pasta. **Limite:** `--competencia` filtra pela data do movimento; se o ajuste posterior trouxer data do mês já aprovado, apenas colocá-lo na pasta seguinte não o reatribui. O Financeiro deve sinalizar esse caso e definir um registro de competência antes de automatizar o transporte, sem alterar o arquivo oficial.
+
+---
+
 # Respostas do Financeiro e da organização (15h47 às 16h52) e D-10
 
 Registro de 17/10/2026. As respostas abaixo foram dadas no canal a outros times, mas valem para todos. O Financeiro disse às 16h08 que não confere conta por conta: vale o critério registrado aqui. Conferido com uma execução do alvo sobre o pacote completo (7 arquivos): os seis resultados saem COMPLETO.
@@ -32,9 +44,9 @@ Revisão completa do canal às 17h30 (63 respostas do Financeiro e da organizaç
 - **Isenção da Casa na antecipação (13h34).** Vale pela data da antecipação: é um serviço prestado no dia. Antecipação feita entre 01/09 e 31/12 é isenta, sem procurar as vendas de origem. O motor já usa a data do movimento da antecipação.
 - **Ajuste tardio da Orbe depois da aprovação (13h34).** Se chegar antes da aprovação do fechamento, entra no mês do movimento (como o arquivo 06). Se chegar depois, entra no mês seguinte. A aprovação é do Financeiro e não é registrada nos arquivos; quem roda o fechamento escolhe a competência com `--competencia`.
 - **Correção de linha com o mesmo `id_transacao` (13h34).** Nunca aconteceu; o critério é nosso. A linha idêntica em dois arquivos conta uma vez. Se os valores forem diferentes, não escolhemos nenhum: as linhas viram pendência para o Financeiro.
-- **Ajuste órfão (14h10).** Regra do Financeiro: ajuste cuja original não está em nenhum arquivo entra pelo valor que veio e vira pendência para o Financeiro pedir a original à Orbe. **Diferença conhecida:** hoje o motor só abre a pendência para estorno de venda do mesmo mês sem original, sem lançar o valor na comissão. Em setembro não há esse caso (todas as referências do arquivo 06 estão no relatório), então nenhum resultado muda; o ajuste no código fica para o time.
+- **Ajuste órfão (14h10; premissa operacional posterior do usuário).** A ausência de original do próprio mês é avaliada por linha, em qualquer CSV da Orbe. A contribuição entra a partir dos dados do evento e do contrato vigente na data original declarada, com pendência e fechamento provisório para o Financeiro solicitar a original. Em setembro não há esse caso.
 - **Bandeira no estorno (14h08).** A bandeira não muda a taxa. Estorno com bandeira diferente da venda segue vinculado pela referência, sem contestação e sem pendência (7 casos no arquivo 06).
-- **Alerta de antecipação (D-03).** O Financeiro disse que o alerta é para ele e para o comercial, que não muda nenhum número e que o critério é nosso (11h37, 11h49, 12h50). O critério operacional (pico, corte, elegibilidade e saída) **ainda não foi decidido pelo time**.
+- **Alerta de antecipação (D-03).** O Financeiro disse que o alerta é para ele e para o comercial, que não muda nenhum número e que o critério é nosso (11h37, 11h49, 12h50). Decisão do time (Alice, 17h36): o alerta não entra nesta entrega. Critério para quando entrar: só lojista com contrato bloqueado (hoje a Atlas), sem corte em reais, pico pelo maior saldo ao fim de cada dia (antecipações menos reversões vinculadas) e uma pendência por lojista para Financeiro e Comercial. Referência de setembro: Atlas, R$ 183.581,24 em 24/09.
 
 ---
 
@@ -157,7 +169,7 @@ A referência atual é `docs/documentação-geral.md` da develop, que prevalece 
 - **D-10 pendente de confirmação financeira:** decisão do time de aplicar 50% do Spread R$ negativo registrada; é preciso confirmar se a linha já representa a participação. Nenhuma remessa implementada.
 - **RN-61:** aprovador, data e natureza separados nas regras. Datas não presentes no registro técnico/time ficam `NAO_INFORMADO` e aparecem no manifesto; completar quando houver evidência. Isso não representa aprovação financeira.
 - **RN-65/RF-22:** reunir CSVs por cabeçalho. Repetição idêntica entre arquivos conta uma vez; conteúdo conflitante fica integralmente pendente. Origem canônica dos idênticos escolhida pela ordem de nomes, sem dependência de nome específico. Duplicata dentro do mesmo arquivo continua invalidando essa fonte por ambiguidade de origem.
-- **RN-13 versus referência ausente em RN-65:** preservado o caso confirmado de estorno de mês anterior sem relatório histórico, usando referência/data declaradas; referência do próprio mês ausente, reversão sem original e referência conflitante viram pendências. Não exigir agosto evita rejeitar o exemplo explicitamente aprovado. Validar com o time se RN-65 pretendia revogar esse caso histórico; nenhuma taxa é estimada.
+- **RN-13 e RN-65 (atualização posterior):** estorno de mês anterior sem relatório histórico usa referência/data declaradas. Estorno ou reversão com original do próprio mês ausente entra pelo próprio evento, com pendência derivada e resultado provisório. Referência conflitante ou dados insuficientes seguem sem cálculo. O tratamento antigo descrito nas seções históricas abaixo foi substituído pela premissa operacional registrada no início deste arquivo.
 - **D-12/D-13:** bloqueio gera cabeçalhos e total indisponível. Pendência de negócio não torna o resultado provisório; pendência de dados ou aviso de fonte rejeitada torna. Fonte rejeitada tem hash/motivo e não entra na cobertura de linhas lidas com sucesso.
 - **D-14:** `--competencia AAAA-MM` quando necessário; contabilizar separadamente eventos de outros meses. Reversão com original fora do recorte continua pendente, sem reconstrução histórica.
 - **D-02 e D-04:** tolerância de 0,01 p.p. e Aurora iniciando em L9 físico pertencem aos módulos futuros. Nenhum cálculo de spread ou leitura bancária antecipado.
@@ -166,7 +178,7 @@ Os registros seguintes descrevem o histórico das Entregas 1–4; menções a D-
 
 ---
 
-# Hipóteses, limites e decisões pendentes
+# Hipóteses, limites e decisões da entrega 1 (registro histórico)
 
 ## Escopo autorizado
 

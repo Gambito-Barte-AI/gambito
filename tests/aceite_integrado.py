@@ -70,6 +70,8 @@ def executar_aceite(dados, regras, saida, evidencias, python, referencia=None, m
         'taxas':{'CHECKOUT','PENDENCIAS_CHECKOUT','DIVERGENCIAS_CHECKOUT','DEVOLUCAO_CASA','NOTAS_CHECKOUT','REMESSAS','DIVERGENCIAS_REMESSA','NOTAS_REMESSA'},
         'ponte':{'REMESSAS','DIVERGENCIAS_REMESSA','NOTAS_REMESSA'},
         'plano_contas':{'EXTRATO_AURORA','EXTRATO_MERIDIANO'},'aurora':{'EXTRATO_AURORA'},'meridiano':{'EXTRATO_MERIDIANO'}}
+    if 'ALERTAS_ANTECIPACAO' in base['partes']:
+        familias['orbe'].add('ALERTAS_ANTECIPACAO');familias['taxas'].add('ALERTAS_ANTECIPACAO')
     nomes={f:[x['arquivo'] for x in base['fontes'][f]['arquivos']] if f in {'orbe','ponte'} else [base['fontes'][f]['arquivo']] for f in familias}
     faltantes={}
     for fonte in familias:
