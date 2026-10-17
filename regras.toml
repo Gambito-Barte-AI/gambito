@@ -236,6 +236,15 @@ aprovador = "Financeiro (critério); time (escolha D-06)"
 aprovado_em = "NAO_INFORMADO"
 natureza = "DECISAO_TIME"
 
+[[decisoes_documentadas]]
+id = "D-03"
+descricao = "Alerta de antecipação (extra E3, RN-63): só para lojista com contrato explicitamente bloqueado em contratos_bloqueados; sem corte monetário. Pico = maior saldo acumulado ao fim de cada dia (antecipações menos reversões vinculadas, nos eventos fornecidos). Uma pendência ALERTA_ANTECIPACAO por lojista, valor = pico, citando data do pico e reversões; quem decide: Financeiro e Comercial. Não altera nenhum outro valor."
+fonte = "docs/documentação-geral.md RN-63 e D-03; Financeiro, Slack 2026-10-17 12:50 (pico razoável; critério é do time)"
+aprovacao = "Time definiu o critério operacional: elegibilidade só por evidência explícita na configuração; pico de fim de dia, sem ordem intradiária inventada; exposição anterior ao período fica declarada como desconhecida."
+aprovador = "Time (critério operacional); Financeiro (critério do pico, 12:50)"
+aprovado_em = "2026-10-17"
+natureza = "DECISAO_TIME"
+
 [[classificacao_aurora]]
 id = "AURORA_ORBE_RECEBIVEIS"
 padrao = "^ted recebida (?:[0-9./-]+ )?orbe adquirencia\\b"

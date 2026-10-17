@@ -26,6 +26,12 @@ Registro de 17/10/2026. As respostas abaixo foram dadas no canal a outros times,
   - Pix de R$ 18.240 da Ponte Aérea: `2.1.02.001`; a baixa sai quando a remessa liquidar, pelo relatório de outubro da Ponte;
   - folha de agosto baixada em setembro: a provisão foi feita pelo valor pago, então a baixa é pelo valor cheio do lançamento. A solução não gera a provisão do mês.
 - **Colunas extras.** Podem ficar, desde que as colunas pedidas estejam presentes e com os nomes certos.
+- **D-03, critério operacional do alerta de antecipação (extra E3).** O Financeiro achou o pico razoável (12:50) e deixou o critério com o time. Decisão do time:
+  - **elegibilidade:** só lojista com contrato explicitamente bloqueado no `regras.toml` (hoje a Atlas). "Sem histórico" não é deduzido da ausência de dados; falha ao ler contrato bloqueia, não vira alerta;
+  - **disparo:** qualquer antecipação de lojista elegível, sem corte monetário (a documentação não pede limiar e um valor arbitrário seria inventado);
+  - **pico:** maior saldo acumulado ao fim de cada dia, somando antecipações e abatendo reversões vinculadas, só com os eventos fornecidos. Não inventamos ordem dentro do dia; a exposição anterior ao período é declarada como desconhecida; reversão sem antecipação no período é listada, sem baixar o saldo;
+  - **saída:** uma pendência `ALERTA_ANTECIPACAO` por lojista, com `valor_brl` = pico, data do pico e reversões no motivo, e `quem_decide` = Financeiro e Comercial. Não altera comissão, nota nem outro valor;
+  - **setembro:** Atlas, pico de **R$ 183.581,24 em 24/09** (5 antecipações somando R$ 235.943,10; reversões de −R$ 52.361,86 em 17/09 e −R$ 56.350,28 em 26/09; saldo final R$ 127.230,96). Valores só para conferência, nunca constantes no código.
 
 ---
 
