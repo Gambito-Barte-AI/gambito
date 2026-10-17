@@ -1,6 +1,6 @@
 # Documentação · Gambito · fechamento mensal da Tarvo
 
-**Desafio Barte AI · 17/10/2026 · versão das 13h (Slack lido até 12h36)**
+**Desafio Barte AI · 17/10/2026 · versão das 13h15 (Slack lido até 12h50)**
 
 ## Como este documento está organizado
 
@@ -271,7 +271,7 @@ O caminho foi: **hipótese → pergunta ao financeiro → resposta → regra esc
 
 | Hipótese | O que perguntamos | Regras que nasceram (Parte II) |
 |---|---|---|
-| P1 · regras fora da planilha | Comissão pelo cobrado ou pelo contratado? Casa tem condição especial? | RN-08, RN-15, RN-16, RN-26 |
+| P1 · regras fora da planilha | Comissão pelo cobrado ou pelo contratado? Casa tem condição especial? | RN-08, RN-15, RN-16, RN-26, RN-64 |
 | P2 · sem identidade única | De quem são os ECs sem cadastro? A Atlas é cliente? | RN-03 a RN-07 |
 | P3 · ninguém compara cobrado × contratado | O que é divergência? Pelo valor cheio? E o estorno? | RN-20 a RN-30 |
 | P4 · decisão não chega ao parceiro | Quem avisa a Orbe e a Ponte? Quem aprova regra? | RN-01, RN-60, RN-61 |
@@ -333,6 +333,7 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | [ ] | RN-24 | **Rota Global:** contrato não mudou; os +0,50 p.p. desde 12/09 são divergência. | SLACK 16 20:49 | 87 linhas da Rota |
 | [ ] | RN-25 | **Bridge:** cobrou 2,59% em 5 vendas de 15 a 18/09 com aditivo de 2,19% assinado. É **divergência**, contestada com a Orbe. | SLACK 17 11:37 | 5 linhas da Bridge em divergências e na cobrança da Orbe |
 | [ ] | RN-26 | **Casa do Estudante não é divergência de contrato.** Vira **devolução ao lojista**, paga pela Tarvo: pendência com o total e o detalhe por transação, **separada das divergências de contrato** e **fora da cobrança da Orbe**. Pôr as 118 linhas também em divergências, marcadas como isenção, é opcional. | SLACK 17 09:44, 10:58 e 11:49 | Total cobrável da Orbe sem a Casa |
+| [ ] | RN-64 | **Valor da devolução ao lojista = o que saiu do bolso dele:** o que a Orbe **descontou de fato** (`valor_taxa`) menos a comissão contratada. Na Casa, a contratada é zero, então devolve-se o `valor_taxa` inteiro: **R$ 15.396,77**. Já o `divergencias_taxa.csv` mantém a fórmula da RN-20 (bruto × diferença de taxa); a diferença entre os dois é o centavo de truncamento da Orbe. | SLACK 17 12:50 | Pendência da Casa = R$ 15.396,77 (soma do `valor_taxa` das 118 linhas) |
 | [ ] | RN-27 | Lojista sem contrato (Atlas) **não é divergência**; é pendência. | CASE / TIME | Nenhuma linha da Atlas em divergências |
 | [ ] | RN-28 | Divergência de **remessa** = spread % aplicado − contratado, pelo **valor cheio**: Δ% × PTAX × valor em moeda estrangeira. **Mundo Aberto** (1,20% registrado desde julho) é divergência, contestada com a Ponte. | SLACK 16 20:48 e 20:58 / 17 11:37 | 23 linhas da Mundo Aberto pelo valor cheio |
 | [ ] | RN-29 | **Spread negativo não é divergência** (o lojista não pagou a mais). Se aparecer na lista, marcado como outra natureza. | SLACK 17 09:44 | As 4 operações negativas fora de divergências (ou com natureza própria) |
@@ -400,16 +401,15 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | ✓ | ID | Decisão | Motivo | Como desfazer |
 |---|---|---|---|---|
 | [ ] | D-02 | Tolerância de spread de **0,01 p.p.** | A Ponte oscila ±0,002 p.p.; a Mundo Aberto difere 0,30 p.p. (30×) | Mudar o número no arquivo de regras |
-| [ ] | D-03 | Alerta de antecipação só para lojista **sem contrato ou sem histórico**, calculado pelo **pico** (o risco existiu quando o dinheiro foi adiantado), **citando as reversões** no texto | O financeiro disse que o critério é nosso e que a preocupação é lojista novo | Mudar o critério no arquivo de regras |
+| [ ] | D-03 | Alerta de antecipação só para lojista **sem contrato ou sem histórico**, calculado pelo **pico** (o risco existiu quando o dinheiro foi adiantado), **citando as reversões** no texto | O financeiro disse que o critério é nosso e que a preocupação é lojista novo; achou a proposta do pico "razoável" (12:50) | Mudar o critério no arquivo de regras |
 | [ ] | D-04 | Referência do Aurora = **linha física** (1º lançamento = L9) | O enunciado mostra L10, L11 só como exemplo | Mudar uma linha no leitor |
 | [ ] | D-05 | Divergência da Mundo Aberto pelo **Spread %** (R$ 1.418,85), não pelo Spread R$ (R$ 1.418,88) | O % é o que se compara com o contrato; o financeiro pediu um critério escrito | Trocar o critério no motor |
 | [ ] | D-06 | Devolução de R$ 12.400 em **2.1.01.001** | O repasse volta a ser devido ao lojista; o financeiro aceitou 2.1.01.001 ou 2.1.01.002 com motivo | Mudar a conta no arquivo de regras |
 | [ ] | D-07 | Atlas **fora** do `comissoes_por_lojista.csv`, com pendência para o comercial (valor que a Orbe cobrou e as 57 linhas no rastro) | O financeiro aceita zerada ou fora; fora evita uma linha de comissão que parece faturável | Incluir com valor zero |
-| [ ] | D-08 | Devolução da Casa = **o que a Orbe cobrou** (soma do `valor_taxa`: **R$ 15.396,77**), não um recálculo | "O que foi cobrado eu devolvo ao lojista"; o lojista recebeu a menos exatamente esse valor | Recalcular pela RN-09 (daria R$ 15.397,42) |
 | [ ] | D-09 | Casa **só na pendência** (total + detalhe), sem as 118 linhas em divergências | O financeiro disse que não precisa; evita confundir com divergência de contrato | Incluir as linhas marcadas como isenção |
 | [ ] | D-10 | Ajuste da Ponte (RN-37): o Spread R$ negativo da linha é o **spread inteiro**; a nossa participação cai **50%** dele | Mesma lógica da comissão (50% do Spread R$). Pergunta de outro time (12:04) ainda sem resposta | Abater 100% se o financeiro disser o contrário |
 
-> A antiga D-01 (Bridge na cobrança da Orbe) **virou regra confirmada** (RN-25).
+> Viraram regra confirmada: a antiga **D-01** (Bridge na cobrança da Orbe → RN-25) e a antiga **D-08** (valor da devolução da Casa → RN-64).
 
 ### II.2.2 Premissas da solução (checkpoint 1)
 
@@ -495,7 +495,6 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 | Desde | Pergunta | O que fazemos enquanto isso |
 |---|---|---|
 | 12:04 | Ajuste da Ponte: o Spread R$ negativo é o spread inteiro ou já a nossa parte? (ex.: devolução de R$ 235,74 da PC-0926-0434 → nota cai R$ 117,87 ou R$ 235,74?) | D-10: tratar como spread inteiro (cai 50%) |
-| 12:36 | Alerta da Atlas: pelo pico ou pelo saldo do fim do mês? | D-03: pelo pico, citando as reversões (o financeiro já disse que o critério é nosso) |
 
 ---
 
@@ -524,11 +523,12 @@ Regras derivadas do canvas (seção I.6) e das respostas do financeiro. **Como u
 - **Ajuste da Ponte** ("AJUSTE REF PC-…"): regra nova para outubro em diante (RN-37, RF-07, D-10).
 - **Estorno com taxa errada** entra em divergências com valor negativo; a faixa vem da linha do estorno (RN-10, RN-21).
 - **Atlas:** o CNPJ da aba antiga pode identificar (RN-07); zerada ou fora é escolha nossa (D-07).
-- **Casa:** isenção pela data da venda (RN-15); devolução = o que a Orbe cobrou, **R$ 15.396,77** (D-08); linhas em divergências opcionais (D-09).
+- **Casa:** isenção pela data da venda (RN-15); devolução = o que a Orbe cobrou, **R$ 15.396,77** (RN-64); linhas em divergências opcionais (D-09).
 - **Provisão do mês** fica fora (RN-48).
 - **Fechamento parcial e validação de layout:** avisar, fechar o que não depende e marcar provisório/bloqueado (RN-62, RF-03, RF-12, RNF-06).
 - **Pendências:** precisam de próximo passo; acompanhamento não é alarme falso; várias origens com `|` (RN-58, RN-59).
 - **Alerta de antecipação:** a preocupação é lojista novo, pelo pico, citando reversões (RN-63, D-03).
 - **Chave de API:** pode ser enviada à banca, exclusiva e com limite de gasto (RNF-13).
 - **Saída:** só setembro, em `saida/` na raiz; não haverá pacote de outubro (RNF-16).
+- **13h15:** a devolução pelo valor descontado de fato virou regra confirmada (RN-64, antiga D-08); o alerta pelo pico foi considerado razoável pelo financeiro (D-03).
 - **13h:** documento reorganizado em quatro partes; entrou a Parte I (entendimento do negócio pelo Data Product Canvas).
