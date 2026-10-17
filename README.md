@@ -2,6 +2,10 @@
 
 > Projeto do hackathon — conciliação de comissões, taxas, notas e lançamentos bancários a partir do data pack.
 
+## Apresentação
+
+Pitch do Gambito no Desafio Barte AI: [apresentação no Canva](https://www.canva.com/d/vdorRQQrzhSLcww).
+
 ## Estrutura
 
 ```
